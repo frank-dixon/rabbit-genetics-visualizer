@@ -11,8 +11,14 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\""
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@types/three": "^0.184.1",
+    "lucide-react": "^1.17.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "three": "^0.184.0",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
