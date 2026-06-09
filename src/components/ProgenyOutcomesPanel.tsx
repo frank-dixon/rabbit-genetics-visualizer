@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react';
 import { calculateCross, formatProbability, type ProgenyOutcome } from '../utils/geneticEngine';
+import { resolvePlainEnglishPhenotype } from '../utils/plainEnglishPhenotype';
+import { formatCompactGenotype } from '../utils/formatGenotype';
 import { useGeneticStore } from '../store/useGeneticStore';
+import { CopyTextButton } from './CopyTextButton';
 import { GenotypeInline } from './GenotypeInline';
 import { PhenotypeRenderer } from './PhenotypeRenderer';
 
@@ -17,6 +20,7 @@ interface PhenotypeGroup {
   phenotype: string;
   title: string;
   subtitle?: string;
+  plainEnglish: string;
   combinedProbability: number;
   variants: PhenotypeVariant[];
 }
@@ -43,11 +47,13 @@ function buildPhenotypeGroups(outcomes: ProgenyOutcome[]): PhenotypeGroup[] {
       const sorted = [...variants].sort((a, b) => b.probability - a.probability);
       const baseline = sorted[0]?.genotypeByLocus;
       const { title, subtitle } = splitPhenotypeLabel(phenotype);
+      const plainEnglish = baseline ? resolvePlainEnglishPhenotype(baseline) : '';
 
       return {
         phenotype,
         title,
         subtitle,
+        plainEnglish,
         combinedProbability: sorted.reduce((sum, item) => sum + item.probability, 0),
         variants: sorted.map((outcome, index) => ({
           outcome,
@@ -100,6 +106,11 @@ export function ProgenyOutcomesPanel() {
                       <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-snug">
                         {group.title}
                       </h4>
+                      {group.plainEnglish && (
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug italic">
+                          {group.plainEnglish}
+                        </p>
+                      )}
                       {group.subtitle && (
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
                           {group.subtitle}
@@ -120,20 +131,24 @@ export function ProgenyOutcomesPanel() {
                 <ul className="divide-y divide-slate-100 dark:divide-slate-800/80">
                   {group.variants.map(({ outcome, baseline }) => {
                     const key = `${outcome.genotype}-${outcome.phenotype}`;
+                    const compactGenotype = formatCompactGenotype(outcome.genotypeByLocus);
 
                     return (
-                      <li
-                        key={key}
-                        className="flex items-start gap-2.5 pl-5 pr-3 py-2"
-                      >
-                        <span className="w-11 shrink-0 text-xs font-bold font-mono text-slate-600 dark:text-slate-300 tabular-nums pt-0.5">
+                      <li key={key} className="flex items-start gap-2.5 pl-3 pr-3 py-2">
+                        <PhenotypeRenderer
+                          genotype={outcome.genotypeByLocus}
+                          size="sm"
+                          className="shrink-0 w-16"
+                        />
+                        <span className="w-11 shrink-0 text-xs font-bold font-mono text-slate-600 dark:text-slate-300 tabular-nums pt-1">
                           {formatProbability(outcome.probability)}
                         </span>
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1 min-w-0 space-y-1">
                           <GenotypeInline
                             genotype={outcome.genotypeByLocus}
                             baseline={baseline}
                           />
+                          <CopyTextButton text={compactGenotype} label="Copy genotype" />
                         </div>
                       </li>
                     );
@@ -142,8 +157,12 @@ export function ProgenyOutcomesPanel() {
               )}
 
               {group.variants.length === 1 && (
-                <div className="px-3 pb-2.5 pl-5">
+                <div className="px-3 pb-2.5 pl-5 space-y-1">
                   <GenotypeInline genotype={group.variants[0].outcome.genotypeByLocus} />
+                  <CopyTextButton
+                    text={formatCompactGenotype(group.variants[0].outcome.genotypeByLocus)}
+                    label="Copy genotype"
+                  />
                 </div>
               )}
             </section>

@@ -3,6 +3,7 @@ import { AboutPage } from './components/AboutPage';
 import { AppFooter, type AppView } from './components/AppFooter';
 import { CrossWorkspace } from './components/CrossWorkspace';
 import { GeneticsReferencePanel } from './components/GeneticsReferencePanel';
+import { CrossHydrator } from './components/CrossHydrator';
 import { GlossaryPanel } from './components/GlossaryPanel';
 import { CitationsPage } from './components/CitationsPage';
 import { ThemeToggle } from './components/ThemeToggle';
@@ -48,7 +49,12 @@ export default function App() {
         </div>
       </header>
 
-      {view === 'workspace' && <WorkspaceView />}
+      {view === 'workspace' && (
+        <>
+          <CrossHydrator />
+          <WorkspaceView />
+        </>
+      )}
       {view === 'about' && <AboutPage onBack={() => setView('workspace')} />}
       {view === 'citations' && <CitationsPage onBack={() => setView('workspace')} />}
 

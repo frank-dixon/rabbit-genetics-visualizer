@@ -18,20 +18,28 @@ export function AboutPage({ onBack }: AboutPageProps) {
       <h2>What you can do today</h2>
       <ul>
         <li>
-          <strong>Set your cross</strong> — Parent A and Parent B cards show preset, phenotype,
-          compact genotype, and a small coat preview. Swap parents with one tap.
+          <strong>Set your cross</strong> — Parent A and Parent B cards show a searchable preset
+          picker, technical phenotype, plain-English description, compact genotype, and a coat
+          preview. Swap parents with a text link between the cards.
         </li>
         <li>
-          <strong>Scan progeny outcomes</strong> — A compact scrollable list shows probability,
-          phenotype, and a thumbnail per outcome. Tap a row for full genotype.
+          <strong>Scan progeny outcomes</strong> — Grouped results show combined probability,
+          plain-English summary, technical labels, thumbnails, and per-variant genotypes with
+          differing loci highlighted.
         </li>
         <li>
-          <strong>Edit alleles</strong> — Expand &quot;Edit genotypes&quot; when you need per-locus
-          control. Presets and variety labels persist above.
+          <strong>Edit alleles per parent</strong> — Expand &quot;Edit genotype&quot; inside each
+          parent card for per-locus control. Open &quot;Variety notes&quot; for cross-breeding
+          context on each breed.
+        </li>
+        <li>
+          <strong>Copy and share</strong> — Copy any genotype string from parent or progeny rows.
+          Use &quot;Copy share link&quot; in the cross header to save or send the full cross via
+          URL. Your cross also persists automatically in this browser.
         </li>
         <li>
           <strong>Dig into genetics</strong> — Collapsible reference sections cover the loci matrix,
-          eye color rules, meat-rabbit variety library, and a 3D chromosome explorer.
+          eye color rules, 3D chromosome explorer, and a full glossary.
         </li>
         <li>
           <strong>Install for offline use</strong> — Production builds register a service worker for
