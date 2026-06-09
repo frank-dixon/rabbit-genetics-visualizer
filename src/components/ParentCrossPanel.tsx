@@ -5,8 +5,10 @@ import {
   type Locus,
 } from '../data/rabbitGenetics';
 import { useGeneticStore } from '../store/useGeneticStore';
+import { lociDiffer } from '../utils/parentGenotypeDiff';
 
 type ParentKey = 'parent1' | 'parent2';
+type GenotypeMap = Record<string, [string, string]>;
 
 function formatAlleleOptionLabel(allele: Allele): string {
   return `${allele.code} — ${allele.name}`;
@@ -39,9 +41,10 @@ function LocusAlleleSelect({ locus, parentKey, alleleIndex, value, onChange }: L
 
 interface ParentGenotypeEditorProps {
   parentKey: ParentKey;
+  mateGenotype?: GenotypeMap;
 }
 
-export function ParentGenotypeEditor({ parentKey }: ParentGenotypeEditorProps) {
+export function ParentGenotypeEditor({ parentKey, mateGenotype }: ParentGenotypeEditorProps) {
   const genotype = useGeneticStore((state) => state[parentKey]);
   const setParentAllele = useGeneticStore((state) => state.setParentAllele);
   const loci = LOCI_ORDER.map((id) => RABBIT_GENETIC_MAP[id]).filter(Boolean);
@@ -51,12 +54,22 @@ export function ParentGenotypeEditor({ parentKey }: ParentGenotypeEditorProps) {
       <div className="space-y-1.5">
         {loci.map((locus) => {
           const pair = genotype[locus.id] ?? ['?', '?'];
+          const differs = mateGenotype ? lociDiffer(genotype, mateGenotype, locus.id) : false;
+
           return (
             <div
               key={locus.id}
-              className="grid grid-cols-[2rem_1fr_1fr] gap-1.5 items-center"
+              className={`grid grid-cols-[2rem_1fr_1fr] gap-1.5 items-center rounded-md px-1 -mx-1 ${
+                differs ? 'bg-amber-50/80 dark:bg-amber-950/20' : ''
+              }`}
             >
-              <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-400">
+              <span
+                className={`font-mono text-xs font-bold ${
+                  differs
+                    ? 'text-amber-700 dark:text-amber-300'
+                    : 'text-slate-600 dark:text-slate-400'
+                }`}
+              >
                 {locus.id}
               </span>
               <LocusAlleleSelect

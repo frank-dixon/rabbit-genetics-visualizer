@@ -81,10 +81,15 @@ export function parseCrossFromSearch(search: string): CrossSnapshot | null {
 
   if (!parent1 || !parent2) return null;
 
+  const mapLegacyPreset = (presetId: string | null) => {
+    if (presetId === 'nz-white') return 'nz-white-field';
+    return presetId;
+  };
+
   return {
     parent1,
     parent2,
-    parent1PresetId: params.get('preset1'),
-    parent2PresetId: params.get('preset2'),
+    parent1PresetId: mapLegacyPreset(params.get('preset1')),
+    parent2PresetId: mapLegacyPreset(params.get('preset2')),
   };
 }

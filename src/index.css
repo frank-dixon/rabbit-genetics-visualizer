@@ -24,3 +24,7 @@
     @apply bg-slate-900 text-slate-100;
   }
 }
+
+.glossary-term-highlight {
+  @apply bg-sky-100 dark:bg-sky-950/50 ring-2 ring-sky-300 dark:ring-sky-700;
+}

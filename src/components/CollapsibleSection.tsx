@@ -80,6 +80,8 @@ interface CollapsiblePanelProps {
   title: string;
   description?: string;
   defaultOpen?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   children: ReactNode;
   className?: string;
 }
@@ -145,11 +147,23 @@ export function CollapsiblePanel({
   title,
   description,
   defaultOpen = true,
+  open: controlledOpen,
+  onOpenChange,
   children,
   className = '',
 }: CollapsiblePanelProps) {
-  const [open, setOpen] = useState(defaultOpen);
+  const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const contentId = useId();
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+
+  const toggle = () => {
+    const next = !open;
+    if (!isControlled) {
+      setInternalOpen(next);
+    }
+    onOpenChange?.(next);
+  };
 
   return (
     <div
@@ -157,7 +171,7 @@ export function CollapsiblePanel({
     >
       <button
         type="button"
-        onClick={() => setOpen((current) => !current)}
+        onClick={toggle}
         aria-expanded={open}
         aria-controls={contentId}
         className="w-full flex items-start gap-2 text-left p-5 hover:bg-slate-50 dark:hover:bg-slate-950/50 transition"

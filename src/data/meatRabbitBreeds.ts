@@ -314,11 +314,18 @@ export const MEAT_RABBIT_VARIETIES: MeatRabbitVariety[] = [
 export const PARENT_PRESETS: ParentPreset[] = [
   // New Zealand
   {
-    id: 'nz-white',
+    id: 'nz-white-show',
     category: 'New Zealand',
-    label: 'New Zealand White',
+    label: 'New Zealand White (show line)',
+    summary: 'aa B_ cc D_ E_ enen SiSi VV — homozygous REW commercial type',
+    genotype: genotype({ A: ['a', 'a'], C: ['c', 'c'] }),
+  },
+  {
+    id: 'nz-white-field',
+    category: 'New Zealand',
+    label: 'New Zealand White (field herd)',
     summary:
-      'A/a B_ cc D_ E/e enen Si/si VV — REW; cc masks hidden agouti, red, and silver carriers (field-herd scaffold)',
+      'A/a B_ cc D_ E/e enen Si/si VV — REW; cc masks hidden agouti, red, and silver carriers',
     genotype: genotype({
       A: ['A', 'a'],
       C: ['c', 'c'],
