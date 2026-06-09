@@ -260,10 +260,12 @@ export function ProgenyOutcomesPanel() {
                       <span className="text-base font-bold font-mono text-sky-700 dark:text-sky-400 tabular-nums">
                         {formatProbability(group.combinedProbability)}
                       </span>
-                      <ProbabilityBar
-                        value={group.combinedProbability}
-                        max={maxGroupProbability || 1}
-                      />
+                      {group.variants.length === 1 && (
+                        <ProbabilityBar
+                          value={group.combinedProbability}
+                          max={maxGroupProbability || 1}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
