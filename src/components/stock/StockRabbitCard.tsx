@@ -8,9 +8,10 @@ import { PhenotypeRenderer } from '../PhenotypeRenderer';
 interface StockRabbitCardProps {
   rabbit: StockRabbit;
   onDelete?: () => void;
+  onUseAsParent?: (parent: 'parent1' | 'parent2') => void;
 }
 
-export function StockRabbitCard({ rabbit, onDelete }: StockRabbitCardProps) {
+export function StockRabbitCard({ rabbit, onDelete, onUseAsParent }: StockRabbitCardProps) {
   const phenotype = resolveParentPhenotype(rabbit.resolvedGenotype);
   const preset = rabbit.sourcePresetId
     ? PARENT_PRESETS.find((p) => p.id === rabbit.sourcePresetId)
@@ -44,6 +45,24 @@ export function StockRabbitCard({ rabbit, onDelete }: StockRabbitCardProps) {
         <p className="text-[10px] text-slate-400">
           {preset?.label ?? 'Custom'} · {CONFIDENCE_LABELS[confidence]} genetics
         </p>
+        {onUseAsParent && (
+          <div className="flex gap-2 pt-1">
+            <button
+              type="button"
+              onClick={() => onUseAsParent('parent1')}
+              className="text-[10px] text-sky-700 dark:text-sky-400 hover:underline"
+            >
+              Set as Parent A
+            </button>
+            <button
+              type="button"
+              onClick={() => onUseAsParent('parent2')}
+              className="text-[10px] text-sky-700 dark:text-sky-400 hover:underline"
+            >
+              Set as Parent B
+            </button>
+          </div>
+        )}
       </div>
     </article>
   );

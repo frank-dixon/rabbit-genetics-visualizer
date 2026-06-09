@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowLeft, Download, Upload } from 'lucide-react';
 import { WORKSPACE_MAX_WIDTH } from '../constants/layout';
 import { useAccountStore } from '../store/useAccountStore';
+import { useGeneticStore } from '../store/useGeneticStore';
 import { useStockRosterStore } from '../store/useStockRosterStore';
 import { AccountPanel } from './stock/AccountPanel';
 import { AddStockRabbitWizard } from './stock/AddStockRabbitWizard';
@@ -9,15 +10,17 @@ import { StockRabbitCard } from './stock/StockRabbitCard';
 
 interface StockRosterPageProps {
   onBack: () => void;
+  onGoToPredictor?: () => void;
 }
 
-export function StockRosterPage({ onBack }: StockRosterPageProps) {
+export function StockRosterPage({ onBack, onGoToPredictor }: StockRosterPageProps) {
   const account = useAccountStore((state) => state.account);
   const getRabbits = useStockRosterStore((state) => state.getRabbits);
   const addRabbit = useStockRosterStore((state) => state.addRabbit);
   const deleteRabbit = useStockRosterStore((state) => state.deleteRabbit);
   const exportRoster = useStockRosterStore((state) => state.exportRoster);
   const importRoster = useStockRosterStore((state) => state.importRoster);
+  const loadParentFromStock = useGeneticStore((state) => state.loadParentFromStock);
 
   const [showWizard, setShowWizard] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
@@ -118,6 +121,10 @@ export function StockRosterPage({ onBack }: StockRosterPageProps) {
                   key={rabbit.id}
                   rabbit={rabbit}
                   onDelete={() => deleteRabbit(account.id, rabbit.id)}
+                  onUseAsParent={(parent) => {
+                    loadParentFromStock(parent, rabbit);
+                    onGoToPredictor?.();
+                  }}
                 />
               ))}
             </div>

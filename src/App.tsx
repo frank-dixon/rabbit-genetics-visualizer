@@ -82,7 +82,12 @@ export default function App() {
         </>
       )}
       {view === 'breeds' && <BreedLibraryPage onBack={() => setView('workspace')} />}
-      {view === 'roster' && <StockRosterPage onBack={() => setView('workspace')} />}
+      {view === 'roster' && (
+        <StockRosterPage
+          onBack={() => setView('workspace')}
+          onGoToPredictor={() => setView('workspace')}
+        />
+      )}
       {view === 'learn' && <MendelianLearnPage onBack={() => setView('workspace')} />}
       {view === 'about' && <AboutPage onBack={() => setView('workspace')} />}
       {view === 'citations' && <CitationsPage onBack={() => setView('workspace')} />}
