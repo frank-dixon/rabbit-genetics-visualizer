@@ -431,8 +431,49 @@ export const MEAT_RABBIT_VARIETIES: MeatRabbitVariety[] = [
 
 export const LOCI_ORDER = ['A', 'B', 'C', 'D', 'E', 'En', 'V'] as const;
 
+/** Distinct band colors for mapped loci on the 3D chromosome models */
+export const LOCUS_BAND_COLORS: Record<string, string> = {
+  A: '#10b981',
+  B: '#f59e0b',
+  C: '#f43f5e',
+  En: '#06b6d4',
+};
+
+export interface LocusBandPlacement {
+  locusId: string;
+  /** 0 = near centromere, 1 = telomere end of the arm */
+  armPosition: number;
+  /** p = short arm (positive Y), q = long arm (negative Y) */
+  arm: 'p' | 'q';
+}
+
+/**
+ * Approximate band positions on simplified chromosome arms — not to cytogenetic scale.
+ * D, E, and V are unanchored in OryCun2.0 and have no bands.
+ */
+export const CHROMOSOME_LOCUS_BANDS: Record<number, LocusBandPlacement[]> = {
+  1: [
+    { locusId: 'C', armPosition: 0.38, arm: 'p' },
+    { locusId: 'B', armPosition: 0.72, arm: 'p' },
+  ],
+  4: [{ locusId: 'A', armPosition: 0.52, arm: 'p' }],
+  15: [{ locusId: 'En', armPosition: 0.48, arm: 'q' }],
+};
+
 export function getLocusChromosome(locusId: string): number | null {
   return RABBIT_GENETIC_MAP[locusId]?.chromosome ?? null;
+}
+
+export function getChromosomeLabel(chromosomeNumber: number): string {
+  return `OCU${chromosomeNumber}`;
+}
+
+export function getLociOnChromosome(chromosomeNumber: number): Locus[] {
+  return Object.values(RABBIT_GENETIC_MAP).filter((locus) => locus.chromosome === chromosomeNumber);
+}
+
+export function getLocusBandsForChromosome(chromosomeNumber: number): LocusBandPlacement[] {
+  return CHROMOSOME_LOCUS_BANDS[chromosomeNumber] ?? [];
 }
 
 export function getMappedChromosomes(): number[] {
