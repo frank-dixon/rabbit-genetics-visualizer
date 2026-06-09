@@ -191,6 +191,16 @@ function resolvePhenotype(genotypes: GenotypeMap): string {
     parts.push('Vienna carrier (Vv — draft)');
   }
 
+  if (genotypes.Si && isHomozygous(genotypes.Si, 'si')) {
+    parts.push('Silvered coat (sisi — progressive white tipping)');
+  } else if (
+    genotypes.Si &&
+    ((genotypes.Si[0] === 'Si' && genotypes.Si[1] === 'si') ||
+      (genotypes.Si[0] === 'si' && genotypes.Si[1] === 'Si'))
+  ) {
+    parts.push('Light silver carrier (Sisi — draft)');
+  }
+
   return parts.join('; ');
 }
 
