@@ -103,6 +103,8 @@ function matchesSearch(group: PhenotypeGroup, query: string): boolean {
 export function ProgenyOutcomesPanel() {
   const parent1 = useGeneticStore((state) => state.parent1);
   const parent2 = useGeneticStore((state) => state.parent2);
+  const focusProgenyGenotype = useGeneticStore((state) => state.focusProgenyGenotype);
+  const progenyFocusLabel = useGeneticStore((state) => state.progenyFocusLabel);
   const [showAll, setShowAll] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [silveredOnly, setSilveredOnly] = useState(false);
@@ -154,6 +156,12 @@ export function ProgenyOutcomesPanel() {
         </span>
       </div>
 
+      {progenyFocusLabel && (
+        <p className="text-[10px] text-sky-700 dark:text-sky-400 mb-2">
+          Chromosome focus: {progenyFocusLabel}
+        </p>
+      )}
+
       <div className="flex flex-wrap items-center gap-2 mb-2">
         <input
           type="search"
@@ -196,22 +204,34 @@ export function ProgenyOutcomesPanel() {
 
           return (
             <section key={group.phenotype}>
-              <button
-                type="button"
-                onClick={() => canCollapse && toggleGroup(group.phenotype)}
-                className={`w-full flex items-start gap-2.5 px-3 py-2.5 bg-slate-50/90 dark:bg-slate-950/60 border-b border-slate-200/80 dark:border-slate-800/80 text-left ${
-                  canCollapse ? 'hover:bg-slate-100/90 dark:hover:bg-slate-900/60' : ''
+              <div
+                className={`w-full flex items-start gap-2.5 px-3 py-2.5 bg-slate-50/90 dark:bg-slate-950/60 border-b border-slate-200/80 dark:border-slate-800/80 ${
+                  progenyFocusLabel === group.title ? 'ring-2 ring-inset ring-sky-400/60' : ''
                 }`}
               >
                 {canCollapse && (
-                  <ChevronDown
-                    className={`h-3.5 w-3.5 mt-1 shrink-0 text-slate-500 transition-transform ${
-                      isCollapsed ? '-rotate-90' : ''
-                    }`}
-                    aria-hidden="true"
-                  />
+                  <button
+                    type="button"
+                    onClick={() => toggleGroup(group.phenotype)}
+                    className="mt-0.5 shrink-0 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                    aria-label={isCollapsed ? 'Expand phenotype group' : 'Collapse phenotype group'}
+                  >
+                    <ChevronDown
+                      className={`h-3.5 w-3.5 transition-transform ${
+                        isCollapsed ? '-rotate-90' : ''
+                      }`}
+                      aria-hidden="true"
+                    />
+                  </button>
                 )}
 
+                <button
+                  type="button"
+                  onClick={() =>
+                    headerGenotype && focusProgenyGenotype(headerGenotype, group.title)
+                  }
+                  className="flex flex-1 items-start gap-2.5 min-w-0 text-left hover:opacity-90"
+                >
                 {headerGenotype && (
                   <PhenotypeRenderer genotype={headerGenotype} size="sm" className="shrink-0" />
                 )}
@@ -240,14 +260,17 @@ export function ProgenyOutcomesPanel() {
                       <span className="text-base font-bold font-mono text-sky-700 dark:text-sky-400 tabular-nums">
                         {formatProbability(group.combinedProbability)}
                       </span>
-                      <ProbabilityBar
-                        value={group.combinedProbability}
-                        max={maxGroupProbability || 1}
-                      />
+                      {group.variants.length === 1 && (
+                        <ProbabilityBar
+                          value={group.combinedProbability}
+                          max={maxGroupProbability || 1}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
-              </button>
+                </button>
+              </div>
 
               {!isCollapsed && group.variants.length > 1 && (
                 <ul className="divide-y divide-slate-100 dark:divide-slate-800/80">
@@ -256,7 +279,18 @@ export function ProgenyOutcomesPanel() {
                     const compactGenotype = formatCompactGenotype(outcome.genotypeByLocus);
 
                     return (
-                      <li key={key} className="flex items-start gap-2.5 pl-3 pr-3 py-2">
+                      <li
+                        key={key}
+                        className={`flex items-start gap-2.5 pl-3 pr-3 py-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-950/40 ${
+                          progenyFocusLabel === outcome.genotype ? 'bg-sky-50/60 dark:bg-sky-950/20' : ''
+                        }`}
+                        onClick={() =>
+                          focusProgenyGenotype(
+                            outcome.genotypeByLocus,
+                            `${group.title} (${formatProbability(outcome.probability)})`,
+                          )
+                        }
+                      >
                         <PhenotypeRenderer
                           genotype={outcome.genotypeByLocus}
                           size="sm"
@@ -276,7 +310,9 @@ export function ProgenyOutcomesPanel() {
                             genotype={outcome.genotypeByLocus}
                             baseline={baseline}
                           />
-                          <CopyTextButton text={compactGenotype} label="Copy genotype" />
+                          <span onClick={(event) => event.stopPropagation()}>
+                            <CopyTextButton text={compactGenotype} label="Copy genotype" />
+                          </span>
                         </div>
                       </li>
                     );
@@ -285,12 +321,24 @@ export function ProgenyOutcomesPanel() {
               )}
 
               {!isCollapsed && group.variants.length === 1 && (
-                <div className="px-3 pb-2.5 pl-8 space-y-1">
+                <div
+                  className={`px-3 pb-2.5 pl-8 space-y-1 hover:bg-slate-50 dark:hover:bg-slate-950/40 cursor-pointer ${
+                    progenyFocusLabel === group.title ? 'bg-sky-50/60 dark:bg-sky-950/20' : ''
+                  }`}
+                  onClick={() =>
+                    focusProgenyGenotype(
+                      group.variants[0].outcome.genotypeByLocus,
+                      group.title,
+                    )
+                  }
+                >
                   <GenotypeInline genotype={group.variants[0].outcome.genotypeByLocus} />
-                  <CopyTextButton
-                    text={formatCompactGenotype(group.variants[0].outcome.genotypeByLocus)}
-                    label="Copy genotype"
-                  />
+                  <span onClick={(event) => event.stopPropagation()}>
+                    <CopyTextButton
+                      text={formatCompactGenotype(group.variants[0].outcome.genotypeByLocus)}
+                      label="Copy genotype"
+                    />
+                  </span>
                 </div>
               )}
             </section>

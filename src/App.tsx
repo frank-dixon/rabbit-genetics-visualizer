@@ -7,18 +7,41 @@ import { CrossHydrator } from './components/CrossHydrator';
 import { GlossaryPanel } from './components/GlossaryPanel';
 import { CitationsPage } from './components/CitationsPage';
 import { ThemeToggle } from './components/ThemeToggle';
+import {
+  WorkspaceMobileTabs,
+  type WorkspaceMobileTab,
+} from './components/WorkspaceMobileTabs';
 import { APP_NAME, APP_TAGLINE } from './constants/app';
 import { WORKSPACE_MAX_WIDTH } from './constants/layout';
 import { useThemeStore } from './store/useThemeStore';
 
 function WorkspaceView() {
+  const [mobileTab, setMobileTab] = useState<WorkspaceMobileTab>('parents');
+
   return (
     <main
       className={`flex-1 min-h-0 w-full mx-auto p-3 sm:p-4 ${WORKSPACE_MAX_WIDTH} space-y-4 lg:overflow-y-auto lg:overscroll-contain pb-6`}
     >
-      <CrossWorkspace />
-      <GeneticsReferencePanel />
-      <GlossaryPanel />
+      <WorkspaceMobileTabs activeTab={mobileTab} onChange={setMobileTab} />
+
+      <div className="hidden md:block">
+        <CrossWorkspace section="all" />
+      </div>
+
+      <div className={mobileTab === 'parents' ? 'block md:hidden' : 'hidden'}>
+        <CrossWorkspace section="parents" />
+      </div>
+
+      <div className={mobileTab === 'outcomes' ? 'block md:hidden' : 'hidden'}>
+        <CrossWorkspace section="outcomes" />
+      </div>
+
+      <div
+        className={`space-y-4 ${mobileTab === 'reference' ? 'block' : 'hidden md:block'}`}
+      >
+        <GeneticsReferencePanel />
+        <GlossaryPanel />
+      </div>
     </main>
   );
 }

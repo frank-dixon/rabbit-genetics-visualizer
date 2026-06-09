@@ -32,6 +32,8 @@ function formatLocusGenes(chromosomeNumber: number): string {
 export function ChromosomeCanvas() {
   const { isDark } = useTheme();
   const selectedLocusId = useGeneticStore((state) => state.selectedLocusId);
+  const highlightedLocusIds = useGeneticStore((state) => state.highlightedLocusIds);
+  const progenyFocusLabel = useGeneticStore((state) => state.progenyFocusLabel);
   const focusedChromosome = selectedLocusId ? getLocusChromosome(selectedLocusId) : null;
   const canvasBackground = isDark ? CANVAS_BACKGROUNDS.dark : CANVAS_BACKGROUNDS.light;
 
@@ -59,6 +61,7 @@ export function ChromosomeCanvas() {
             isFocused={focusedChromosome === chromosomeNumber}
             isDark={isDark}
             selectedLocusId={selectedLocusId}
+            highlightedLocusIds={highlightedLocusIds}
           />
         ))}
 
@@ -67,10 +70,26 @@ export function ChromosomeCanvas() {
 
       <div className="pointer-events-none absolute inset-0 z-10">
         <div className="absolute top-4 left-4 text-xs font-mono text-slate-700 dark:text-slate-200 bg-white/95 dark:bg-slate-900/95 px-3 py-1.5 rounded border border-sky-300 dark:border-sky-700 backdrop-blur shadow-sm max-w-[90%]">
-          Active Locus Focus:{' '}
-          <span className="font-semibold text-sky-700 dark:text-sky-400">
-            {selectedLocusId || 'None (Orbit Mode)'}
-          </span>
+          {progenyFocusLabel ? (
+            <>
+              Progeny focus:{' '}
+              <span className="font-semibold text-sky-700 dark:text-sky-400">
+                {progenyFocusLabel}
+              </span>
+              {highlightedLocusIds.length > 0 && (
+                <span className="block text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 font-sans">
+                  Loci: {highlightedLocusIds.join(' · ')}
+                </span>
+              )}
+            </>
+          ) : (
+            <>
+              Active Locus Focus:{' '}
+              <span className="font-semibold text-sky-700 dark:text-sky-400">
+                {selectedLocusId || 'None (Orbit Mode)'}
+              </span>
+            </>
+          )}
         </div>
 
         {focusedChromosome !== null && selectedLocus && (

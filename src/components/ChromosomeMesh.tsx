@@ -16,6 +16,7 @@ interface MeshProps {
   isFocused?: boolean;
   isDark?: boolean;
   selectedLocusId?: string | null;
+  highlightedLocusIds?: string[];
 }
 
 const ARM_LENGTH = 2.5;
@@ -90,6 +91,7 @@ export function ChromosomeMesh({
   isFocused = false,
   isDark = false,
   selectedLocusId = null,
+  highlightedLocusIds = [],
 }: MeshProps) {
   const meshRef = useRef<THREE.Group>(null);
   const hoveredChromosome = useGeneticStore((state) => state.hoveredChromosome);
@@ -99,7 +101,7 @@ export function ChromosomeMesh({
   const isHovered = hoveredChromosome === chromosomeNumber;
   const isActive = isFocused || isHovered;
   const locusBands = getLocusBandsForChromosome(chromosomeNumber);
-  const hasSelection = Boolean(selectedLocusId);
+  const hasSelection = Boolean(selectedLocusId) || highlightedLocusIds.length > 0;
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -149,15 +151,20 @@ export function ChromosomeMesh({
         <meshStandardMaterial {...armMaterialProps} />
       </mesh>
 
-      {locusBands.map((band) => (
-        <LocusBand
-          key={band.locusId}
-          band={band}
-          isSelected={selectedLocusId === band.locusId}
-          isDimmed={hasSelection && selectedLocusId !== band.locusId}
-          isDark={isDark}
-        />
-      ))}
+      {locusBands.map((band) => {
+        const isHighlighted =
+          highlightedLocusIds.includes(band.locusId) || selectedLocusId === band.locusId;
+
+        return (
+          <LocusBand
+            key={band.locusId}
+            band={band}
+            isSelected={isHighlighted}
+            isDimmed={hasSelection && !isHighlighted}
+            isDark={isDark}
+          />
+        );
+      })}
 
       <Html
         position={[0, -3.35, 0]}
