@@ -28,7 +28,7 @@ export function ChromosomeCanvas() {
   const positions = spreadChromosomePositions(chromosomes.length);
 
   return (
-    <div className="w-full h-[400px] md:h-full min-h-[400px] bg-slate-200 dark:bg-slate-950 rounded-xl overflow-hidden relative border border-slate-300 dark:border-slate-800 shadow-sm transition-colors duration-200">
+    <div className="w-full h-[400px] lg:h-[480px] lg:max-h-[min(480px,55vh)] shrink-0 bg-slate-200 dark:bg-slate-950 rounded-xl overflow-hidden relative border border-slate-300 dark:border-slate-800 shadow-sm transition-colors duration-200">
       <Canvas className="!absolute inset-0" camera={{ position: [0, 0, 10], fov: 50 }}>
         <color attach="background" args={[canvasBackground]} />
         <ambientLight intensity={isDark ? 0.45 : 0.7} />

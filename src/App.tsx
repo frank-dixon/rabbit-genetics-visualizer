@@ -15,7 +15,7 @@ export default function App() {
   return (
     <div
       data-theme={theme}
-      className="min-h-screen bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200"
+      className="min-h-screen lg:h-screen lg:overflow-hidden bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200"
     >
       <header className="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur p-4 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center gap-4">
@@ -32,8 +32,8 @@ export default function App() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <section className="lg:col-span-4 space-y-6 flex flex-col">
+      <main className="flex-1 min-h-0 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:overflow-hidden">
+        <section className="lg:col-span-4 space-y-6 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-4 shadow-sm">
             <h2 className="text-lg font-semibold border-b border-slate-200 dark:border-slate-800 pb-2 text-slate-700 dark:text-slate-200">
               Loci Matrix Selectors
@@ -80,7 +80,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="lg:col-span-8 flex flex-col min-h-[400px] lg:min-h-0">
+        <section className="lg:col-span-8 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
           <ChromosomeCanvas />
         </section>
       </main>
