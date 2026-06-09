@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { ParentCompactCard } from './ParentCompactCard';
+import { ParentDiffStrip } from './ParentDiffStrip';
 import { ProgenyOutcomesPanel } from './ProgenyOutcomesPanel';
 import { CopyTextButton } from './CopyTextButton';
 import { useGeneticStore } from '../store/useGeneticStore';
@@ -48,6 +49,7 @@ export function CrossWorkspace() {
             roleHint="Dam"
             accentTextClass="text-rose-700 dark:text-rose-400"
             accentBorderClass="border-rose-200 dark:border-rose-900/50"
+            mateGenotype={parent2}
           />
           <ParentCompactCard
             parentKey="parent2"
@@ -55,8 +57,11 @@ export function CrossWorkspace() {
             roleHint="Sire"
             accentTextClass="text-indigo-700 dark:text-indigo-400"
             accentBorderClass="border-indigo-200 dark:border-indigo-900/50"
+            mateGenotype={parent1}
           />
         </div>
+
+        <ParentDiffStrip />
 
         <div className="flex justify-center -my-1">
           <button

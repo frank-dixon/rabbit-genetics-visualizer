@@ -8,11 +8,16 @@ const PRESET_VARIETY_NAME: Record<string, string> = {
 };
 
 const PRESET_CROSS_NOTES: Record<string, string[]> = {
-  'nz-white': [
+  'nz-white-show': [
+    'Homozygous cc (albino) — pure ruby-eyed white with no hidden color or silvering alleles in this preset.',
+    'Crossed to colored or silvered breeds, progeny variation comes only from the mate unless you edit alleles.',
+    'Use this for intensely selected show or commercial REW lines (aa, EE, SiSi under the white coat).',
+  ],
+  'nz-white-field': [
     'Homozygous cc (albino) masks all underlying coat color — the rabbit looks REW regardless of A, E, or Si genotype.',
     'REW does can still carry agouti (A), red extension (e), and silvering (si) hidden under the white coat.',
     'Crossing to a full-color rabbit reveals those hidden alleles in the progeny.',
-    'This preset uses a field-herd scaffold (A/a, E/e, Si/si). Edit alleles if your line is intensely homozygous.',
+    'Field-herd scaffold (A/a, E/e, Si/si) — switch to show line preset if your herd is homozygous.',
   ],
   'nz-red': [
     'Homozygous ee blocks black extension — red/fawn shows on any agouti (A_) or self (aa) base.',

@@ -5,8 +5,11 @@ import { genotypesEqual, useGeneticStore } from '../store/useGeneticStore';
 import { formatCompactGenotype } from '../utils/formatGenotype';
 import { resolveParentPhenotype } from '../utils/geneticEngine';
 import { resolvePlainEnglishPhenotype } from '../utils/plainEnglishPhenotype';
+import { getDifferingLoci } from '../utils/parentGenotypeDiff';
 import { CompactCollapsible } from './CollapsibleSection';
 import { CopyTextButton } from './CopyTextButton';
+import { GenotypeInline } from './GenotypeInline';
+import { GlossaryTermText } from './GlossaryTermText';
 import { ParentGenotypeEditor } from './ParentCrossPanel';
 import { PhenotypeRenderer } from './PhenotypeRenderer';
 import { PresetPicker } from './PresetPicker';
@@ -20,6 +23,7 @@ interface ParentCompactCardProps {
   roleHint: string;
   accentTextClass: string;
   accentBorderClass: string;
+  mateGenotype: GenotypeMap;
 }
 
 function getVarietyLabel(presetId: string | null, genotype: GenotypeMap): string {
@@ -37,6 +41,7 @@ export function ParentCompactCard({
   roleHint,
   accentTextClass,
   accentBorderClass,
+  mateGenotype,
 }: ParentCompactCardProps) {
   const genotype = useGeneticStore((state) => state[parentKey]);
   const presetId = useGeneticStore((state) =>
@@ -49,14 +54,25 @@ export function ParentCompactCard({
   const phenotype = useMemo(() => resolveParentPhenotype(genotype), [genotype]);
   const plainEnglish = useMemo(() => resolvePlainEnglishPhenotype(genotype), [genotype]);
   const varietyLabel = useMemo(() => getVarietyLabel(presetId, genotype), [presetId, genotype]);
-  const compactGenotype = useMemo(() => formatCompactGenotype(genotype), [genotype]);
   const breedingNotes = useMemo(
     () => getPresetBreedingNotes(presetId, genotype),
     [presetId, genotype],
   );
+  const differingLoci = useMemo(
+    () => getDifferingLoci(genotype, mateGenotype),
+    [genotype, mateGenotype],
+  );
   const activePreset = presetId ? PARENT_PRESETS.find((entry) => entry.id === presetId) : null;
   const isModified = Boolean(activePreset && !genotypesEqual(genotype, activePreset.genotype));
   const notesPreview = breedingNotes[0] ?? 'Genetics and cross-breeding tips';
+  const compactGenotype = useMemo(() => formatCompactGenotype(genotype), [genotype]);
+  const compactGenotypeForCopy = useMemo(
+    () =>
+      differingLoci.length > 0
+        ? `${compactGenotype} (differs from mate at: ${differingLoci.join(', ')})`
+        : compactGenotype,
+    [compactGenotype, differingLoci],
+  );
 
   const handlePresetChange = (nextPresetId: string | null) => {
     if (!nextPresetId) {
@@ -104,17 +120,26 @@ export function ParentCompactCard({
             {varietyLabel}
           </p>
 
-          <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug">{phenotype}</p>
+          <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug">
+            <GlossaryTermText text={phenotype} />
+          </p>
           <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug italic">
             {plainEnglish}
           </p>
 
           <div className="flex items-start justify-between gap-2">
-            <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400 leading-relaxed break-words flex-1">
-              {compactGenotype}
-            </p>
-            <CopyTextButton text={compactGenotype} label="Copy" className="shrink-0" />
+            <div className="flex-1 min-w-0">
+              <GenotypeInline genotype={genotype} baseline={mateGenotype} />
+            </div>
+            <CopyTextButton text={compactGenotypeForCopy} label="Copy" className="shrink-0" />
           </div>
+
+          {differingLoci.length > 0 && (
+            <p className="text-[10px] text-amber-700 dark:text-amber-300">
+              Differs from mate at:{' '}
+              <span className="font-mono font-semibold">{differingLoci.join(' · ')}</span>
+            </p>
+          )}
 
           {isModified && (
             <button
@@ -137,7 +162,7 @@ export function ParentCompactCard({
       </CompactCollapsible>
 
       <CompactCollapsible title="Edit genotype" subtitle="Per-locus allele selectors">
-        <ParentGenotypeEditor parentKey={parentKey} />
+        <ParentGenotypeEditor parentKey={parentKey} mateGenotype={mateGenotype} />
       </CompactCollapsible>
     </article>
   );

@@ -101,6 +101,20 @@ export const useGeneticStore = create<GeneticState>()(
     }),
     {
       name: 'rabbit-progeny-cross',
+      version: 1,
+      migrate: (persisted: unknown) => {
+        const state = persisted as Pick<
+          GeneticState,
+          'parent1' | 'parent2' | 'parent1PresetId' | 'parent2PresetId'
+        >;
+        if (state.parent1PresetId === 'nz-white') {
+          state.parent1PresetId = 'nz-white-field';
+        }
+        if (state.parent2PresetId === 'nz-white') {
+          state.parent2PresetId = 'nz-white-field';
+        }
+        return state;
+      },
       partialize: (state) => ({
         parent1: state.parent1,
         parent2: state.parent2,
