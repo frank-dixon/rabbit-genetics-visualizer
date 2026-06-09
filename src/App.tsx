@@ -4,6 +4,8 @@ import { AppFooter, type AppView } from './components/AppFooter';
 import { ChromosomeCanvas } from './components/ChromosomeCanvas';
 import { CitationsPage } from './components/CitationsPage';
 import { EyeColorPanel } from './components/EyeColorPanel';
+import { LociMatrixPanel } from './components/LociMatrixPanel';
+import { ParentGenotypePanel } from './components/ParentGenotypePanel';
 import { ThemeToggle } from './components/ThemeToggle';
 import { LOCI_ORDER, RABBIT_GENETIC_MAP } from './data/rabbitGenetics';
 import { useGeneticStore } from './store/useGeneticStore';
@@ -17,40 +19,13 @@ function WorkspaceView() {
   return (
     <main className="flex-1 min-h-0 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:overflow-hidden">
       <section className="lg:col-span-4 space-y-6 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-4 shadow-sm">
-          <h2 className="text-lg font-semibold border-b border-slate-200 dark:border-slate-800 pb-2 text-slate-700 dark:text-slate-200">
-            Loci Matrix Selectors
-          </h2>
+        <LociMatrixPanel
+          loci={loci}
+          selectedLocusId={selectedLocusId}
+          onSelectLocus={setSelectedLocus}
+        />
 
-          {loci.map((locus) => (
-            <button
-              key={locus.id}
-              type="button"
-              onClick={() => setSelectedLocus(selectedLocusId === locus.id ? null : locus.id)}
-              className={`w-full text-left p-3 rounded-lg border transition ${
-                selectedLocusId === locus.id
-                  ? 'border-sky-500 bg-sky-100 dark:bg-sky-950/50 ring-2 ring-sky-400/50 shadow-sm'
-                  : 'border-slate-200 dark:border-slate-800 hover:border-sky-300 dark:hover:border-sky-600 bg-slate-50 dark:bg-slate-950/50 hover:bg-white dark:hover:bg-slate-900'
-              }`}
-            >
-              <div className="font-semibold text-sm text-sky-700 dark:text-sky-400">
-                {locus.name}
-                <span className="text-slate-400 dark:text-slate-500 font-normal">
-                  {' '}
-                  ({locus.geneSymbol})
-                </span>
-              </div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">
-                {locus.chromosome !== null
-                  ? `Chromosome ${locus.chromosome}${locus.cytogeneticLocation ? ` • ${locus.cytogeneticLocation}` : ''}`
-                  : `${locus.geneSymbol} — chromosome unplaced in OryCun2.0`}
-              </div>
-              <div className="text-xs text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
-                {locus.meatRabbitRelevance}
-              </div>
-            </button>
-          ))}
-        </div>
+        <ParentGenotypePanel />
 
         <EyeColorPanel />
       </section>
