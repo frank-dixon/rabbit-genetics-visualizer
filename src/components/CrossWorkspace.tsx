@@ -43,25 +43,17 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
           <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">
             Progeny outcomes
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Tap an outcome to highlight loci in the Chromosome Explorer.
-          </p>
         </div>
       )}
 
       {showHeader && (
-        <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 sm:px-5 flex items-start justify-between gap-3">
-          <div>
-            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">Your cross</h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Set both parents, then scan predicted progeny below.
-            </p>
-          </div>
+        <div className="px-4 py-2.5 border-b border-slate-200 dark:border-slate-800 sm:px-5 flex items-center justify-between gap-3">
+          <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">Your cross</h2>
           <CopyTextButton
             text={shareUrl}
-            label="Copy share link"
-            copiedLabel="Link copied"
-            className="shrink-0 mt-0.5"
+            label="Share link"
+            copiedLabel="Copied"
+            className="shrink-0"
           />
         </div>
       )}
@@ -70,7 +62,6 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
         {showParents && (
           <>
             <ExampleCrossChips />
-            <SavedCrossesPanel />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <ParentCompactCard
@@ -91,9 +82,8 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
               />
             </div>
 
-            <ParentDiffStrip />
-
-            <div className="flex justify-center -my-1">
+            <div className="flex flex-col items-center gap-1">
+              <ParentDiffStrip />
               <button
                 type="button"
                 onClick={swapParents}
@@ -102,17 +92,12 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
                 Swap parents
               </button>
             </div>
+
+            <SavedCrossesPanel />
           </>
         )}
 
         {showOutcomes && <ProgenyOutcomesPanel />}
-
-        {section === 'all' && (
-          <p className="text-[10px] text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2">
-            Draft previews and genetics — verify before breeding. Click a progeny outcome to
-            highlight its loci in the Chromosome Explorer.
-          </p>
-        )}
       </div>
     </section>
   );

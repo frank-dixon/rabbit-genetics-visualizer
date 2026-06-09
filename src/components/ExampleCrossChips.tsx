@@ -3,12 +3,12 @@ import { useGeneticStore } from '../store/useGeneticStore';
 
 const EXAMPLE_CROSSES = [
   {
-    label: "NZ White (field) × Crème d'Argent",
+    label: "NZ White × Crème",
     parent1PresetId: 'nz-white-field',
     parent2PresetId: 'creme-dargent',
   },
   {
-    label: 'Californian × NZ White (show)',
+    label: 'Californian × NZ show',
     parent1PresetId: 'californian',
     parent2PresetId: 'nz-white-show',
   },
@@ -40,23 +40,20 @@ export function ExampleCrossChips() {
   };
 
   return (
-    <div className="rounded-lg border border-dashed border-sky-300 dark:border-sky-700 bg-sky-50/50 dark:bg-sky-950/20 p-3 space-y-2">
-      <p className="text-xs font-semibold text-sky-900 dark:text-sky-200">Try an example cross</p>
-      <p className="text-[10px] text-slate-600 dark:text-slate-400">
-        Pick a preset pairing to see how progeny predictions work.
-      </p>
-      <div className="flex flex-wrap gap-2">
-        {EXAMPLE_CROSSES.map((example) => (
-          <button
-            key={example.label}
-            type="button"
-            onClick={() => loadExample(example)}
-            className="text-[10px] rounded-full border border-sky-300 dark:border-sky-700 bg-white dark:bg-slate-900 text-sky-800 dark:text-sky-200 px-3 py-1.5 hover:bg-sky-100 dark:hover:bg-sky-950/60 transition"
-          >
-            {example.label}
-          </button>
-        ))}
-      </div>
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 shrink-0">
+        Examples
+      </span>
+      {EXAMPLE_CROSSES.map((example) => (
+        <button
+          key={example.label}
+          type="button"
+          onClick={() => loadExample(example)}
+          className="text-[10px] rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 px-2.5 py-1 hover:border-sky-300 dark:hover:border-sky-600 hover:text-sky-800 dark:hover:text-sky-300 transition"
+        >
+          {example.label}
+        </button>
+      ))}
     </div>
   );
 }
