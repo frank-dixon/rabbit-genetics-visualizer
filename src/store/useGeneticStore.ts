@@ -1,19 +1,19 @@
 import { create } from 'zustand';
 import { buildDefaultGenotypes } from '../data/rabbitGenetics';
 
+type ParentKey = 'parent1' | 'parent2';
+type GenotypeMap = Record<string, [string, string]>;
+
 interface GeneticState {
   selectedLocusId: string | null;
   hoveredChromosome: number | null;
-  parent1: Record<string, [string, string]>;
-  parent2: Record<string, [string, string]>;
+  parent1: GenotypeMap;
+  parent2: GenotypeMap;
   setSelectedLocus: (locusId: string | null) => void;
   setHoveredChromosome: (chromId: number | null) => void;
-  setParentAllele: (
-    parent: 'parent1' | 'parent2',
-    locusId: string,
-    alleleIndex: 0 | 1,
-    alleleCode: string,
-  ) => void;
+  setParentAllele: (parent: ParentKey, locusId: string, alleleIndex: 0 | 1, alleleCode: string) => void;
+  setParentGenotype: (parent: ParentKey, genotype: GenotypeMap) => void;
+  swapParents: () => void;
 }
 
 const defaultGenotypes = buildDefaultGenotypes();
@@ -34,4 +34,15 @@ export const useGeneticStore = create<GeneticState>((set) => ({
       updatedParent[locusId][alleleIndex] = alleleCode;
       return { [parent]: updatedParent };
     }),
+
+  setParentGenotype: (parent, genotype) =>
+    set(() => ({
+      [parent]: { ...genotype },
+    })),
+
+  swapParents: () =>
+    set((state) => ({
+      parent1: { ...state.parent2 },
+      parent2: { ...state.parent1 },
+    })),
 }));

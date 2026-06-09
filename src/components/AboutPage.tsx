@@ -36,8 +36,13 @@ export function AboutPage({ onBack }: AboutPageProps) {
           different loci (especially C vs V).
         </li>
         <li>
-          <strong>Compare meat-rabbit varieties</strong> — Typical genotype summaries for common
-          commercial color types appear in the left panel reference cards.
+          <strong>Define a breeding cross</strong> — Set Parent A and Parent B in full genotype
+          cards below the 3D canvas. Load NZ White, Californian, NZ Red, and other draft presets,
+          then tweak alleles per locus. Cross results update instantly.
+        </li>
+        <li>
+          <strong>Compare meat-rabbit varieties</strong> — Variety presets and reference cards
+          reflect common commercial color types.
         </li>
         <li>
           <strong>Toggle light / dark mode</strong> — Sun/moon control in the header; your choice
@@ -62,9 +67,8 @@ export function AboutPage({ onBack }: AboutPageProps) {
 
       <h2>How the layout works</h2>
       <p>
-        On desktop, the left panel (loci, eye color, references) and right panel (3D canvas) scroll
-        independently so a long genetics list doesn&apos;t stretch the canvas into oblivion. On
-        mobile, the page stacks vertically and scrolls as one column.
+        On desktop, the left panel (loci reference, eye color rules) and right panel (3D canvas,
+        parent cross, results) scroll independently. On mobile, the page stacks vertically.
       </p>
 
       <h2>Division of labor</h2>
