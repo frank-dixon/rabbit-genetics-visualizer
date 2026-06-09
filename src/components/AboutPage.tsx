@@ -43,11 +43,17 @@ export function AboutPage({ onBack }: AboutPageProps) {
 
       <h2>What&apos;s coming next</h2>
       <ul>
-        <li>Parent genotype selectors for each locus</li>
         <li>Punnett square cross engine with epistasis (e.g. cc albino masking coat color)</li>
         <li>Cross results panel with phenotype probabilities</li>
         <li>Offline PWA support</li>
       </ul>
+
+      <h2>Parent genotypes</h2>
+      <p>
+        Use the <strong>Parent Genotype Selectors</strong> panel to set each parent&apos;s alleles
+        at every locus. Select a locus card above to highlight the matching genotype block. Cross
+        calculations will use these values once the Punnett engine lands.
+      </p>
 
       <h2>How the layout works</h2>
       <p>
