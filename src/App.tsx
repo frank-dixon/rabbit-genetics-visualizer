@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { AboutPage } from './components/AboutPage';
+import { MendelianLearnPage } from './components/MendelianLearnPage';
 import { AppFooter, type AppView } from './components/AppFooter';
 import { CrossWorkspace } from './components/CrossWorkspace';
 import { GeneticsReferencePanel } from './components/GeneticsReferencePanel';
@@ -78,6 +79,7 @@ export default function App() {
           <WorkspaceView />
         </>
       )}
+      {view === 'learn' && <MendelianLearnPage onBack={() => setView('workspace')} />}
       {view === 'about' && <AboutPage onBack={() => setView('workspace')} />}
       {view === 'citations' && <CitationsPage onBack={() => setView('workspace')} />}
 
