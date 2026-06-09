@@ -1,4 +1,4 @@
-export type AppView = 'workspace' | 'learn' | 'about' | 'citations';
+export type AppView = 'workspace' | 'breeds' | 'learn' | 'about' | 'citations';
 
 interface AppFooterProps {
   view: AppView;
@@ -7,8 +7,9 @@ interface AppFooterProps {
 
 const NAV_ITEMS: { id: AppView; label: string }[] = [
   { id: 'workspace', label: 'Predictor' },
-  { id: 'about', label: 'How It Works' },
+  { id: 'breeds', label: 'Breeds' },
   { id: 'learn', label: 'Learn Genetics' },
+  { id: 'about', label: 'How It Works' },
   { id: 'citations', label: 'Citations' },
 ];
 
