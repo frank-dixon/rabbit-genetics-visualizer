@@ -6,7 +6,7 @@ import { CrossResultsPanel } from './components/CrossResultsPanel';
 import { CitationsPage } from './components/CitationsPage';
 import { EyeColorPanel } from './components/EyeColorPanel';
 import { LociMatrixPanel } from './components/LociMatrixPanel';
-import { ParentGenotypePanel } from './components/ParentGenotypePanel';
+import { ParentCrossPanel } from './components/ParentCrossPanel';
 import { ThemeToggle } from './components/ThemeToggle';
 import { LOCI_ORDER, RABBIT_GENETIC_MAP } from './data/rabbitGenetics';
 import { useGeneticStore } from './store/useGeneticStore';
@@ -26,13 +26,12 @@ function WorkspaceView() {
           onSelectLocus={setSelectedLocus}
         />
 
-        <ParentGenotypePanel />
-
         <EyeColorPanel />
       </section>
 
       <section className="lg:col-span-8 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-1 space-y-6">
         <ChromosomeCanvas />
+        <ParentCrossPanel />
         <CrossResultsPanel />
       </section>
     </main>

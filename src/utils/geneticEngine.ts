@@ -194,6 +194,10 @@ function resolvePhenotype(genotypes: GenotypeMap): string {
   return parts.join('; ');
 }
 
+export function resolveParentPhenotype(genotypes: GenotypeMap): string {
+  return resolvePhenotype(genotypes);
+}
+
 export function calculateCross(
   parent1: Record<string, [string, string]>,
   parent2: Record<string, [string, string]>,

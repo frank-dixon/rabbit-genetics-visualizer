@@ -497,3 +497,112 @@ export function buildDefaultGenotypes(): Record<string, [string, string]> {
     V: ['V', 'V'],
   };
 }
+
+export interface ParentPreset {
+  id: string;
+  label: string;
+  summary: string;
+  genotype: Record<string, [string, string]>;
+}
+
+/** Draft genotype maps for common meat-rabbit starting points — verify before breeding use */
+export const PARENT_PRESETS: ParentPreset[] = [
+  {
+    id: 'nz-white',
+    label: 'New Zealand White',
+    summary: 'aa B_ cc D_ E_ enen VV — REW commercial standard',
+    genotype: {
+      A: ['a', 'a'],
+      B: ['B', 'B'],
+      C: ['c', 'c'],
+      D: ['D', 'D'],
+      E: ['E', 'E'],
+      En: ['en', 'en'],
+      V: ['V', 'V'],
+    },
+  },
+  {
+    id: 'californian',
+    label: 'Californian',
+    summary: 'aa B_ chch D_ E_ enen VV — pointed white body',
+    genotype: {
+      A: ['a', 'a'],
+      B: ['B', 'B'],
+      C: ['ch', 'ch'],
+      D: ['D', 'D'],
+      E: ['E', 'E'],
+      En: ['en', 'en'],
+      V: ['V', 'V'],
+    },
+  },
+  {
+    id: 'nz-red',
+    label: 'New Zealand Red',
+    summary: 'A_ B_ C_ D_ ee enen VV — non-extension red',
+    genotype: {
+      A: ['A', 'A'],
+      B: ['B', 'B'],
+      C: ['C', 'C'],
+      D: ['D', 'D'],
+      E: ['e', 'e'],
+      En: ['en', 'en'],
+      V: ['V', 'V'],
+    },
+  },
+  {
+    id: 'self-black',
+    label: 'Self Black',
+    summary: 'aa B_ C_ D_ E_ enen VV — solid black base',
+    genotype: {
+      A: ['a', 'a'],
+      B: ['B', 'B'],
+      C: ['C', 'C'],
+      D: ['D', 'D'],
+      E: ['E', 'E'],
+      En: ['en', 'en'],
+      V: ['V', 'V'],
+    },
+  },
+  {
+    id: 'chestnut',
+    label: 'Chestnut / Agouti',
+    summary: 'A_ B_ C_ D_ E_ enen VV — wild-type pattern base',
+    genotype: {
+      A: ['A', 'A'],
+      B: ['B', 'B'],
+      C: ['C', 'C'],
+      D: ['D', 'D'],
+      E: ['E', 'E'],
+      En: ['en', 'en'],
+      V: ['V', 'V'],
+    },
+  },
+  {
+    id: 'broken',
+    label: 'Broken / Spotted',
+    summary: 'A_ B_ C_ D_ E_ Enen VV — English spotting heterozygote',
+    genotype: {
+      A: ['A', 'a'],
+      B: ['B', 'B'],
+      C: ['C', 'C'],
+      D: ['D', 'D'],
+      E: ['E', 'E'],
+      En: ['En', 'en'],
+      V: ['V', 'V'],
+    },
+  },
+  {
+    id: 'blue-vienna',
+    label: 'Blue Vienna (BEW)',
+    summary: 'aa B_ C_ dd E_ enen vv — Vienna blue-eyed white',
+    genotype: {
+      A: ['a', 'a'],
+      B: ['B', 'B'],
+      C: ['C', 'C'],
+      D: ['d', 'd'],
+      E: ['E', 'E'],
+      En: ['en', 'en'],
+      V: ['v', 'v'],
+    },
+  },
+];
