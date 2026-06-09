@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { PARENT_PRESETS } from '../data/meatRabbitBreeds';
 import { useGeneticStore } from '../store/useGeneticStore';
 import { useSavedCrossesStore } from '../store/useSavedCrossesStore';
@@ -10,7 +9,6 @@ function presetLabel(presetId: string | null): string {
 }
 
 export function SavedCrossesPanel() {
-  const [name, setName] = useState('');
   const getCrossSnapshot = useGeneticStore((state) => state.getCrossSnapshot);
   const loadCrossSnapshot = useGeneticStore((state) => state.loadCrossSnapshot);
   const parent1PresetId = useGeneticStore((state) => state.parent1PresetId);
@@ -19,17 +17,14 @@ export function SavedCrossesPanel() {
   const saveCross = useSavedCrossesStore((state) => state.saveCross);
   const deleteCross = useSavedCrossesStore((state) => state.deleteCross);
 
-  const defaultName = `${presetLabel(parent1PresetId)} × ${presetLabel(parent2PresetId)}`;
+  const crossName = `${presetLabel(parent1PresetId)} × ${presetLabel(parent2PresetId)}`;
 
   const handleSave = () => {
-    saveCross(name.trim() || defaultName, getCrossSnapshot());
-    setName('');
+    saveCross(crossName, getCrossSnapshot());
   };
 
   const subtitle =
-    saved.length === 0
-      ? 'Save pairings you plan to repeat'
-      : `${saved.length} saved · ${defaultName}`;
+    saved.length === 0 ? 'One-click save for pairings you repeat' : `${saved.length} saved`;
 
   return (
     <CompactCollapsible
@@ -42,18 +37,17 @@ export function SavedCrossesPanel() {
       subtitle={subtitle}
     >
       <div className="space-y-2 pt-1">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder={defaultName}
-            className="flex-1 text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-400"
-          />
+        <div className="flex items-center justify-between gap-3 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 py-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              Save this cross
+            </p>
+            <p className="text-xs text-slate-800 dark:text-slate-100 truncate mt-0.5">{crossName}</p>
+          </div>
           <button
             type="button"
             onClick={handleSave}
-            className="text-xs font-medium rounded-md border border-sky-300 dark:border-sky-700 bg-sky-50 dark:bg-sky-950/40 text-sky-800 dark:text-sky-200 px-3 py-1.5 hover:bg-sky-100 dark:hover:bg-sky-950/60"
+            className="text-xs font-medium shrink-0 rounded-md border border-sky-300 dark:border-sky-700 bg-sky-50 dark:bg-sky-950/40 text-sky-800 dark:text-sky-200 px-3 py-1.5 hover:bg-sky-100 dark:hover:bg-sky-950/60"
           >
             Save
           </button>
