@@ -45,6 +45,7 @@ export interface EyeColorRule {
 
 export interface MeatRabbitVariety {
   name: string;
+  category: string;
   typicalGenotypeSummary: string;
   coatDescription: string;
   eyeColor: string;
@@ -336,6 +337,37 @@ export const RABBIT_GENETIC_MAP: Record<string, Locus> = {
       'Breadbox Farm REW vs BEW comparison',
     ],
   },
+
+  Si: {
+    id: 'Si',
+    name: 'Silvering',
+    geneSymbol: 'Si',
+    chromosome: null,
+    function:
+      'Controls progressive white tipping of coat hairs. Homozygous si/si produces the mature silvered coat seen in Silver Fox, Champagne d\'Argent, Crème d\'Argent, and related breeds.',
+    alleles: [
+      {
+        code: 'Si',
+        name: 'Non-silvered',
+        symbol: 'Si',
+        description:
+          'Wild-type — no progressive silver ticking. Required for solid commercial lines without silvering.',
+      },
+      {
+        code: 'si',
+        name: 'Silvered',
+        symbol: 'si',
+        description:
+          'Silvered allele — white-tipped guard hairs develop as the coat matures. Heavy expression typically sisi; light tipping possible in Sisi carriers.',
+      },
+    ],
+    dominanceHierarchy: ['Si', 'si'],
+    notes:
+      'OSU Extension EM 9708 notes the silvering gene is not yet molecularly identified. Dichrome Rabbitry documents Si/si nomenclature. Silvering is invisible on cc or vv white coats.',
+    meatRabbitRelevance:
+      'Defining locus for Silver Fox, Champagne d\'Argent, Crème d\'Argent, Silver, and Argente varieties. Most NZ/Californian commercial lines are SiSi (non-silvered).',
+    sources: ['OSU Extension EM 9708', 'Dichrome Rabbitry Si locus guide'],
+  },
 };
 
 /** Eye color outcomes — coat loci interact; order of evaluation matters for phenotype */
@@ -391,45 +423,7 @@ export const EYE_COLOR_RULES: EyeColorRule[] = [
   },
 ];
 
-export const MEAT_RABBIT_VARIETIES: MeatRabbitVariety[] = [
-  {
-    name: 'New Zealand White',
-    typicalGenotypeSummary: 'aa B_ cc D_ E_ enen VV',
-    coatDescription: 'Pure white — cc epistatic albino masks all underlying color',
-    eyeColor: 'Ruby / red (REW)',
-    sources: ['OMIA TYR albino', 'Fontanesi 2006 MC1R', 'OSU Extension'],
-  },
-  {
-    name: 'Californian',
-    typicalGenotypeSummary: 'aa B_ chch D_ E_ enen VV',
-    coatDescription: 'White body with dark points (nose, ears, feet, tail)',
-    eyeColor: 'Pink / red-tinged (Himalayan)',
-    sources: ['OSU Extension Part 3', 'Fontanesi 2006 MC1R'],
-  },
-  {
-    name: 'New Zealand Red',
-    typicalGenotypeSummary: 'A_ B_ C_ D_ ee enen VV',
-    coatDescription: 'Rich red/chestnut from agouti + non-extension (ee)',
-    eyeColor: 'Dark brown',
-    sources: ['OSU Extension EM 9708', 'Fontanesi 2006 MC1R'],
-  },
-  {
-    name: 'Broken New Zealand',
-    typicalGenotypeSummary: 'A_ or aa, B_ C_ D_ E_ Enen VV',
-    coatDescription: 'Colored patches on white — heterozygous En spotting',
-    eyeColor: 'Dark brown (or ruby if cc)',
-    sources: ['OSU Extension EM 9708', 'Fontanesi 2014 KIT'],
-  },
-  {
-    name: 'Blue Vienna',
-    typicalGenotypeSummary: 'aa B_ C_ dd E_ enen vv',
-    coatDescription: 'White coat (vv) or blue self (dd) depending on V and C interplay',
-    eyeColor: 'Blue (BEW when vv)',
-    sources: ['Fontanesi 2014 MLPH', 'Dichrome Rabbitry V locus'],
-  },
-];
-
-export const LOCI_ORDER = ['A', 'B', 'C', 'D', 'E', 'En', 'V'] as const;
+export const LOCI_ORDER = ['A', 'B', 'C', 'D', 'E', 'En', 'V', 'Si'] as const;
 
 /** Distinct band colors for mapped loci on the 3D chromosome models */
 export const LOCUS_BAND_COLORS: Record<string, string> = {
@@ -437,6 +431,7 @@ export const LOCUS_BAND_COLORS: Record<string, string> = {
   B: '#f59e0b',
   C: '#f43f5e',
   En: '#06b6d4',
+  Si: '#a78bfa',
 };
 
 export interface LocusBandPlacement {
@@ -495,114 +490,14 @@ export function buildDefaultGenotypes(): Record<string, [string, string]> {
     E: ['E', 'e'],
     En: ['en', 'en'],
     V: ['V', 'V'],
+    Si: ['Si', 'Si'],
   };
 }
 
 export interface ParentPreset {
   id: string;
   label: string;
+  category: string;
   summary: string;
   genotype: Record<string, [string, string]>;
 }
-
-/** Draft genotype maps for common meat-rabbit starting points — verify before breeding use */
-export const PARENT_PRESETS: ParentPreset[] = [
-  {
-    id: 'nz-white',
-    label: 'New Zealand White',
-    summary: 'aa B_ cc D_ E_ enen VV — REW commercial standard',
-    genotype: {
-      A: ['a', 'a'],
-      B: ['B', 'B'],
-      C: ['c', 'c'],
-      D: ['D', 'D'],
-      E: ['E', 'E'],
-      En: ['en', 'en'],
-      V: ['V', 'V'],
-    },
-  },
-  {
-    id: 'californian',
-    label: 'Californian',
-    summary: 'aa B_ chch D_ E_ enen VV — pointed white body',
-    genotype: {
-      A: ['a', 'a'],
-      B: ['B', 'B'],
-      C: ['ch', 'ch'],
-      D: ['D', 'D'],
-      E: ['E', 'E'],
-      En: ['en', 'en'],
-      V: ['V', 'V'],
-    },
-  },
-  {
-    id: 'nz-red',
-    label: 'New Zealand Red',
-    summary: 'A_ B_ C_ D_ ee enen VV — non-extension red',
-    genotype: {
-      A: ['A', 'A'],
-      B: ['B', 'B'],
-      C: ['C', 'C'],
-      D: ['D', 'D'],
-      E: ['e', 'e'],
-      En: ['en', 'en'],
-      V: ['V', 'V'],
-    },
-  },
-  {
-    id: 'self-black',
-    label: 'Self Black',
-    summary: 'aa B_ C_ D_ E_ enen VV — solid black base',
-    genotype: {
-      A: ['a', 'a'],
-      B: ['B', 'B'],
-      C: ['C', 'C'],
-      D: ['D', 'D'],
-      E: ['E', 'E'],
-      En: ['en', 'en'],
-      V: ['V', 'V'],
-    },
-  },
-  {
-    id: 'chestnut',
-    label: 'Chestnut / Agouti',
-    summary: 'A_ B_ C_ D_ E_ enen VV — wild-type pattern base',
-    genotype: {
-      A: ['A', 'A'],
-      B: ['B', 'B'],
-      C: ['C', 'C'],
-      D: ['D', 'D'],
-      E: ['E', 'E'],
-      En: ['en', 'en'],
-      V: ['V', 'V'],
-    },
-  },
-  {
-    id: 'broken',
-    label: 'Broken / Spotted',
-    summary: 'A_ B_ C_ D_ E_ Enen VV — English spotting heterozygote',
-    genotype: {
-      A: ['A', 'a'],
-      B: ['B', 'B'],
-      C: ['C', 'C'],
-      D: ['D', 'D'],
-      E: ['E', 'E'],
-      En: ['En', 'en'],
-      V: ['V', 'V'],
-    },
-  },
-  {
-    id: 'blue-vienna',
-    label: 'Blue Vienna (BEW)',
-    summary: 'aa B_ C_ dd E_ enen vv — Vienna blue-eyed white',
-    genotype: {
-      A: ['a', 'a'],
-      B: ['B', 'B'],
-      C: ['C', 'C'],
-      D: ['d', 'd'],
-      E: ['E', 'E'],
-      En: ['en', 'en'],
-      V: ['v', 'v'],
-    },
-  },
-];

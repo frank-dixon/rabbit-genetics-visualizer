@@ -18,7 +18,7 @@ export function AboutPage({ onBack }: AboutPageProps) {
       <ul>
         <li>
           <strong>Select a locus</strong> — Click any card in the Loci Matrix (A, B, C, D, E, En,
-          V) to focus that gene. The 3D canvas highlights the chromosome where that gene is
+          V, Si) to focus that gene. The 3D canvas highlights the chromosome where that gene is
           anchored in the reference genome.
         </li>
         <li>
@@ -37,12 +37,13 @@ export function AboutPage({ onBack }: AboutPageProps) {
         </li>
         <li>
           <strong>Define a breeding cross</strong> — Set Parent A and Parent B in full genotype
-          cards below the 3D canvas. Load NZ White, Californian, NZ Red, and other draft presets,
-          then tweak alleles per locus. Cross results update instantly.
+          cards below the 3D canvas. Load presets for NZ colors, Silver Fox, d&apos;Argent breeds,
+          chinchillas, broken patterns, and more — then tweak alleles per locus.
         </li>
         <li>
-          <strong>Compare meat-rabbit varieties</strong> — Variety presets and reference cards
-          reflect common commercial color types.
+          <strong>Compare meat-rabbit varieties</strong> — Reference cards cover New Zealand,
+          Californian, Silver Fox, Champagne and Crème d&apos;Argent, chinchilla types, broken
+          colors, steel, and base self colors (draft genotypes).
         </li>
         <li>
           <strong>Toggle light / dark mode</strong> — Sun/moon control in the header; your choice

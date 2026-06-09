@@ -1,20 +1,31 @@
 import { useMemo } from 'react';
 import { ArrowLeftRight } from 'lucide-react';
+import { PARENT_PRESET_CATEGORIES, PARENT_PRESETS } from '../data/meatRabbitBreeds';
 import {
   LOCI_ORDER,
-  PARENT_PRESETS,
   RABBIT_GENETIC_MAP,
   type Allele,
   type Locus,
 } from '../data/rabbitGenetics';
+import { genotypesEqual, useGeneticStore } from '../store/useGeneticStore';
+import { resolveParentPhenotype } from '../utils/geneticEngine';
+
+type ParentKey = 'parent1' | 'parent2';
+type GenotypeMap = Record<string, [string, string]>;
 
 function formatAlleleOptionLabel(allele: Allele): string {
   return `${allele.code} — ${allele.name}`;
 }
-import { useGeneticStore } from '../store/useGeneticStore';
-import { resolveParentPhenotype } from '../utils/geneticEngine';
 
-type ParentKey = 'parent1' | 'parent2';
+function getVarietyDisplayLabel(presetId: string | null, genotype: GenotypeMap): string {
+  if (!presetId) return 'Custom';
+
+  const preset = PARENT_PRESETS.find((entry) => entry.id === presetId);
+  if (!preset) return 'Custom';
+
+  const modified = !genotypesEqual(genotype, preset.genotype);
+  return modified ? `${preset.label} — modified` : preset.label;
+}
 
 interface ParentRabbitCardProps {
   parentKey: ParentKey;
@@ -68,19 +79,38 @@ function LocusAlleleSelect({
 
 function ParentRabbitCard({ parentKey, title, subtitle, accentClass }: ParentRabbitCardProps) {
   const genotype = useGeneticStore((state) => state[parentKey]);
+  const presetId = useGeneticStore((state) =>
+    parentKey === 'parent1' ? state.parent1PresetId : state.parent2PresetId,
+  );
   const selectedLocusId = useGeneticStore((state) => state.selectedLocusId);
   const setSelectedLocus = useGeneticStore((state) => state.setSelectedLocus);
   const setParentAllele = useGeneticStore((state) => state.setParentAllele);
-  const setParentGenotype = useGeneticStore((state) => state.setParentGenotype);
+  const loadParentPreset = useGeneticStore((state) => state.loadParentPreset);
+  const clearParentPreset = useGeneticStore((state) => state.clearParentPreset);
+  const resetParentToPreset = useGeneticStore((state) => state.resetParentToPreset);
 
   const loci = LOCI_ORDER.map((id) => RABBIT_GENETIC_MAP[id]).filter(Boolean);
   const phenotype = useMemo(() => resolveParentPhenotype(genotype), [genotype]);
+  const activePreset = presetId ? PARENT_PRESETS.find((entry) => entry.id === presetId) : null;
+  const varietyLabel = getVarietyDisplayLabel(presetId, genotype);
+  const isModified = Boolean(activePreset && !genotypesEqual(genotype, activePreset.genotype));
+  const selectValue = presetId ?? 'custom';
 
-  const handlePresetChange = (presetId: string) => {
-    if (!presetId) return;
-    const preset = PARENT_PRESETS.find((entry) => entry.id === presetId);
+  const handlePresetChange = (value: string) => {
+    if (value === 'custom') {
+      clearParentPreset(parentKey);
+      return;
+    }
+
+    const preset = PARENT_PRESETS.find((entry) => entry.id === value);
     if (preset) {
-      setParentGenotype(parentKey, preset.genotype);
+      loadParentPreset(parentKey, preset.id, preset.genotype);
+    }
+  };
+
+  const handleResetToPreset = () => {
+    if (activePreset) {
+      resetParentToPreset(parentKey, activePreset.genotype);
     }
   };
 
@@ -89,30 +119,57 @@ function ParentRabbitCard({ parentKey, title, subtitle, accentClass }: ParentRab
       className={`rounded-xl border bg-white dark:bg-slate-900 shadow-sm overflow-hidden ${accentClass}`}
     >
       <header className="px-4 py-3 border-b border-slate-200/80 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/50">
-        <div className="flex items-start justify-between gap-3">
-          <div>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
             <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">{title}</h3>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">{subtitle}</p>
+            <p
+              className={`text-xs font-medium mt-1.5 truncate ${
+                isModified
+                  ? 'text-amber-700 dark:text-amber-400'
+                  : presetId
+                    ? 'text-slate-700 dark:text-slate-200'
+                    : 'text-slate-500 dark:text-slate-400 italic'
+              }`}
+            >
+              {varietyLabel}
+            </p>
           </div>
-          <label className="sr-only" htmlFor={`${parentKey}-preset`}>
-            Load preset for {title}
-          </label>
-          <select
-            id={`${parentKey}-preset`}
-            defaultValue=""
-            onChange={(event) => {
-              handlePresetChange(event.target.value);
-              event.target.value = '';
-            }}
-            className="max-w-[11rem] text-[11px] rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-200 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-400"
-          >
-            <option value="">Load preset…</option>
-            {PARENT_PRESETS.map((preset) => (
-              <option key={preset.id} value={preset.id}>
-                {preset.label}
-              </option>
-            ))}
-          </select>
+
+          <div className="shrink-0 w-full sm:w-auto sm:min-w-[12rem]">
+            <label
+              htmlFor={`${parentKey}-preset`}
+              className="block text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1"
+            >
+              Variety preset
+            </label>
+            <select
+              id={`${parentKey}-preset`}
+              value={selectValue}
+              onChange={(event) => handlePresetChange(event.target.value)}
+              className="w-full text-[11px] rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-200 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-400"
+            >
+              <option value="custom">Custom</option>
+              {PARENT_PRESET_CATEGORIES.map((category) => (
+                <optgroup key={category} label={category}>
+                  {PARENT_PRESETS.filter((preset) => preset.category === category).map((preset) => (
+                    <option key={preset.id} value={preset.id}>
+                      {preset.label}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+            {isModified && (
+              <button
+                type="button"
+                onClick={handleResetToPreset}
+                className="mt-1.5 text-[10px] text-sky-700 dark:text-sky-400 hover:underline focus:outline-none focus:ring-2 focus:ring-sky-400 rounded"
+              >
+                Reset to preset
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="mt-3 rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50/80 dark:bg-sky-950/30 px-3 py-2">
