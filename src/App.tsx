@@ -1,17 +1,16 @@
 import { ChromosomeCanvas } from './components/ChromosomeCanvas';
+import { EyeColorPanel } from './components/EyeColorPanel';
 import { ThemeToggle } from './components/ThemeToggle';
+import { LOCI_ORDER, RABBIT_GENETIC_MAP } from './data/rabbitGenetics';
 import { useGeneticStore } from './store/useGeneticStore';
 import { useThemeStore } from './store/useThemeStore';
-
-const STATIC_LOCI = [
-  { id: 'A', name: 'Agouti', chromosome: 4, basePairLocation: '4q21' },
-  { id: 'C', name: 'Color / Albinism', chromosome: 1, basePairLocation: '1q12' },
-];
 
 export default function App() {
   const theme = useThemeStore((state) => state.theme);
   const selectedLocusId = useGeneticStore((state) => state.selectedLocusId);
   const setSelectedLocus = useGeneticStore((state) => state.setSelectedLocus);
+
+  const loci = LOCI_ORDER.map((id) => RABBIT_GENETIC_MAP[id]).filter(Boolean);
 
   return (
     <div
@@ -39,7 +38,8 @@ export default function App() {
             <h2 className="text-lg font-semibold border-b border-slate-200 dark:border-slate-800 pb-2 text-slate-700 dark:text-slate-200">
               Loci Matrix Selectors
             </h2>
-            {STATIC_LOCI.map((locus) => (
+
+            {loci.map((locus) => (
               <button
                 key={locus.id}
                 type="button"
@@ -53,19 +53,30 @@ export default function App() {
                 }`}
               >
                 <div className="font-semibold text-sm text-sky-700 dark:text-sky-400">
-                  {locus.name} Locus
+                  {locus.name}
+                  <span className="text-slate-400 dark:text-slate-500 font-normal">
+                    {' '}
+                    ({locus.geneSymbol})
+                  </span>
                 </div>
                 <div className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">
-                  Chromosome {locus.chromosome} • {locus.basePairLocation}
+                  {locus.chromosome !== null
+                    ? `Chromosome ${locus.chromosome}${locus.cytogeneticLocation ? ` • ${locus.cytogeneticLocation}` : ''}`
+                    : `${locus.geneSymbol} — chromosome unplaced in OryCun2.0`}
+                </div>
+                <div className="text-xs text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
+                  {locus.meatRabbitRelevance}
                 </div>
               </button>
             ))}
           </div>
 
+          <EyeColorPanel />
+
           <div className="bg-slate-50 dark:bg-slate-950/50 p-4 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400">
-            <strong className="text-slate-700 dark:text-slate-200">Portfolio Tip:</strong> Click a
-            locus card above to tell the R3F Canvas to draw or emphasize specific gene bands along
-            the chromosome model.
+            <strong className="text-slate-700 dark:text-slate-200">Sources:</strong> OSU
+            Extension EM 9708, OMIA, Fontanesi et al. (MC1R, MLPH, KIT), Aigner et al. (TYR
+            albino). Data reflects published rabbit genetics — verify before breeding decisions.
           </div>
         </section>
 
