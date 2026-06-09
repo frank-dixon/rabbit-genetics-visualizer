@@ -43,16 +43,16 @@ export function AboutPage({ onBack }: AboutPageProps) {
 
       <h2>What&apos;s coming next</h2>
       <ul>
-        <li>Punnett square cross engine with epistasis (e.g. cc albino masking coat color)</li>
-        <li>Cross results panel with phenotype probabilities</li>
         <li>Offline PWA support</li>
+        <li>Visual polish — locus bands on chromosome models, shader tuning</li>
       </ul>
 
-      <h2>Parent genotypes</h2>
+      <h2>Cross results</h2>
       <p>
-        Use the <strong>Parent Genotype Selectors</strong> panel to set each parent&apos;s alleles
-        at every locus. Select a locus card above to highlight the matching genotype block. Cross
-        calculations will use these values once the Punnett engine lands.
+        The <strong>Cross Results</strong> panel below the 3D canvas calculates offspring
+        probabilities from the current parent genotypes. Epistasis rules (especially{' '}
+        <strong>cc</strong> albino and <strong>vv</strong> Vienna) are implemented as drafts —
+        verify against your herd and reference charts before breeding decisions.
       </p>
 
       <h2>How the layout works</h2>

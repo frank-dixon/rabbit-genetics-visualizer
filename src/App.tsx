@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AboutPage } from './components/AboutPage';
 import { AppFooter, type AppView } from './components/AppFooter';
 import { ChromosomeCanvas } from './components/ChromosomeCanvas';
+import { CrossResultsPanel } from './components/CrossResultsPanel';
 import { CitationsPage } from './components/CitationsPage';
 import { EyeColorPanel } from './components/EyeColorPanel';
 import { LociMatrixPanel } from './components/LociMatrixPanel';
@@ -30,8 +31,9 @@ function WorkspaceView() {
         <EyeColorPanel />
       </section>
 
-      <section className="lg:col-span-8 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
+      <section className="lg:col-span-8 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-1 space-y-6">
         <ChromosomeCanvas />
+        <CrossResultsPanel />
       </section>
     </main>
   );
