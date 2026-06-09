@@ -8,6 +8,7 @@ import { CopyTextButton } from './CopyTextButton';
 import { GenotypeInline } from './GenotypeInline';
 import { GlossaryTermText } from './GlossaryTermText';
 import { PhenotypeRenderer } from './PhenotypeRenderer';
+import { ProbabilityBar } from './ProbabilityBar';
 
 const INITIAL_VISIBLE_GROUPS = 8;
 const RARE_THRESHOLD = 0.05;
@@ -126,6 +127,10 @@ export function ProgenyOutcomesPanel() {
   );
   const visibleGroups = showAll ? filteredGroups : filteredGroups.slice(0, INITIAL_VISIBLE_GROUPS);
   const hiddenGroupCount = Math.max(0, filteredGroups.length - INITIAL_VISIBLE_GROUPS);
+  const maxGroupProbability = useMemo(
+    () => Math.max(...filteredGroups.map((group) => group.combinedProbability), 0),
+    [filteredGroups],
+  );
 
   const toggleGroup = (phenotype: string) => {
     setCollapsedGroups((current) => {
@@ -231,9 +236,15 @@ export function ProgenyOutcomesPanel() {
                         {variantQualifier(group.variants.length)}
                       </p>
                     </div>
-                    <span className="text-base font-bold font-mono text-sky-700 dark:text-sky-400 tabular-nums shrink-0">
-                      {formatProbability(group.combinedProbability)}
-                    </span>
+                    <div className="flex flex-col items-end gap-1 shrink-0 w-20">
+                      <span className="text-base font-bold font-mono text-sky-700 dark:text-sky-400 tabular-nums">
+                        {formatProbability(group.combinedProbability)}
+                      </span>
+                      <ProbabilityBar
+                        value={group.combinedProbability}
+                        max={maxGroupProbability || 1}
+                      />
+                    </div>
                   </div>
                 </div>
               </button>
@@ -251,9 +262,15 @@ export function ProgenyOutcomesPanel() {
                           size="sm"
                           className="shrink-0 w-16"
                         />
-                        <span className="w-11 shrink-0 text-xs font-bold font-mono text-slate-600 dark:text-slate-300 tabular-nums pt-1">
-                          {formatProbability(outcome.probability)}
-                        </span>
+                        <div className="w-16 shrink-0 flex flex-col items-end gap-1 pt-0.5">
+                          <span className="text-xs font-bold font-mono text-slate-600 dark:text-slate-300 tabular-nums">
+                            {formatProbability(outcome.probability)}
+                          </span>
+                          <ProbabilityBar
+                            value={outcome.probability}
+                            max={group.combinedProbability || 1}
+                          />
+                        </div>
                         <div className="flex-1 min-w-0 space-y-1">
                           <GenotypeInline
                             genotype={outcome.genotypeByLocus}
