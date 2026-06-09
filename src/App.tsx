@@ -3,6 +3,7 @@ import { AboutPage } from './components/AboutPage';
 import { AppFooter, type AppView } from './components/AppFooter';
 import { CrossWorkspace } from './components/CrossWorkspace';
 import { GeneticsReferencePanel } from './components/GeneticsReferencePanel';
+import { GlossaryPanel } from './components/GlossaryPanel';
 import { CitationsPage } from './components/CitationsPage';
 import { ThemeToggle } from './components/ThemeToggle';
 import { APP_NAME, APP_TAGLINE } from './constants/app';
@@ -16,6 +17,7 @@ function WorkspaceView() {
     >
       <CrossWorkspace />
       <GeneticsReferencePanel />
+      <GlossaryPanel />
     </main>
   );
 }
