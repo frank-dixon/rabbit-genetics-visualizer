@@ -139,7 +139,7 @@ export function ParentGenotypePanel() {
   return (
     <CollapsiblePanel
       title="Parent Genotype Selectors"
-      description="Set each parent's two alleles per locus. Cross results coming in the next branch."
+      description="Set each parent's two alleles per locus."
       defaultOpen
     >
       {loci.map((locus) => (
