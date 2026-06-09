@@ -317,8 +317,14 @@ export const PARENT_PRESETS: ParentPreset[] = [
     id: 'nz-white',
     category: 'New Zealand',
     label: 'New Zealand White',
-    summary: 'aa B_ cc D_ E_ enen SiSi VV — REW commercial standard',
-    genotype: genotype({ A: ['a', 'a'], C: ['c', 'c'] }),
+    summary:
+      'A/a B_ cc D_ E/e enen Si/si VV — REW; cc masks hidden agouti, red, and silver carriers (field-herd scaffold)',
+    genotype: genotype({
+      A: ['A', 'a'],
+      C: ['c', 'c'],
+      E: ['E', 'e'],
+      Si: ['Si', 'si'],
+    }),
   },
   {
     id: 'nz-red',

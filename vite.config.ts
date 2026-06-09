@@ -13,10 +13,9 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
       },
       manifest: {
-        name: 'Leporidae Genetics Architecture Engine',
-        short_name: 'Leporidae Genetics',
-        description:
-          'Interactive 3D rabbit coat and eye color genetics visualizer for meat-rabbit breeding education.',
+        name: 'Rabbit Progeny Predictor',
+        short_name: 'Progeny Predictor',
+        description: 'Predict meat rabbit progeny coat and eye colors from parent crosses.',
         theme_color: '#0f172a',
         background_color: '#0f172a',
         display: 'standalone',
