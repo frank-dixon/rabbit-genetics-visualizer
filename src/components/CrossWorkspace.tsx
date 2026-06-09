@@ -6,6 +6,7 @@ import { CopyTextButton } from './CopyTextButton';
 import { ExampleCrossChips } from './ExampleCrossChips';
 import { SavedCrossesPanel } from './SavedCrossesPanel';
 import { useGeneticStore } from '../store/useGeneticStore';
+import { useIsAdvancedMode } from '../store/usePredictorModeStore';
 import { buildCrossShareUrl } from '../utils/genotypeCodec';
 
 export type CrossWorkspaceSection = 'all' | 'parents' | 'outcomes';
@@ -15,6 +16,7 @@ interface CrossWorkspaceProps {
 }
 
 export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
+  const isAdvanced = useIsAdvancedMode();
   const swapParents = useGeneticStore((state) => state.swapParents);
   const parent1 = useGeneticStore((state) => state.parent1);
   const parent2 = useGeneticStore((state) => state.parent2);
@@ -41,20 +43,24 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
       {section === 'outcomes' && (
         <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 sm:px-5">
           <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">
-            Progeny outcomes
+            Possible offspring
           </h2>
         </div>
       )}
 
       {showHeader && (
         <div className="px-4 py-2.5 border-b border-slate-200 dark:border-slate-800 sm:px-5 flex items-center justify-between gap-3">
-          <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">Your cross</h2>
-          <CopyTextButton
-            text={shareUrl}
-            label="Share link"
-            copiedLabel="Copied"
-            className="shrink-0"
-          />
+          <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">
+            {isAdvanced ? 'Your cross' : 'Pick two rabbits'}
+          </h2>
+          {isAdvanced && (
+            <CopyTextButton
+              text={shareUrl}
+              label="Share link"
+              copiedLabel="Copied"
+              className="shrink-0"
+            />
+          )}
         </div>
       )}
 
@@ -83,7 +89,7 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
             </div>
 
             <div className="flex flex-col items-center gap-1">
-              <ParentDiffStrip />
+              {isAdvanced && <ParentDiffStrip />}
               <button
                 type="button"
                 onClick={swapParents}
@@ -93,7 +99,7 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
               </button>
             </div>
 
-            <SavedCrossesPanel />
+            {isAdvanced && <SavedCrossesPanel />}
           </>
         )}
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AboutPage } from './components/AboutPage';
 import { BreedLibraryPage } from './components/BreedLibraryPage';
 import { StockRosterPage } from './components/StockRosterPage';
@@ -9,7 +9,9 @@ import { GeneticsReferencePanel } from './components/GeneticsReferencePanel';
 import { CrossHydrator } from './components/CrossHydrator';
 import { GlossaryPanel } from './components/GlossaryPanel';
 import { CitationsPage } from './components/CitationsPage';
+import { PredictorModeToggle } from './components/PredictorModeToggle';
 import { ThemeToggle } from './components/ThemeToggle';
+import { useIsAdvancedMode } from './store/usePredictorModeStore';
 import {
   WorkspaceMobileTabs,
   type WorkspaceMobileTab,
@@ -19,13 +21,24 @@ import { WORKSPACE_MAX_WIDTH } from './constants/layout';
 import { useThemeStore } from './store/useThemeStore';
 
 function WorkspaceView() {
+  const isAdvanced = useIsAdvancedMode();
   const [mobileTab, setMobileTab] = useState<WorkspaceMobileTab>('parents');
+
+  useEffect(() => {
+    if (!isAdvanced && mobileTab === 'reference') {
+      setMobileTab('parents');
+    }
+  }, [isAdvanced, mobileTab]);
 
   return (
     <main
       className={`flex-1 min-h-0 w-full mx-auto p-3 sm:p-4 ${WORKSPACE_MAX_WIDTH} space-y-4 lg:overflow-y-auto lg:overscroll-contain pb-6`}
     >
-      <WorkspaceMobileTabs activeTab={mobileTab} onChange={setMobileTab} />
+      <WorkspaceMobileTabs
+        activeTab={mobileTab}
+        onChange={setMobileTab}
+        showReference={isAdvanced}
+      />
 
       <div className="hidden md:block">
         <CrossWorkspace section="all" />
@@ -39,12 +52,14 @@ function WorkspaceView() {
         <CrossWorkspace section="outcomes" />
       </div>
 
-      <div
-        className={`space-y-4 ${mobileTab === 'reference' ? 'block' : 'hidden md:block'}`}
-      >
-        <GeneticsReferencePanel />
-        <GlossaryPanel />
-      </div>
+      {isAdvanced && (
+        <div
+          className={`space-y-4 ${mobileTab === 'reference' ? 'block' : 'hidden md:block'}`}
+        >
+          <GeneticsReferencePanel />
+          <GlossaryPanel />
+        </div>
+      )}
     </main>
   );
 }
@@ -70,6 +85,7 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
+            {view === 'workspace' && <PredictorModeToggle />}
             <ThemeToggle />
           </div>
         </div>

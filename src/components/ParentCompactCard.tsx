@@ -4,6 +4,7 @@ import { getPresetBreedingNotes } from '../data/presetBreedingNotes';
 import { useAccountStore } from '../store/useAccountStore';
 import { useStockRosterStore } from '../store/useStockRosterStore';
 import { genotypesEqual, useGeneticStore } from '../store/useGeneticStore';
+import { useIsAdvancedMode } from '../store/usePredictorModeStore';
 import { formatCompactGenotype } from '../utils/formatGenotype';
 import { resolveParentPhenotype } from '../utils/geneticEngine';
 import { resolvePlainEnglishPhenotype } from '../utils/plainEnglishPhenotype';
@@ -13,6 +14,7 @@ import { GenotypeInline } from './GenotypeInline';
 import { GlossaryTermText } from './GlossaryTermText';
 import { ParentGenotypeEditor } from './ParentCrossPanel';
 import { ParentSourcePicker } from './ParentSourcePicker';
+import { PresetPicker } from './PresetPicker';
 import { PhenotypeRenderer } from './PhenotypeRenderer';
 
 type ParentKey = 'parent1' | 'parent2';
@@ -44,6 +46,7 @@ export function ParentCompactCard({
   accentBorderClass,
   mateGenotype,
 }: ParentCompactCardProps) {
+  const isAdvanced = useIsAdvancedMode();
   const account = useAccountStore((state) => state.account);
   const getRabbits = useStockRosterStore((state) => state.getRabbits);
   const genotype = useGeneticStore((state) => state[parentKey]);
@@ -99,86 +102,106 @@ export function ParentCompactCard({
         <div className="flex-1 min-w-0 space-y-2">
           <div className="flex items-baseline gap-1.5 flex-wrap">
             <span className={`text-xs font-bold ${accentTextClass}`}>{roleLabel}</span>
-            <span className="text-[10px] text-slate-400 dark:text-slate-500">· {roleHint}</span>
+            {isAdvanced && (
+              <span className="text-[10px] text-slate-400 dark:text-slate-500">· {roleHint}</span>
+            )}
           </div>
 
-          <ParentSourcePicker
-            id={`${parentKey}-compact-preset`}
-            parentKey={parentKey}
-            presetId={presetId}
-            stockId={stockId}
-            onPresetChange={handlePresetChange}
-          />
+          {isAdvanced ? (
+            <ParentSourcePicker
+              id={`${parentKey}-compact-preset`}
+              parentKey={parentKey}
+              presetId={presetId}
+              stockId={stockId}
+              onPresetChange={handlePresetChange}
+            />
+          ) : (
+            <PresetPicker
+              id={`${parentKey}-compact-preset`}
+              value={presetId}
+              onChange={handlePresetChange}
+            />
+          )}
 
           <p
             className={`text-xs font-semibold leading-snug ${
-              isModified && !isStockLinked
+              isModified && !isStockLinked && isAdvanced
                 ? 'text-amber-700 dark:text-amber-400'
                 : 'text-slate-800 dark:text-slate-100'
             }`}
           >
             {varietyLabel}
-            {isStockLinked && (
+            {isStockLinked && isAdvanced && (
               <span className="text-[10px] font-normal text-emerald-600 dark:text-emerald-400 ml-1.5">
                 · from roster
               </span>
             )}
           </p>
 
-          <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug line-clamp-2">
-            <GlossaryTermText text={phenotype} />
-          </p>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug line-clamp-2">
-            {plainEnglish}
-          </p>
+          {isAdvanced ? (
+            <>
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug line-clamp-2">
+                <GlossaryTermText text={phenotype} />
+              </p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug line-clamp-2">
+                {plainEnglish}
+              </p>
+            </>
+          ) : (
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-snug line-clamp-3">
+              {plainEnglish}
+            </p>
+          )}
         </div>
       </div>
 
-      <CompactCollapsible title="Genetics & editing" subtitle={compactGenotype}>
-        <div className="space-y-3 pt-1">
-          <div className="flex items-start justify-between gap-2">
-            <GenotypeInline genotype={genotype} baseline={mateGenotype} />
-            <CopyTextButton text={compactGenotype} label="Copy" className="shrink-0" />
-          </div>
+      {isAdvanced && (
+        <CompactCollapsible title="Genetics & editing" subtitle={compactGenotype}>
+          <div className="space-y-3 pt-1">
+            <div className="flex items-start justify-between gap-2">
+              <GenotypeInline genotype={genotype} baseline={mateGenotype} />
+              <CopyTextButton text={compactGenotype} label="Copy" className="shrink-0" />
+            </div>
 
-          {isStockLinked && (
-            <div className="flex items-center justify-between gap-2 text-[10px]">
-              <span className="text-emerald-700 dark:text-emerald-400">
-                Genotype locked to roster entry.
-              </span>
+            {isStockLinked && (
+              <div className="flex items-center justify-between gap-2 text-[10px]">
+                <span className="text-emerald-700 dark:text-emerald-400">
+                  Genotype locked to roster entry.
+                </span>
+                <button
+                  type="button"
+                  onClick={() => clearParentStockLink(parentKey)}
+                  className="text-sky-700 dark:text-sky-400 hover:underline shrink-0"
+                >
+                  Unlink to edit
+                </button>
+              </div>
+            )}
+
+            {isModified && !isStockLinked && (
               <button
                 type="button"
-                onClick={() => clearParentStockLink(parentKey)}
-                className="text-sky-700 dark:text-sky-400 hover:underline shrink-0"
+                onClick={() => activePreset && resetParentToPreset(parentKey, activePreset.genotype)}
+                className="text-[10px] text-sky-700 dark:text-sky-400 hover:underline"
               >
-                Unlink to edit
+                Reset to preset
               </button>
-            </div>
-          )}
+            )}
 
-          {isModified && !isStockLinked && (
-            <button
-              type="button"
-              onClick={() => activePreset && resetParentToPreset(parentKey, activePreset.genotype)}
-              className="text-[10px] text-sky-700 dark:text-sky-400 hover:underline"
-            >
-              Reset to preset
-            </button>
-          )}
+            {breedingNotes.length > 0 && !isStockLinked && (
+              <ul className="list-disc pl-4 space-y-1 text-[10px] leading-relaxed text-slate-600 dark:text-slate-300">
+                {breedingNotes.map((note) => (
+                  <li key={note}>{note}</li>
+                ))}
+              </ul>
+            )}
 
-          {breedingNotes.length > 0 && !isStockLinked && (
-            <ul className="list-disc pl-4 space-y-1 text-[10px] leading-relaxed text-slate-600 dark:text-slate-300">
-              {breedingNotes.map((note) => (
-                <li key={note}>{note}</li>
-              ))}
-            </ul>
-          )}
-
-          {!isStockLinked && (
-            <ParentGenotypeEditor parentKey={parentKey} mateGenotype={mateGenotype} />
-          )}
-        </div>
-      </CompactCollapsible>
+            {!isStockLinked && (
+              <ParentGenotypeEditor parentKey={parentKey} mateGenotype={mateGenotype} />
+            )}
+          </div>
+        </CompactCollapsible>
+      )}
     </article>
   );
 }

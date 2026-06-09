@@ -4,6 +4,7 @@ import { calculateCross, formatProbability, type ProgenyOutcome } from '../utils
 import { resolvePlainEnglishPhenotype } from '../utils/plainEnglishPhenotype';
 import { formatCompactGenotype } from '../utils/formatGenotype';
 import { useGeneticStore } from '../store/useGeneticStore';
+import { useIsAdvancedMode } from '../store/usePredictorModeStore';
 import { CopyTextButton } from './CopyTextButton';
 import { GenotypeInline } from './GenotypeInline';
 import { GlossaryTermText } from './GlossaryTermText';
@@ -100,7 +101,77 @@ function matchesSearch(group: PhenotypeGroup, query: string): boolean {
   return haystack.includes(normalized);
 }
 
+function SimpleProgenyOutcomes({
+  groups,
+  maxGroupProbability,
+}: {
+  groups: PhenotypeGroup[];
+  maxGroupProbability: number;
+}) {
+  const [showAll, setShowAll] = useState(false);
+  const visibleGroups = showAll ? groups : groups.slice(0, INITIAL_VISIBLE_GROUPS);
+  const hiddenGroupCount = Math.max(0, groups.length - INITIAL_VISIBLE_GROUPS);
+
+  return (
+    <div>
+      <div className="flex items-baseline justify-between gap-3 mb-2">
+        <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+          Possible offspring
+        </h3>
+        <span className="text-[10px] text-slate-500 dark:text-slate-400 shrink-0">
+          {groups.length} outcome{groups.length === 1 ? '' : 's'}
+        </span>
+      </div>
+
+      <div className="rounded-lg border border-slate-200 dark:border-slate-800 max-h-[min(55vh,400px)] overflow-y-auto overscroll-contain bg-white dark:bg-slate-900 divide-y divide-slate-200 dark:divide-slate-800">
+        {visibleGroups.map((group) => {
+          const headerGenotype = group.variants[0]?.outcome.genotypeByLocus;
+          const label = group.plainEnglish || group.title;
+
+          return (
+            <div key={group.phenotype} className="flex items-center gap-3 px-3 py-3">
+              {headerGenotype && (
+                <PhenotypeRenderer genotype={headerGenotype} size="sm" className="shrink-0" />
+              )}
+              <p className="flex-1 min-w-0 text-sm font-medium text-slate-800 dark:text-slate-100 leading-snug">
+                {label}
+              </p>
+              <div className="flex flex-col items-end gap-1 shrink-0 w-20">
+                <span className="text-base font-bold font-mono text-sky-700 dark:text-sky-400 tabular-nums">
+                  {formatProbability(group.combinedProbability)}
+                </span>
+                <ProbabilityBar value={group.combinedProbability} max={maxGroupProbability || 1} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {hiddenGroupCount > 0 && !showAll && (
+        <button
+          type="button"
+          onClick={() => setShowAll(true)}
+          className="mt-2 text-xs text-sky-700 dark:text-sky-400 hover:underline min-h-[44px]"
+        >
+          Show {hiddenGroupCount} more outcome{hiddenGroupCount === 1 ? '' : 's'}
+        </button>
+      )}
+
+      {showAll && hiddenGroupCount > 0 && (
+        <button
+          type="button"
+          onClick={() => setShowAll(false)}
+          className="mt-2 text-xs text-slate-500 dark:text-slate-400 hover:underline min-h-[44px]"
+        >
+          Show fewer
+        </button>
+      )}
+    </div>
+  );
+}
+
 export function ProgenyOutcomesPanel() {
+  const isAdvanced = useIsAdvancedMode();
   const parent1 = useGeneticStore((state) => state.parent1);
   const parent2 = useGeneticStore((state) => state.parent2);
   const focusProgenyGenotype = useGeneticStore((state) => state.focusProgenyGenotype);
@@ -130,8 +201,8 @@ export function ProgenyOutcomesPanel() {
   const visibleGroups = showAll ? filteredGroups : filteredGroups.slice(0, INITIAL_VISIBLE_GROUPS);
   const hiddenGroupCount = Math.max(0, filteredGroups.length - INITIAL_VISIBLE_GROUPS);
   const maxGroupProbability = useMemo(
-    () => Math.max(...filteredGroups.map((group) => group.combinedProbability), 0),
-    [filteredGroups],
+    () => Math.max(...groups.map((group) => group.combinedProbability), 0),
+    [groups],
   );
 
   const toggleGroup = (phenotype: string) => {
@@ -145,6 +216,12 @@ export function ProgenyOutcomesPanel() {
       return next;
     });
   };
+
+  if (!isAdvanced) {
+    return (
+      <SimpleProgenyOutcomes groups={groups} maxGroupProbability={maxGroupProbability} />
+    );
+  }
 
   return (
     <div>
