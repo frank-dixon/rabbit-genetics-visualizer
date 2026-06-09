@@ -23,8 +23,12 @@ export function AboutPage({ onBack }: AboutPageProps) {
         </li>
         <li>
           <strong>Explore the 3D canvas</strong> — Drag to orbit, scroll or pinch to zoom. Hover
-          chromosomes to highlight them. Mapped chromosomes currently shown: 1 (TYR, TYRP1), 4
-          (ASIP), and 15 (KIT).
+          chromosomes to highlight them. Colored locus bands mark gene positions on OCU1 (B, C),
+          OCU4 (A), and OCU15 (En). Select a locus card to pulse its band.
+        </li>
+        <li>
+          <strong>Install for offline use</strong> — Production builds register a service worker.
+          Add to home screen on mobile or use Lighthouse to verify installability.
         </li>
         <li>
           <strong>Review eye color rules</strong> — Ruby-eyed white (REW), blue-eyed white (BEW),
@@ -43,8 +47,9 @@ export function AboutPage({ onBack }: AboutPageProps) {
 
       <h2>What&apos;s coming next</h2>
       <ul>
-        <li>Offline PWA support</li>
-        <li>Visual polish — locus bands on chromosome models, shader tuning</li>
+        <li>Cytogenetic band positions (Mb-scale) when assembly anchors improve for D, E, and V</li>
+        <li>Biology review — epistasis rules and phenotype naming in cross results</li>
+        <li>Final branded icon artwork and additional 3D polish</li>
       </ul>
 
       <h2>Cross results</h2>
