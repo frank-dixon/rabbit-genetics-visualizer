@@ -6,7 +6,7 @@ interface AppFooterProps {
 }
 
 const NAV_ITEMS: { id: AppView; label: string }[] = [
-  { id: 'workspace', label: 'Workspace' },
+  { id: 'workspace', label: 'Predictor' },
   { id: 'about', label: 'How It Works' },
   { id: 'citations', label: 'Citations' },
 ];
@@ -16,7 +16,7 @@ export function AppFooter({ view, onNavigate }: AppFooterProps) {
     <footer className="shrink-0 border-t border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur">
       <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <p className="text-xs text-slate-500 dark:text-slate-400">
-          Meat-rabbit coat &amp; eye color genetics visualizer
+          Meat rabbit coat &amp; eye cross calculator
         </p>
 
         <nav aria-label="Footer navigation" className="flex flex-wrap gap-2">

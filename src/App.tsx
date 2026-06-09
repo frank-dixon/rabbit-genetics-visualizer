@@ -1,39 +1,21 @@
 import { useState } from 'react';
 import { AboutPage } from './components/AboutPage';
 import { AppFooter, type AppView } from './components/AppFooter';
-import { ChromosomeCanvas } from './components/ChromosomeCanvas';
-import { CrossResultsPanel } from './components/CrossResultsPanel';
+import { CrossWorkspace } from './components/CrossWorkspace';
+import { GeneticsReferencePanel } from './components/GeneticsReferencePanel';
 import { CitationsPage } from './components/CitationsPage';
-import { EyeColorPanel } from './components/EyeColorPanel';
-import { LociMatrixPanel } from './components/LociMatrixPanel';
-import { ParentCrossPanel } from './components/ParentCrossPanel';
 import { ThemeToggle } from './components/ThemeToggle';
-import { LOCI_ORDER, RABBIT_GENETIC_MAP } from './data/rabbitGenetics';
-import { useGeneticStore } from './store/useGeneticStore';
+import { APP_NAME, APP_TAGLINE } from './constants/app';
+import { WORKSPACE_MAX_WIDTH } from './constants/layout';
 import { useThemeStore } from './store/useThemeStore';
 
 function WorkspaceView() {
-  const selectedLocusId = useGeneticStore((state) => state.selectedLocusId);
-  const setSelectedLocus = useGeneticStore((state) => state.setSelectedLocus);
-  const loci = LOCI_ORDER.map((id) => RABBIT_GENETIC_MAP[id]).filter(Boolean);
-
   return (
-    <main className="flex-1 min-h-0 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:overflow-hidden">
-      <section className="lg:col-span-4 space-y-6 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
-        <LociMatrixPanel
-          loci={loci}
-          selectedLocusId={selectedLocusId}
-          onSelectLocus={setSelectedLocus}
-        />
-
-        <EyeColorPanel />
-      </section>
-
-      <section className="lg:col-span-8 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-1 space-y-6">
-        <ChromosomeCanvas />
-        <ParentCrossPanel />
-        <CrossResultsPanel />
-      </section>
+    <main
+      className={`flex-1 min-h-0 w-full mx-auto p-3 sm:p-4 ${WORKSPACE_MAX_WIDTH} space-y-4 lg:overflow-y-auto lg:overscroll-contain pb-6`}
+    >
+      <CrossWorkspace />
+      <GeneticsReferencePanel />
     </main>
   );
 }
@@ -47,17 +29,19 @@ export default function App() {
       data-theme={theme}
       className="min-h-screen lg:h-screen lg:overflow-hidden bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200"
     >
-      <header className="shrink-0 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur p-4 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto flex justify-between items-center gap-4">
-          <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-sky-600 to-indigo-600 dark:from-sky-400 dark:to-indigo-400 bg-clip-text text-transparent">
-            Leporidae Genetics Architecture Engine
-          </h1>
+      <header className="shrink-0 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur px-3 py-3 sm:p-4 sticky top-0 z-50 shadow-sm">
+        <div className={`${WORKSPACE_MAX_WIDTH} mx-auto flex justify-between items-center gap-3`}>
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-xl font-bold tracking-tight bg-gradient-to-r from-sky-600 to-indigo-600 dark:from-sky-400 dark:to-indigo-400 bg-clip-text text-transparent">
+              {APP_NAME}
+            </h1>
+            <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+              {APP_TAGLINE}
+            </p>
+          </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             <ThemeToggle />
-            <span className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2.5 py-1 rounded-full font-mono border border-slate-300 dark:border-slate-700">
-              v1.0.0 Stable
-            </span>
           </div>
         </div>
       </header>
