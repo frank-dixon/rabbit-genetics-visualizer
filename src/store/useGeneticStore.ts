@@ -1,7 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { LOCI_ORDER, buildDefaultGenotypes } from '../data/rabbitGenetics';
+import {
+  LOCI_ORDER,
+  buildDefaultGenotypes,
+  getLocusChromosome,
+} from '../data/rabbitGenetics';
 import type { CrossSnapshot } from '../utils/genotypeCodec';
+import { openChromosomeExplorer } from '../utils/referenceNavigation';
 
 type ParentKey = 'parent1' | 'parent2';
 type GenotypeMap = Record<string, [string, string]>;
@@ -12,6 +17,8 @@ function presetKey(parent: ParentKey): 'parent1PresetId' | 'parent2PresetId' {
 
 interface GeneticState {
   selectedLocusId: string | null;
+  highlightedLocusIds: string[];
+  progenyFocusLabel: string | null;
   hoveredChromosome: number | null;
   parent1: GenotypeMap;
   parent2: GenotypeMap;
@@ -19,6 +26,8 @@ interface GeneticState {
   parent2PresetId: string | null;
   setSelectedLocus: (locusId: string | null) => void;
   setHoveredChromosome: (chromId: number | null) => void;
+  focusProgenyGenotype: (genotype: GenotypeMap, label: string) => void;
+  clearProgenyFocus: () => void;
   setParentAllele: (parent: ParentKey, locusId: string, alleleIndex: 0 | 1, alleleCode: string) => void;
   setParentGenotype: (parent: ParentKey, genotype: GenotypeMap) => void;
   loadParentPreset: (parent: ParentKey, presetId: string, genotype: GenotypeMap) => void;
@@ -35,14 +44,34 @@ export const useGeneticStore = create<GeneticState>()(
   persist(
     (set, get) => ({
       selectedLocusId: null,
+      highlightedLocusIds: [],
+      progenyFocusLabel: null,
       hoveredChromosome: null,
       parent1: { ...defaultGenotypes, A: ['A', 'a'], C: ['C', 'c'] },
       parent2: { ...defaultGenotypes, A: ['a', 'a'], C: ['C', 'C'] },
       parent1PresetId: null,
       parent2PresetId: null,
 
-      setSelectedLocus: (locusId) => set({ selectedLocusId: locusId }),
+      setSelectedLocus: (locusId) =>
+        set({ selectedLocusId: locusId, progenyFocusLabel: null, highlightedLocusIds: [] }),
+
       setHoveredChromosome: (chromId) => set({ hoveredChromosome: chromId }),
+
+      focusProgenyGenotype: (genotype, label) => {
+        const locusIds = LOCI_ORDER.filter((locusId) => genotype[locusId]);
+        const firstMapped =
+          locusIds.find((locusId) => getLocusChromosome(locusId) !== null) ?? locusIds[0] ?? null;
+
+        set({
+          highlightedLocusIds: locusIds,
+          selectedLocusId: firstMapped,
+          progenyFocusLabel: label,
+        });
+        openChromosomeExplorer();
+      },
+
+      clearProgenyFocus: () =>
+        set({ highlightedLocusIds: [], progenyFocusLabel: null }),
 
       setParentAllele: (parent, locusId, alleleIndex, alleleCode) =>
         set((state) => {
