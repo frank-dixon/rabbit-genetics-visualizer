@@ -1,12 +1,15 @@
 import { useMemo } from 'react';
-import { PARENT_PRESET_CATEGORIES, PARENT_PRESETS } from '../data/meatRabbitBreeds';
+import { PARENT_PRESETS } from '../data/meatRabbitBreeds';
 import { getPresetBreedingNotes } from '../data/presetBreedingNotes';
 import { genotypesEqual, useGeneticStore } from '../store/useGeneticStore';
-import { resolveParentPhenotype } from '../utils/geneticEngine';
 import { formatCompactGenotype } from '../utils/formatGenotype';
+import { resolveParentPhenotype } from '../utils/geneticEngine';
+import { resolvePlainEnglishPhenotype } from '../utils/plainEnglishPhenotype';
 import { CompactCollapsible } from './CollapsibleSection';
+import { CopyTextButton } from './CopyTextButton';
 import { ParentGenotypeEditor } from './ParentCrossPanel';
 import { PhenotypeRenderer } from './PhenotypeRenderer';
+import { PresetPicker } from './PresetPicker';
 
 type ParentKey = 'parent1' | 'parent2';
 type GenotypeMap = Record<string, [string, string]>;
@@ -44,6 +47,7 @@ export function ParentCompactCard({
   const resetParentToPreset = useGeneticStore((state) => state.resetParentToPreset);
 
   const phenotype = useMemo(() => resolveParentPhenotype(genotype), [genotype]);
+  const plainEnglish = useMemo(() => resolvePlainEnglishPhenotype(genotype), [genotype]);
   const varietyLabel = useMemo(() => getVarietyLabel(presetId, genotype), [presetId, genotype]);
   const compactGenotype = useMemo(() => formatCompactGenotype(genotype), [genotype]);
   const breedingNotes = useMemo(
@@ -52,15 +56,14 @@ export function ParentCompactCard({
   );
   const activePreset = presetId ? PARENT_PRESETS.find((entry) => entry.id === presetId) : null;
   const isModified = Boolean(activePreset && !genotypesEqual(genotype, activePreset.genotype));
-  const selectValue = presetId ?? 'custom';
   const notesPreview = breedingNotes[0] ?? 'Genetics and cross-breeding tips';
 
-  const handlePresetChange = (value: string) => {
-    if (value === 'custom') {
+  const handlePresetChange = (nextPresetId: string | null) => {
+    if (!nextPresetId) {
       clearParentPreset(parentKey);
       return;
     }
-    const preset = PARENT_PRESETS.find((entry) => entry.id === value);
+    const preset = PARENT_PRESETS.find((entry) => entry.id === nextPresetId);
     if (preset) {
       loadParentPreset(parentKey, preset.id, preset.genotype);
     }
@@ -86,23 +89,11 @@ export function ParentCompactCard({
             >
               Variety preset
             </label>
-            <select
+            <PresetPicker
               id={`${parentKey}-compact-preset`}
-              value={selectValue}
-              onChange={(event) => handlePresetChange(event.target.value)}
-              className="w-full text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
-            >
-              <option value="custom">Custom</option>
-              {PARENT_PRESET_CATEGORIES.map((category) => (
-                <optgroup key={category} label={category}>
-                  {PARENT_PRESETS.filter((preset) => preset.category === category).map((preset) => (
-                    <option key={preset.id} value={preset.id}>
-                      {preset.label}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
+              value={presetId}
+              onChange={handlePresetChange}
+            />
           </div>
 
           <p
@@ -114,10 +105,16 @@ export function ParentCompactCard({
           </p>
 
           <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug">{phenotype}</p>
-
-          <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400 leading-relaxed break-words">
-            {compactGenotype}
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug italic">
+            {plainEnglish}
           </p>
+
+          <div className="flex items-start justify-between gap-2">
+            <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400 leading-relaxed break-words flex-1">
+              {compactGenotype}
+            </p>
+            <CopyTextButton text={compactGenotype} label="Copy" className="shrink-0" />
+          </div>
 
           {isModified && (
             <button

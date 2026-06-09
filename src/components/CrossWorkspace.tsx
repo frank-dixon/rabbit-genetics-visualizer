@@ -1,18 +1,43 @@
-import { ArrowLeftRight } from 'lucide-react';
+import { useMemo } from 'react';
 import { ParentCompactCard } from './ParentCompactCard';
 import { ProgenyOutcomesPanel } from './ProgenyOutcomesPanel';
+import { CopyTextButton } from './CopyTextButton';
 import { useGeneticStore } from '../store/useGeneticStore';
+import { buildCrossShareUrl } from '../utils/genotypeCodec';
 
 export function CrossWorkspace() {
   const swapParents = useGeneticStore((state) => state.swapParents);
+  const parent1 = useGeneticStore((state) => state.parent1);
+  const parent2 = useGeneticStore((state) => state.parent2);
+  const parent1PresetId = useGeneticStore((state) => state.parent1PresetId);
+  const parent2PresetId = useGeneticStore((state) => state.parent2PresetId);
+
+  const shareUrl = useMemo(
+    () =>
+      buildCrossShareUrl({
+        parent1,
+        parent2,
+        parent1PresetId,
+        parent2PresetId,
+      }),
+    [parent1, parent2, parent1PresetId, parent2PresetId],
+  );
 
   return (
     <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden">
-      <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 sm:px-5">
-        <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">Your cross</h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-          Set both parents, then scan predicted progeny below.
-        </p>
+      <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 sm:px-5 flex items-start justify-between gap-3">
+        <div>
+          <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">Your cross</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Set both parents, then scan predicted progeny below.
+          </p>
+        </div>
+        <CopyTextButton
+          text={shareUrl}
+          label="Copy share link"
+          copiedLabel="Link copied"
+          className="shrink-0 mt-0.5"
+        />
       </div>
 
       <div className="p-4 sm:p-5 space-y-4">
@@ -33,13 +58,12 @@ export function CrossWorkspace() {
           />
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-center -my-1">
           <button
             type="button"
             onClick={swapParents}
-            className="inline-flex items-center gap-2 text-xs font-medium rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-200 px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition focus:outline-none focus:ring-2 focus:ring-sky-400 min-h-[44px]"
+            className="text-[10px] text-slate-500 dark:text-slate-400 hover:text-sky-700 dark:hover:text-sky-400 hover:underline transition focus:outline-none focus:underline"
           >
-            <ArrowLeftRight className="h-3.5 w-3.5" aria-hidden="true" />
             Swap parents
           </button>
         </div>
@@ -48,7 +72,7 @@ export function CrossWorkspace() {
 
         <p className="text-[10px] text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2">
           Draft previews and genetics — verify before breeding. Open Variety notes on each parent for
-          cross-breeding context.
+          cross-breeding context. Your cross is saved automatically in this browser.
         </p>
       </div>
     </section>
