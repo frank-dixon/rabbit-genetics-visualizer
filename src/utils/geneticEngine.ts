@@ -33,13 +33,14 @@ function parsePairKey(locusId: string, key: string): [string, string] {
 
 function getLocusCrossProbabilities(
   locusId: string,
-  parentAlleles: [string, string],
+  parent1Alleles: [string, string],
+  parent2Alleles: [string, string],
 ): Map<string, number> {
   const probabilities = new Map<string, number>();
 
-  for (const g1 of [parentAlleles[0], parentAlleles[1]]) {
-    for (const g2 of [parentAlleles[0], parentAlleles[1]]) {
-      const key = pairKey(locusId, g1, g2);
+  for (const gamete1 of parent1Alleles) {
+    for (const gamete2 of parent2Alleles) {
+      const key = pairKey(locusId, gamete1, gamete2);
       probabilities.set(key, (probabilities.get(key) ?? 0) + 0.25);
     }
   }
@@ -121,7 +122,7 @@ function baseColorName(
   if (e === 'e') {
     if (a === 'A') return diluted ? 'Frosted / ermine (draft)' : 'Red / fawn / orange';
     if (a === 'at') return diluted ? 'Lilac otter (draft)' : 'Chocolate otter (draft)';
-    return diluted ? 'Cream / pearl (draft)' : 'Red-eyed orange (draft)';
+    return diluted ? 'Cream / pearl' : 'Cream / fawn';
   }
 
   if (e === 'Es' && a === 'A') {
@@ -148,6 +149,54 @@ function baseColorName(
   return 'Unknown base color (draft)';
 }
 
+function isSilverHeterozygote(pair: [string, string]): boolean {
+  return (
+    (pair[0] === 'Si' && pair[1] === 'si') || (pair[0] === 'si' && pair[1] === 'Si')
+  );
+}
+
+function describeSilvering(
+  genotypes: GenotypeMap,
+  resolved: Record<string, string>,
+  baseColor: string,
+): string | null {
+  if (!genotypes.Si) return null;
+
+  if (isHomozygous(genotypes.Si, 'si')) {
+    if (resolved.E === 'e' && resolved.A === 'a') {
+      return "Crème d'Argent type — cream/fawn with heavy silvering (sisi)";
+    }
+    if (resolved.E === 'e' && resolved.A === 'A') {
+      return 'Silvered red/fawn — frosted ermine type (A_ ee sisi)';
+    }
+    if (resolved.A === 'A') {
+      return 'Silver breed type — agouti with heavy silvering (sisi)';
+    }
+    if (resolved.A === 'a') {
+      return 'Heavy silvered self — black-born Champagne/Silver Fox type (sisi)';
+    }
+    return 'Silvered coat (sisi — progressive white tipping)';
+  }
+
+  if (isSilverHeterozygote(genotypes.Si)) {
+    if (resolved.E === 'e' && resolved.A === 'a') {
+      return 'Cream/fawn with light silvering (Sisi)';
+    }
+    if (resolved.E === 'e' && resolved.A === 'A') {
+      return 'Red/fawn with light silvering (Sisi)';
+    }
+    if (resolved.A === 'A') {
+      return `${baseColor} with light silvering (Sisi)`;
+    }
+    if (resolved.A === 'a') {
+      return `${baseColor} with light silvering (Sisi)`;
+    }
+    return `${baseColor} with light silvering (Sisi)`;
+  }
+
+  return null;
+}
+
 function resolvePhenotype(genotypes: GenotypeMap): string {
   const resolved = Object.fromEntries(
     LOCI_ORDER.filter((id) => genotypes[id]).map((id) => [id, resolvedAllele(id, genotypes[id])]),
@@ -166,14 +215,27 @@ function resolvePhenotype(genotypes: GenotypeMap): string {
   const parts: string[] = [];
 
   if (resolved.C === 'ch') {
-    parts.push('Himalayan / pointed white (ch_)');
+    const isAlbinoCarrier =
+      (genotypes.C[0] === 'c' || genotypes.C[1] === 'c') && !isHomozygous(genotypes.C, 'c');
+    parts.push(
+      isAlbinoCarrier
+        ? 'Himalayan / pointed white (ch/c — often paler points than chch)'
+        : 'Himalayan / pointed white (ch_)',
+    );
   } else if (resolved.C === 'cchd') {
     parts.push('Chinchilla modifier (cchd_)');
   } else if (resolved.C === 'cchl') {
     parts.push('Shaded / sable modifier (cchl_)');
   }
 
-  parts.push(baseColorName(resolved, genotypes));
+  const baseColor = baseColorName(resolved, genotypes);
+  const silvering = describeSilvering(genotypes, resolved, baseColor);
+
+  if (silvering) {
+    parts.push(silvering);
+  } else {
+    parts.push(baseColor);
+  }
 
   if (isHomozygous(genotypes.En, 'En')) {
     parts.push('Charlie spotting (EnEn — draft)');
@@ -189,16 +251,6 @@ function resolvePhenotype(genotypes: GenotypeMap): string {
     (genotypes.V[0] === 'v' && genotypes.V[1] === 'V')
   ) {
     parts.push('Vienna carrier (Vv — draft)');
-  }
-
-  if (genotypes.Si && isHomozygous(genotypes.Si, 'si')) {
-    parts.push('Silvered coat (sisi — progressive white tipping)');
-  } else if (
-    genotypes.Si &&
-    ((genotypes.Si[0] === 'Si' && genotypes.Si[1] === 'si') ||
-      (genotypes.Si[0] === 'si' && genotypes.Si[1] === 'Si'))
-  ) {
-    parts.push('Light silver carrier (Sisi — draft)');
   }
 
   return parts.join('; ');
@@ -219,7 +271,11 @@ export function calculateCross(
   let outcomes: { genotypes: GenotypeMap; probability: number }[] = [{ genotypes: {}, probability: 1 }];
 
   for (const locusId of activeLoci) {
-    const locusProbabilities = getLocusCrossProbabilities(locusId, parent1[locusId]);
+    const locusProbabilities = getLocusCrossProbabilities(
+      locusId,
+      parent1[locusId],
+      parent2[locusId],
+    );
     outcomes = combineOutcomes(outcomes, locusId, locusProbabilities);
   }
 
