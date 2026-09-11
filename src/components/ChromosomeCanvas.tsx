@@ -69,7 +69,7 @@ export function ChromosomeCanvas() {
       </Canvas>
 
       <div className="pointer-events-none absolute inset-0 z-10">
-        <div className="absolute top-4 left-4 text-xs font-mono text-slate-700 dark:text-slate-200 bg-white/95 dark:bg-slate-900/95 px-3 py-1.5 rounded border border-sky-300 dark:border-sky-700 backdrop-blur shadow-sm max-w-[90%]">
+        <div className="absolute top-4 left-4 text-xs font-mono text-slate-700 dark:text-slate-200 bg-paper-soft/95 dark:bg-slate-900/95 px-3 py-1.5 rounded border border-sky-300 dark:border-sky-700 backdrop-blur shadow-sm max-w-[90%]">
           {progenyFocusLabel ? (
             <>
               Progeny focus:{' '}
@@ -93,21 +93,21 @@ export function ChromosomeCanvas() {
         </div>
 
         {focusedChromosome !== null && selectedLocus && (
-          <div className="absolute top-4 right-4 text-xs text-slate-600 dark:text-slate-300 bg-white/95 dark:bg-slate-900/95 px-3 py-1.5 rounded border border-slate-300 dark:border-slate-700 shadow-sm max-w-[45%] text-right">
+          <div className="absolute top-4 right-4 text-xs text-slate-600 dark:text-slate-300 bg-paper-soft/95 dark:bg-slate-900/95 px-3 py-1.5 rounded border border-slate-300 dark:border-slate-700 shadow-sm max-w-[45%] text-right">
             <span className="font-semibold text-sky-700 dark:text-sky-400">{selectedLocus.id}</span>{' '}
             — {selectedLocus.geneSymbol} on OCU{focusedChromosome}
           </div>
         )}
 
         {focusedChromosome !== null && (
-          <div className="absolute bottom-4 left-4 text-xs text-slate-600 dark:text-slate-300 bg-white/95 dark:bg-slate-900/95 px-3 py-1.5 rounded border border-slate-300 dark:border-slate-700 shadow-sm max-w-[90%]">
+          <div className="absolute bottom-4 left-4 text-xs text-slate-600 dark:text-slate-300 bg-paper-soft/95 dark:bg-slate-900/95 px-3 py-1.5 rounded border border-slate-300 dark:border-slate-700 shadow-sm max-w-[90%]">
             <span className="font-semibold">OCU{focusedChromosome}</span> —{' '}
             {formatLocusGenes(focusedChromosome)}
           </div>
         )}
 
         {selectedLocusId && focusedChromosome === null && (
-          <div className="absolute bottom-4 left-4 text-xs text-slate-600 dark:text-slate-300 bg-white/95 dark:bg-slate-900/95 px-3 py-1.5 rounded border border-amber-300 dark:border-amber-700 shadow-sm max-w-[90%]">
+          <div className="absolute bottom-4 left-4 text-xs text-slate-600 dark:text-slate-300 bg-paper-soft/95 dark:bg-slate-900/95 px-3 py-1.5 rounded border border-amber-300 dark:border-amber-700 shadow-sm max-w-[90%]">
             {selectedLocusId} ({RABBIT_GENETIC_MAP[selectedLocusId]?.geneSymbol}) — no anchored
             chromosome in OryCun2.0 reference genome
           </div>

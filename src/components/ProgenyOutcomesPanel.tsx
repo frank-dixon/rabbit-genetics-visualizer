@@ -168,7 +168,7 @@ export function ProgenyOutcomesPanel() {
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
           placeholder="Filter phenotypes…"
-          className="flex-1 min-w-[10rem] text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-400"
+          className="flex-1 min-w-[10rem] text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-paper-soft dark:bg-slate-950 text-slate-800 dark:text-slate-100 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-400"
         />
         <label className="inline-flex items-center gap-1.5 text-[10px] text-slate-600 dark:text-slate-300 cursor-pointer">
           <input
@@ -190,7 +190,7 @@ export function ProgenyOutcomesPanel() {
         </label>
       </div>
 
-      <div className="rounded-lg border border-slate-200 dark:border-slate-800 max-h-[min(55vh,400px)] overflow-y-auto overscroll-contain bg-white dark:bg-slate-900 divide-y divide-slate-200 dark:divide-slate-800">
+      <div className="rounded-lg border border-slate-200 dark:border-slate-800 max-h-[min(55vh,400px)] overflow-y-auto overscroll-contain bg-paper-soft dark:bg-slate-900 divide-y divide-slate-200 dark:divide-slate-800">
         {visibleGroups.length === 0 && (
           <p className="px-3 py-6 text-xs text-center text-slate-500 dark:text-slate-400">
             No outcomes match the current filters.

@@ -106,7 +106,7 @@ export function CompactCollapsible({
 
   return (
     <div
-      className={`rounded-md border border-slate-200/80 dark:border-slate-700/80 bg-white/60 dark:bg-slate-900/40 ${className}`}
+      className={`rounded-lg border border-rule/80 dark:border-rule-dark/60 bg-paper/50 dark:bg-ink/40 ${className}`}
     >
       <button
         type="button"
@@ -167,7 +167,7 @@ export function CollapsiblePanel({
 
   return (
     <div
-      className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden ${className}`}
+      className={`bg-paper-soft/90 dark:bg-ink/55 border border-rule/90 dark:border-rule-dark/70 rounded-paper shadow-paper-sm overflow-hidden ${className}`}
     >
       <button
         type="button"
@@ -183,7 +183,7 @@ export function CollapsiblePanel({
           aria-hidden="true"
         />
         <div className="flex-1 border-b-0">
-          <h2 className="text-lg font-semibold text-slate-700 dark:text-slate-200">{title}</h2>
+          <h2 className="font-serif text-lg font-semibold text-ink dark:text-paper-soft">{title}</h2>
           {description && (
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{description}</p>
           )}

@@ -122,7 +122,7 @@ export function MendelianLearnPage({ onBack }: MendelianLearnPageProps) {
         </button>
 
         <header className="space-y-2">
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+          <h1 className="font-serif text-2xl font-semibold text-slate-800 dark:text-slate-100">
             Mendelian Inheritance &amp; Punnett Squares
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-300 max-w-3xl">
@@ -143,7 +143,7 @@ export function MendelianLearnPage({ onBack }: MendelianLearnPageProps) {
               return (
                 <div
                   key={section.id}
-                  className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden"
+                  className="rounded-lg border border-slate-200 dark:border-slate-800 bg-paper-soft dark:bg-slate-900 overflow-hidden"
                 >
                   <button
                     type="button"
@@ -180,7 +180,7 @@ export function MendelianLearnPage({ onBack }: MendelianLearnPageProps) {
 
         <IndependentAssortmentDemo />
 
-        <section className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-sm text-slate-600 dark:text-slate-300 space-y-3">
+        <section className="rounded-paper border border-slate-200 dark:border-slate-800 bg-paper-soft dark:bg-slate-900 p-4 text-sm text-slate-600 dark:text-slate-300 space-y-3">
           <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
             How this connects to the predictor
           </h2>

@@ -49,7 +49,7 @@ export function ExampleCrossChips() {
           key={example.label}
           type="button"
           onClick={() => loadExample(example)}
-          className="text-[10px] rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 px-2.5 py-1 hover:border-sky-300 dark:hover:border-sky-600 hover:text-sky-800 dark:hover:text-sky-300 transition"
+          className="text-[10px] rounded-full border border-slate-200 dark:border-slate-700 bg-paper-soft dark:bg-slate-900 text-slate-700 dark:text-slate-300 px-2.5 py-1 hover:border-sky-300 dark:hover:border-sky-600 hover:text-sky-800 dark:hover:text-sky-300 transition"
         >
           {example.label}
         </button>

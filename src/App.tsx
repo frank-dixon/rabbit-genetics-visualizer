@@ -54,17 +54,26 @@ export default function App() {
   return (
     <div
       data-theme={theme}
-      className="min-h-screen lg:h-screen lg:overflow-hidden bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200"
+      className="min-h-screen lg:h-screen lg:overflow-hidden bg-transparent text-ink dark:text-paper-soft flex flex-col font-sans transition-colors duration-200"
     >
-      <header className="shrink-0 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur px-3 py-3 sm:p-4 sticky top-0 z-50 shadow-sm">
+      <header className="shrink-0 border-b border-rule/80 dark:border-rule-dark/70 bg-paper-soft/85 dark:bg-espresso/85 backdrop-blur-md px-3 py-3 sm:px-4 sticky top-0 z-50">
         <div className={`${WORKSPACE_MAX_WIDTH} mx-auto flex justify-between items-center gap-3`}>
-          <div className="min-w-0">
-            <h1 className="text-lg sm:text-xl font-bold tracking-tight bg-gradient-to-r from-sky-600 to-indigo-600 dark:from-sky-400 dark:to-indigo-400 bg-clip-text text-transparent">
-              {APP_NAME}
-            </h1>
-            <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-              {APP_TAGLINE}
-            </p>
+          <div className="min-w-0 flex items-start gap-3">
+            <span
+              aria-hidden="true"
+              className="mt-0.5 hidden sm:block h-9 w-9 shrink-0 rounded-[0.85rem] bg-gradient-to-br from-teal via-teal-deep to-espresso shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]"
+            />
+            <div className="min-w-0">
+              <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.06em] text-ink-muted dark:text-slate-400">
+                Meat rabbit genetics
+              </p>
+              <h1 className="font-serif text-xl sm:text-2xl font-semibold text-ink dark:text-paper-soft leading-tight">
+                {APP_NAME}
+              </h1>
+              <p className="text-[11px] sm:text-xs text-ink-muted dark:text-slate-400 mt-0.5 truncate">
+                {APP_TAGLINE}
+              </p>
+            </div>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">

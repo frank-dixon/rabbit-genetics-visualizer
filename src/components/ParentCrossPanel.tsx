@@ -33,7 +33,7 @@ function LocusAlleleSelect({ locus, parentKey, alleleIndex, value, onChange }: L
       aria-label={`${parentKey} ${locus.id} allele ${alleleIndex + 1}`}
       value={value}
       onChange={(event) => onChange(event.target.value)}
-      className="w-full min-h-[40px] text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-400"
+      className="w-full min-h-[40px] text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-paper-soft dark:bg-slate-950 text-slate-800 dark:text-slate-100 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-400"
     >
       {locus.alleles.map((allele) => (
         <option key={allele.code} value={allele.code}>
@@ -73,7 +73,7 @@ export function ParentGenotypeEditor({ parentKey, mateGenotype }: ParentGenotype
               className={`text-[10px] font-mono font-bold px-2 py-1 rounded border transition ${
                 differs
                   ? 'border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/40'
-                  : 'border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 hover:border-sky-400'
+                  : 'border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 bg-paper-soft dark:bg-slate-900 hover:border-sky-400'
               }`}
             >
               {locusId}
@@ -148,7 +148,7 @@ export function ParentCrossPanel({ embedded = false, editorOnly = false }: Paren
   }
 
   return (
-    <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden p-5">
+    <section className="bg-paper-soft dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-paper shadow-paper-sm overflow-hidden p-5">
       {content}
     </section>
   );

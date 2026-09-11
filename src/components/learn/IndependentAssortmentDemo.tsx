@@ -39,7 +39,7 @@ export function IndependentAssortmentDemo() {
   const jointProbability = exampleB.probability * exampleD.probability;
 
   return (
-    <section className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+    <section className="rounded-paper border border-slate-200 dark:border-slate-800 bg-paper-soft dark:bg-slate-900 shadow-sm overflow-hidden">
       <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/50 text-center">
         <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">
           Independent assortment (two loci)
@@ -74,7 +74,7 @@ export function IndependentAssortmentDemo() {
           />
         </div>
 
-        <div className="rounded-xl border border-sky-200/80 dark:border-sky-800/80 bg-gradient-to-br from-sky-50/80 to-indigo-50/40 dark:from-sky-950/30 dark:to-indigo-950/20 p-4">
+        <div className="rounded-paper border border-teal/25 dark:border-sky-800/70 bg-teal-soft/40 dark:bg-sky-950/30 p-4">
           <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 mb-3 text-center">
             Joint probability example
           </p>
@@ -84,7 +84,7 @@ export function IndependentAssortmentDemo() {
             <span className="text-slate-400 dark:text-slate-500 font-light text-lg">×</span>
             <OutcomeChip locus="D" genotype={exampleD.label} probability={exampleD.probability} />
             <span className="text-slate-400 dark:text-slate-500 font-light text-lg">=</span>
-            <div className="rounded-lg bg-white/80 dark:bg-slate-900/80 border border-sky-300 dark:border-sky-700 px-4 py-2 text-center">
+            <div className="rounded-lg bg-paper-soft/80 dark:bg-slate-900/80 border border-sky-300 dark:border-sky-700 px-4 py-2 text-center">
               <span className="font-mono font-bold text-lg text-sky-700 dark:text-sky-300 tabular-nums">
                 {formatProbability(jointProbability)}
               </span>
@@ -114,7 +114,7 @@ function OutcomeChip({
   probability: number;
 }) {
   return (
-    <div className="rounded-lg bg-white/70 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 px-3 py-2 text-center min-w-[5rem]">
+    <div className="rounded-lg bg-paper-soft/70 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 px-3 py-2 text-center min-w-[5rem]">
       <p className="text-[10px] uppercase tracking-wide text-slate-400 dark:text-slate-500">
         {locus} locus
       </p>
@@ -148,7 +148,7 @@ function MiniLocusPanel({
   square,
 }: MiniLocusPanelProps) {
   return (
-    <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/30 p-4 flex flex-col items-center gap-4 text-center">
+    <div className="rounded-paper border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/30 p-4 flex flex-col items-center gap-4 text-center">
       <div>
         <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">{title}</h3>
         <p className="text-[11px] text-slate-500 dark:text-slate-400">{subtitle}</p>

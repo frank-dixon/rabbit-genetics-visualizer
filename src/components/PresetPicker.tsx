@@ -91,7 +91,7 @@ export function PresetPicker({ id, value, onChange }: PresetPickerProps) {
         aria-expanded={open}
         aria-controls={listboxId}
         onClick={() => setOpen((current) => !current)}
-        className="w-full flex items-center justify-between gap-2 text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400 text-left"
+        className="w-full flex items-center justify-between gap-2 text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-paper-soft dark:bg-slate-950 text-slate-800 dark:text-slate-100 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400 text-left"
       >
         <span className="truncate">{selectedLabel}</span>
         <ChevronDown
@@ -101,7 +101,7 @@ export function PresetPicker({ id, value, onChange }: PresetPickerProps) {
       </button>
 
       {open && (
-        <div className="absolute z-30 mt-1 w-full rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 shadow-lg overflow-hidden">
+        <div className="absolute z-30 mt-1 w-full rounded-md border border-slate-200 dark:border-slate-700 bg-paper-soft dark:bg-slate-950 shadow-paper overflow-hidden">
           <div className="flex items-center gap-2 px-2 py-1.5 border-b border-slate-200 dark:border-slate-800">
             <Search className="h-3.5 w-3.5 text-slate-400 shrink-0" aria-hidden="true" />
             <input

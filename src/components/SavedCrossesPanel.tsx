@@ -37,7 +37,7 @@ export function SavedCrossesPanel() {
       subtitle={subtitle}
     >
       <div className="space-y-2 pt-1">
-        <div className="flex items-center justify-between gap-3 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 py-2">
+        <div className="flex items-center justify-between gap-3 rounded-md border border-slate-200 dark:border-slate-700 bg-paper-soft dark:bg-slate-900 px-2.5 py-2">
           <div className="min-w-0">
             <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
               Save this cross
@@ -58,7 +58,7 @@ export function SavedCrossesPanel() {
             {saved.map((entry) => (
               <li
                 key={entry.id}
-                className="flex items-center justify-between gap-2 text-xs rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2 py-1.5"
+                className="flex items-center justify-between gap-2 text-xs rounded-md border border-slate-200 dark:border-slate-700 bg-paper-soft dark:bg-slate-900 px-2 py-1.5"
               >
                 <button
                   type="button"

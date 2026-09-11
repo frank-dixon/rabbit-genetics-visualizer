@@ -20,9 +20,9 @@ export function InfoPage({ title, onBack, children }: InfoPageProps) {
           Back to workspace
         </button>
 
-        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{title}</h1>
+        <h1 className="font-serif text-2xl font-semibold text-slate-800 dark:text-slate-100">{title}</h1>
 
-        <div className="space-y-4 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-slate-800 dark:[&_h2]:text-slate-100 [&_h2]:mt-6 [&_h2]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-2 [&_a]:text-sky-600 dark:[&_a]:text-sky-400 [&_a]:underline [&_a]:underline-offset-2 [&_strong]:text-slate-800 dark:[&_strong]:text-slate-100">
+        <div className="space-y-4 [&_h2]:font-serif [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-ink dark:[&_h2]:text-paper-soft [&_h2]:mt-6 [&_h2]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-2 [&_a]:text-sky-600 dark:[&_a]:text-sky-400 [&_a]:underline [&_a]:underline-offset-2 [&_strong]:text-slate-800 dark:[&_strong]:text-slate-100">
           {children}
         </div>
       </div>
