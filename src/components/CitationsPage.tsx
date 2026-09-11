@@ -33,7 +33,7 @@ export function CitationsPage({ onBack }: CitationsPageProps) {
           <li
             key={citation.id}
             id={citation.id}
-            className="border border-slate-200 dark:border-slate-800 rounded-lg p-4 bg-white dark:bg-slate-900 shadow-sm"
+            className="border border-slate-200 dark:border-slate-800 rounded-lg p-4 bg-paper-soft dark:bg-slate-900 shadow-sm"
           >
             <div className="text-xs font-mono text-slate-400 dark:text-slate-500 mb-1">
               [{index + 1}]

@@ -101,7 +101,7 @@ export function PunnettSquareGrid({
                         ? 'bg-sky-100 dark:bg-sky-950/50 border-sky-400 dark:border-sky-500 shadow-sm shadow-sky-200/50 dark:shadow-sky-900/30'
                         : isDimmed
                           ? 'bg-indigo-50/70 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-800'
-                          : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                          : 'bg-paper-soft dark:bg-slate-900 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
                     }`}
                     onMouseEnter={() => onHighlight?.({ row: rowIndex, col: colIndex })}
                     onMouseLeave={() => onHighlight?.(null)}

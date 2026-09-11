@@ -50,7 +50,7 @@ export function InteractivePunnettLab() {
   };
 
   return (
-    <section className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+    <section className="rounded-paper border border-slate-200 dark:border-slate-800 bg-paper-soft dark:bg-slate-900 shadow-sm overflow-hidden">
       <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/50">
         <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">
           Interactive Punnett square lab
@@ -67,7 +67,7 @@ export function InteractivePunnettLab() {
           <select
             value={locusId}
             onChange={(event) => resetForLocus(event.target.value)}
-            className="mt-1 w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 px-2 py-1.5 text-sm"
+            className="mt-1 w-full rounded-md border border-slate-300 dark:border-slate-600 bg-paper-soft dark:bg-slate-950 px-2 py-1.5 text-sm"
           >
             {LEARN_LOCUS_PRESETS.map((option) => (
               <option key={option.id} value={option.id}>
@@ -133,7 +133,7 @@ export function InteractivePunnettLab() {
         )}
 
         {walkthroughStep !== 'parents' && (
-          <div className="rounded-xl border border-slate-200 dark:border-slate-800 p-4 bg-slate-50/50 dark:bg-slate-950/30 flex flex-col items-center">
+          <div className="rounded-paper border border-slate-200 dark:border-slate-800 p-4 bg-slate-50/50 dark:bg-slate-950/30 flex flex-col items-center">
             <PunnettSquareGrid
               square={square}
               parent1Label="Parent A"
@@ -278,7 +278,7 @@ function GameteCard({ parentLabel, genotype, preset, alleles, emphasized }: Game
           {gametes.map((gamete) => (
             <span
               key={gamete}
-              className="inline-flex items-center justify-center h-8 min-w-8 px-2 rounded-full bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-800 font-mono font-bold text-indigo-700 dark:text-indigo-300"
+              className="inline-flex items-center justify-center h-8 min-w-8 px-2 rounded-full bg-paper-soft dark:bg-slate-900 border border-indigo-200 dark:border-indigo-800 font-mono font-bold text-indigo-700 dark:text-indigo-300"
             >
               {gamete}
             </span>

@@ -40,7 +40,7 @@ function LocusSelectorCard({ locus, isSelected, onSelect }: LocusSelectorCardPro
         className={`w-full min-h-[44px] text-sm rounded-lg border transition ${
           isSelected
             ? 'border-sky-500 bg-sky-100 dark:bg-sky-950/50 text-sky-800 dark:text-sky-300'
-            : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-sky-300'
+            : 'border-slate-200 dark:border-slate-700 bg-paper-soft dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-sky-300'
         }`}
       >
         {isSelected ? 'Focused on canvas — click to clear' : 'Focus this locus on canvas'}

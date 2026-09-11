@@ -6,7 +6,7 @@ export function ThemeToggle() {
 
   return (
     <div
-      className="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 p-0.5 shadow-sm"
+      className="inline-flex items-center rounded-full border border-rule dark:border-rule-dark bg-paper/80 dark:bg-ink/70 p-0.5 shadow-paper-sm"
       role="group"
       aria-label="Theme"
     >
@@ -17,8 +17,8 @@ export function ThemeToggle() {
         aria-label="Light mode"
         className={`relative flex h-7 w-7 items-center justify-center rounded-full transition-all duration-200 ${
           !isDark
-            ? 'bg-white text-amber-500 shadow-sm dark:bg-slate-700'
-            : 'text-slate-400 hover:text-slate-200'
+            ? 'bg-paper-soft text-teal shadow-sm'
+            : 'text-slate-400 hover:text-paper-soft'
         }`}
       >
         <Sun className="h-4 w-4" strokeWidth={2.25} />
@@ -31,8 +31,8 @@ export function ThemeToggle() {
         aria-label="Dark mode"
         className={`relative flex h-7 w-7 items-center justify-center rounded-full transition-all duration-200 ${
           isDark
-            ? 'bg-slate-900 text-sky-300 shadow-sm ring-1 ring-slate-600'
-            : 'text-slate-400 hover:text-slate-600'
+            ? 'bg-espresso text-teal shadow-sm ring-1 ring-rule-dark'
+            : 'text-ink-muted hover:text-ink'
         }`}
       >
         <Moon className="h-4 w-4" strokeWidth={2.25} />

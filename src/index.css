@@ -3,6 +3,21 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --paper: #f3eee4;
+    --paper-2: #e8e0d2;
+    --paper-soft: #f8f3ea;
+    --ink: #1c1916;
+    --ink-soft: #3f3a35;
+    --muted: #6a635b;
+    --rule: #d4cbbe;
+    --teal: #0b8a8f;
+    --teal-deep: #087075;
+    --on-teal: #f8f3ea;
+    --espresso: #241e1b;
+    --shadow-paper: 0 12px 40px rgba(28, 25, 22, 0.08);
+  }
+
   html {
     @apply transition-colors duration-200;
   }
@@ -17,14 +32,52 @@
   }
 
   body {
-    @apply bg-slate-100 text-slate-800 antialiased;
+    @apply bg-paper text-ink antialiased font-sans;
+    background-image:
+      radial-gradient(1200px 600px at 10% -10%, rgba(11, 138, 143, 0.09), transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, rgba(36, 30, 27, 0.05), transparent 50%);
+    background-attachment: fixed;
   }
 
   html.dark body {
-    @apply bg-slate-900 text-slate-100;
+    @apply bg-espresso text-paper-soft;
+    background-image:
+      radial-gradient(1000px 520px at 8% -12%, rgba(11, 138, 143, 0.16), transparent 55%),
+      radial-gradient(800px 480px at 100% 0%, rgba(243, 238, 228, 0.04), transparent 50%);
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    @apply font-serif tracking-tight;
+    font-variation-settings: 'SOFT' 40, 'opsz' 72;
+  }
+
+  a {
+    @apply text-teal-deep;
+  }
+
+  a:hover {
+    @apply text-teal;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .surface-card {
+    @apply rounded-paper border border-rule/90 bg-paper-soft/90 shadow-paper-sm;
+  }
+
+  .dark .surface-card {
+    @apply border-rule-dark/80 bg-ink/60 shadow-none;
   }
 }
 
 .glossary-term-highlight {
-  @apply bg-sky-100 dark:bg-sky-950/50 ring-2 ring-sky-300 dark:ring-sky-700;
+  @apply bg-teal-soft dark:bg-sky-950/50 ring-2 ring-teal/40 dark:ring-sky-700;
 }

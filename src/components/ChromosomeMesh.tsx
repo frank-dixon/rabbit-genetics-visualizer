@@ -176,7 +176,7 @@ export function ChromosomeMesh({
           className={`whitespace-nowrap rounded border px-2 py-0.5 text-[10px] font-mono font-semibold tracking-wide shadow-sm ${
             isDark
               ? 'border-slate-600 bg-slate-900/90 text-slate-200'
-              : 'border-slate-300 bg-white/95 text-slate-700'
+              : 'border-slate-300 bg-paper-soft/95 text-slate-700'
           }`}
         >
           {getChromosomeLabel(chromosomeNumber)}
