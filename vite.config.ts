@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  base: '/rabbit/',
   plugins: [
     react(),
     VitePWA({
@@ -20,8 +21,9 @@ export default defineConfig({
         background_color: '#F3EEE4',
         display: 'standalone',
         orientation: 'any',
-        start_url: '/',
-        scope: '/',
+        // Absolute under hub subpath (matches Vite base '/rabbit/')
+        start_url: '/rabbit/',
+        scope: '/rabbit/',
         icons: [
           {
             src: 'pwa-192x192.png',
