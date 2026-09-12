@@ -1,0 +1,38 @@
+name: Deploy to frank-dixon.github.io/rabbit
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to hub /rabbit/
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.HUB_DEPLOY_TOKEN }}
+          external_repository: frank-dixon/frank-dixon.github.io
+          publish_branch: main
+          publish_dir: ./dist
+          destination_dir: rabbit
+          commit_message: 'deploy(rabbit): update from rabbit-genetics-visualizer'
