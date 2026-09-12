@@ -29,7 +29,7 @@ export function AppFooter({ view, onNavigate }: AppFooterProps) {
               className={`text-xs px-3 py-1.5 rounded-full border transition ${
                 view === item.id
                   ? 'bg-teal text-teal-on border-teal shadow-teal font-semibold'
-                  : 'bg-paper/70 dark:bg-ink/50 border-rule dark:border-rule-dark text-ink-soft dark:text-slate-300 hover:border-teal/50 dark:hover:border-teal/40'
+                  : 'bg-paper/70 dark:bg-paper-2/80 border-rule dark:border-rule-dark text-ink-soft dark:text-slate-300 hover:border-teal/50 dark:hover:border-teal/40'
               }`}
             >
               {item.label}

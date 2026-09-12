@@ -6,7 +6,7 @@ export function ThemeToggle() {
 
   return (
     <div
-      className="inline-flex items-center rounded-full border border-rule dark:border-rule-dark bg-paper/80 dark:bg-ink/70 p-0.5 shadow-paper-sm"
+      className="inline-flex items-center rounded-full border border-rule dark:border-rule-dark bg-paper/80 dark:bg-paper-2/90 p-0.5 shadow-paper-sm"
       role="group"
       aria-label="Theme"
     >
@@ -18,7 +18,7 @@ export function ThemeToggle() {
         className={`relative flex h-7 w-7 items-center justify-center rounded-full transition-all duration-200 ${
           !isDark
             ? 'bg-paper-soft text-teal shadow-sm'
-            : 'text-slate-400 hover:text-paper-soft'
+            : 'text-slate-400 hover:text-ink'
         }`}
       >
         <Sun className="h-4 w-4" strokeWidth={2.25} />

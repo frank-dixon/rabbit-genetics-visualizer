@@ -55,7 +55,7 @@ export default function App() {
   return (
     <div
       data-theme={theme}
-      className="min-h-screen lg:h-screen lg:overflow-hidden bg-transparent text-ink dark:text-paper-soft flex flex-col font-sans transition-colors duration-200"
+      className="min-h-screen lg:h-screen lg:overflow-hidden bg-transparent text-ink dark:text-ink flex flex-col font-sans transition-colors duration-200"
     >
       <HubMasthead />
 
@@ -67,10 +67,10 @@ export default function App() {
               className="mt-0.5 hidden sm:block h-9 w-9 shrink-0 rounded-[0.85rem] bg-gradient-to-br from-teal via-teal-deep to-espresso shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]"
             />
             <div className="min-w-0">
-              <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.06em] text-ink-muted dark:text-slate-400">
+              <p className="font-mono text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.1em] text-indigo-500">
                 Meat rabbit genetics
               </p>
-              <h1 className="font-serif text-xl sm:text-2xl font-semibold text-ink dark:text-paper-soft leading-tight">
+              <h1 className="font-serif text-xl sm:text-2xl font-semibold text-ink dark:text-ink leading-tight">
                 {APP_NAME}
               </h1>
               <p className="text-[11px] sm:text-xs text-ink-muted dark:text-slate-400 mt-0.5 truncate">

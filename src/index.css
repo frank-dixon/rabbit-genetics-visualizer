@@ -4,18 +4,20 @@
 
 @layer base {
   :root {
-    --paper: #f3eee4;
-    --paper-2: #e8e0d2;
-    --paper-soft: #f8f3ea;
-    --ink: #1c1916;
-    --ink-soft: #3f3a35;
-    --muted: #6a635b;
-    --rule: #d4cbbe;
-    --teal: #0b8a8f;
-    --teal-deep: #087075;
-    --on-teal: #f8f3ea;
-    --espresso: #241e1b;
-    --shadow-paper: 0 12px 40px rgba(28, 25, 22, 0.08);
+    --paper: #0a0c10;
+    --paper-2: #141820;
+    --paper-soft: #141820;
+    --ink: #e6eaf0;
+    --ink-soft: #b7c0ce;
+    --muted: #8b93a3;
+    --rule: #243041;
+    --teal: #6b7fd7;
+    --teal-deep: #5a6ec4;
+    --on-teal: #0a0c10;
+    --espresso: #050608;
+    --action: #6b7fd7;
+    --sea: #5fa8a0;
+    --shadow-paper: 0 16px 40px rgba(0, 0, 0, 0.35);
   }
 
   html {
@@ -23,27 +25,19 @@
   }
 
   html,
-  html.light {
-    color-scheme: light;
-  }
-
+  html.light,
   html.dark {
     color-scheme: dark;
   }
 
-  body {
-    @apply bg-paper text-ink antialiased font-sans;
+  body,
+  html.dark body,
+  html.light body {
+    @apply bg-espresso text-ink antialiased font-sans;
     background-image:
-      radial-gradient(1200px 600px at 10% -10%, rgba(11, 138, 143, 0.09), transparent 55%),
-      radial-gradient(900px 500px at 100% 0%, rgba(36, 30, 27, 0.05), transparent 50%);
+      radial-gradient(1000px 520px at 8% -12%, rgba(107, 127, 215, 0.16), transparent 55%),
+      radial-gradient(800px 480px at 100% 0%, rgba(95, 168, 160, 0.1), transparent 50%);
     background-attachment: fixed;
-  }
-
-  html.dark body {
-    @apply bg-espresso text-paper-soft;
-    background-image:
-      radial-gradient(1000px 520px at 8% -12%, rgba(11, 138, 143, 0.16), transparent 55%),
-      radial-gradient(800px 480px at 100% 0%, rgba(243, 238, 228, 0.04), transparent 50%);
   }
 
   h1,
@@ -51,7 +45,6 @@
   h3,
   .font-display {
     @apply font-serif tracking-tight;
-    font-variation-settings: 'SOFT' 40, 'opsz' 72;
   }
 
   a {
@@ -74,7 +67,7 @@
   }
 
   .dark .surface-card {
-    @apply border-rule-dark/80 bg-ink/60 shadow-none;
+    @apply border-rule-dark/80 bg-paper-2/90 shadow-none;
   }
 }
 

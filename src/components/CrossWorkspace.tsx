@@ -40,7 +40,7 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
     <section className="bg-paper-soft/90 dark:bg-ink/55 border border-rule/90 dark:border-rule-dark/70 rounded-paper shadow-paper-sm overflow-hidden">
       {section === 'outcomes' && (
         <div className="px-4 py-3 border-b border-rule/80 dark:border-rule-dark/60 sm:px-5">
-          <h2 className="font-serif text-lg font-semibold text-ink dark:text-paper-soft">
+          <h2 className="font-serif text-lg font-semibold text-ink dark:text-ink">
             Progeny outcomes
           </h2>
         </div>
@@ -48,7 +48,7 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
 
       {showHeader && (
         <div className="px-4 py-2.5 border-b border-rule/80 dark:border-rule-dark/60 sm:px-5 flex items-center justify-between gap-3">
-          <h2 className="font-serif text-lg font-semibold text-ink dark:text-paper-soft">Your cross</h2>
+          <h2 className="font-serif text-lg font-semibold text-ink dark:text-ink">Your cross</h2>
           <CopyTextButton
             text={shareUrl}
             label="Share link"

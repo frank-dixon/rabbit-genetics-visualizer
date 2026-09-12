@@ -183,7 +183,7 @@ export function CollapsiblePanel({
           aria-hidden="true"
         />
         <div className="flex-1 border-b-0">
-          <h2 className="font-serif text-lg font-semibold text-ink dark:text-paper-soft">{title}</h2>
+          <h2 className="font-serif text-lg font-semibold text-ink dark:text-ink">{title}</h2>
           {description && (
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{description}</p>
           )}

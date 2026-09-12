@@ -12,21 +12,22 @@ function getStoredTheme(): Theme | null {
   return null;
 }
 
-function getSystemTheme(): Theme {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
-
 export function resolveTheme(): Theme {
-  return getStoredTheme() ?? getSystemTheme();
+  // Cool Spectrum ships dark-first; honor stored choice but default dark.
+  return getStoredTheme() ?? 'dark';
 }
 
 export function applyThemeToDocument(theme: Theme) {
   const root = document.documentElement;
 
   root.classList.remove('light', 'dark');
-  root.classList.add(theme);
+  // Cool Spectrum is dark-only: keep dark: utilities active in both modes.
+  root.classList.add('dark');
+  if (theme === 'light') {
+    root.classList.add('light');
+  }
   root.dataset.theme = theme;
-  root.style.colorScheme = theme;
+  root.style.colorScheme = 'dark';
   localStorage.setItem(STORAGE_KEY, theme);
 }
 
