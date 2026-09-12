@@ -8,6 +8,7 @@ import { CrossHydrator } from './components/CrossHydrator';
 import { GlossaryPanel } from './components/GlossaryPanel';
 import { CitationsPage } from './components/CitationsPage';
 import { ThemeToggle } from './components/ThemeToggle';
+import { HubMasthead } from './components/HubMasthead';
 import {
   WorkspaceMobileTabs,
   type WorkspaceMobileTab,
@@ -56,7 +57,9 @@ export default function App() {
       data-theme={theme}
       className="min-h-screen lg:h-screen lg:overflow-hidden bg-transparent text-ink dark:text-paper-soft flex flex-col font-sans transition-colors duration-200"
     >
-      <header className="shrink-0 border-b border-rule/80 dark:border-rule-dark/70 bg-paper-soft/85 dark:bg-espresso/85 backdrop-blur-md px-3 py-3 sm:px-4 sticky top-0 z-50">
+      <HubMasthead />
+
+      <header className="shrink-0 border-b border-rule/80 dark:border-rule-dark/70 bg-paper-soft/85 dark:bg-espresso/85 backdrop-blur-md px-3 py-3 sm:px-4 sticky top-[3.15rem] z-50">
         <div className={`${WORKSPACE_MAX_WIDTH} mx-auto flex justify-between items-center gap-3`}>
           <div className="min-w-0 flex items-start gap-3">
             <span
