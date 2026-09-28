@@ -7,6 +7,7 @@ import { GeneticsReferencePanel } from './components/GeneticsReferencePanel';
 import { CrossHydrator } from './components/CrossHydrator';
 import { GlossaryPanel } from './components/GlossaryPanel';
 import { CitationsPage } from './components/CitationsPage';
+import { ContentModeToggle } from './components/ContentModeToggle';
 import { ThemeToggle } from './components/ThemeToggle';
 import { HubMasthead } from './components/HubMasthead';
 import {
@@ -22,7 +23,7 @@ function WorkspaceView() {
 
   return (
     <main
-      className={`flex-1 min-h-0 w-full mx-auto p-3 sm:p-4 ${WORKSPACE_MAX_WIDTH} space-y-4 lg:overflow-y-auto lg:overscroll-contain pb-6`}
+      className={`flex-1 min-h-0 w-full mx-auto p-3 sm:p-4 ${WORKSPACE_MAX_WIDTH} space-y-3 lg:overflow-y-auto lg:overscroll-contain pb-6`}
     >
       <WorkspaceMobileTabs activeTab={mobileTab} onChange={setMobileTab} />
 
@@ -39,7 +40,7 @@ function WorkspaceView() {
       </div>
 
       <div
-        className={`space-y-4 ${mobileTab === 'reference' ? 'block' : 'hidden md:block'}`}
+        className={`space-y-3 ${mobileTab === 'reference' ? 'block' : 'hidden md:block'}`}
       >
         <GeneticsReferencePanel />
         <GlossaryPanel />
@@ -59,27 +60,28 @@ export default function App() {
     >
       <HubMasthead />
 
-      <header className="shrink-0 border-b border-rule/80 dark:border-rule-dark/70 bg-paper-soft/85 dark:bg-espresso/85 backdrop-blur-md px-3 py-3 sm:px-4 sticky top-[3.15rem] z-50">
+      <header className="shrink-0 border-b border-rule/70 dark:border-rule-dark/70 bg-paper-soft/90 dark:bg-espresso/90 backdrop-blur-md px-3 py-2.5 sm:px-4 sticky top-[3rem] z-50">
         <div className={`${WORKSPACE_MAX_WIDTH} mx-auto flex justify-between items-center gap-3`}>
-          <div className="min-w-0 flex items-start gap-3">
+          <div className="min-w-0 flex items-start gap-2.5">
             <span
               aria-hidden="true"
-              className="mt-0.5 hidden sm:block h-9 w-9 shrink-0 rounded-[0.85rem] bg-gradient-to-br from-teal via-teal-deep to-espresso shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]"
+              className="mt-0.5 hidden sm:block h-8 w-8 shrink-0 rounded-lg bg-gradient-to-br from-teal via-teal-deep to-espresso shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]"
             />
             <div className="min-w-0">
-              <p className="font-mono text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.1em] text-indigo-500">
+              <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.1em] text-teal">
                 Meat rabbit genetics
               </p>
-              <h1 className="font-serif text-xl sm:text-2xl font-semibold text-ink dark:text-ink leading-tight">
+              <h1 className="font-sans text-lg sm:text-xl font-semibold text-ink leading-tight">
                 {APP_NAME}
               </h1>
-              <p className="text-[11px] sm:text-xs text-ink-muted dark:text-slate-400 mt-0.5 truncate">
+              <p className="text-[11px] sm:text-xs text-ink-muted mt-0.5 truncate">
                 {APP_TAGLINE}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
+            <ContentModeToggle />
             <ThemeToggle />
           </div>
         </div>

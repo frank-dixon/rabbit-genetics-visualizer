@@ -32,72 +32,96 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
     [parent1, parent2, parent1PresetId, parent2PresetId],
   );
 
-  const showParents = section === 'all' || section === 'parents';
-  const showOutcomes = section === 'all' || section === 'outcomes';
-  const showHeader = section !== 'outcomes';
 
+  const parentsRail = (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-teal">
+            Breeding desk
+          </p>
+          <h2 className="text-base font-semibold text-ink leading-tight">Dam &amp; Sire</h2>
+        </div>
+        <CopyTextButton
+          text={shareUrl}
+          label="Share"
+          copiedLabel="Copied"
+          className="shrink-0"
+        />
+      </div>
+
+      <ExampleCrossChips />
+
+      <div className="grid grid-cols-1 gap-3">
+        <ParentCompactCard
+          parentKey="parent1"
+          roleLabel="Dam"
+          roleHint="Parent A"
+          accentTextClass="text-rose-700 dark:text-rose-400"
+          accentBorderClass="border-rose-200/80 dark:border-rose-900/40"
+          mateGenotype={parent2}
+        />
+        <ParentCompactCard
+          parentKey="parent2"
+          roleLabel="Sire"
+          roleHint="Parent B"
+          accentTextClass="text-teal-deep dark:text-sky-300"
+          accentBorderClass="border-teal/30 dark:border-sky-800/50"
+          mateGenotype={parent1}
+        />
+      </div>
+
+      <div className="flex flex-col items-center gap-1">
+        <ParentDiffStrip />
+        <button
+          type="button"
+          onClick={swapParents}
+          className="text-[10px] text-ink-muted dark:text-slate-400 hover:text-teal-deep dark:hover:text-sky-300 hover:underline transition focus:outline-none focus:underline"
+        >
+          Swap Dam / Sire
+        </button>
+      </div>
+
+      <SavedCrossesPanel />
+    </div>
+  );
+
+  const outcomesHero = (
+    <div className="space-y-2 h-full min-h-0 flex flex-col">
+      <div className="shrink-0">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-teal">
+          Outcomes
+        </p>
+        <h2 className="text-base font-semibold text-ink leading-tight">Progeny</h2>
+      </div>
+      <div className="flex-1 min-h-0">
+        <ProgenyOutcomesPanel />
+      </div>
+    </div>
+  );
+
+  if (section === 'parents') {
+    return (
+      <section className="surface-card p-4 sm:p-5">{parentsRail}</section>
+    );
+  }
+
+  if (section === 'outcomes') {
+    return (
+      <section className="surface-card p-4 sm:p-5">{outcomesHero}</section>
+    );
+  }
+
+  // Breeding desk: left Dam/Sire rail, right Progeny hero (not a Compare strip wizard)
   return (
-    <section className="bg-paper-soft/90 dark:bg-ink/55 border border-rule/90 dark:border-rule-dark/70 rounded-paper shadow-paper-sm overflow-hidden">
-      {section === 'outcomes' && (
-        <div className="px-4 py-3 border-b border-rule/80 dark:border-rule-dark/60 sm:px-5">
-          <h2 className="font-serif text-lg font-semibold text-ink dark:text-ink">
-            Progeny outcomes
-          </h2>
+    <section className="surface-card overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-12 lg:divide-x divide-rule/80 dark:divide-rule-dark/60">
+        <div className="lg:col-span-5 p-4 sm:p-5 border-b lg:border-b-0 border-rule/80 dark:border-rule-dark/60">
+          {parentsRail}
         </div>
-      )}
-
-      {showHeader && (
-        <div className="px-4 py-2.5 border-b border-rule/80 dark:border-rule-dark/60 sm:px-5 flex items-center justify-between gap-3">
-          <h2 className="font-serif text-lg font-semibold text-ink dark:text-ink">Your cross</h2>
-          <CopyTextButton
-            text={shareUrl}
-            label="Share link"
-            copiedLabel="Copied"
-            className="shrink-0"
-          />
+        <div className="lg:col-span-7 p-4 sm:p-5 bg-paper/40 dark:bg-espresso/30">
+          {outcomesHero}
         </div>
-      )}
-
-      <div className="p-4 sm:p-5 space-y-4">
-        {showParents && (
-          <>
-            <ExampleCrossChips />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <ParentCompactCard
-                parentKey="parent1"
-                roleLabel="Parent A"
-                roleHint="Dam"
-                accentTextClass="text-rose-700 dark:text-rose-400"
-                accentBorderClass="border-rose-200/80 dark:border-rose-900/40"
-                mateGenotype={parent2}
-              />
-              <ParentCompactCard
-                parentKey="parent2"
-                roleLabel="Parent B"
-                roleHint="Sire"
-                accentTextClass="text-teal-deep dark:text-sky-300"
-                accentBorderClass="border-teal/25 dark:border-sky-800/50"
-                mateGenotype={parent1}
-              />
-            </div>
-
-            <div className="flex flex-col items-center gap-1">
-              <ParentDiffStrip />
-              <button
-                type="button"
-                onClick={swapParents}
-                className="text-[10px] text-ink-muted dark:text-slate-400 hover:text-teal-deep dark:hover:text-sky-300 hover:underline transition focus:outline-none focus:underline"
-              >
-                Swap parents
-              </button>
-            </div>
-
-            <SavedCrossesPanel />
-          </>
-        )}
-
-        {showOutcomes && <ProgenyOutcomesPanel />}
       </div>
     </section>
   );

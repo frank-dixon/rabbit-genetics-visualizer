@@ -4,6 +4,8 @@ import { calculateCross, formatProbability, type ProgenyOutcome } from '../utils
 import { resolvePlainEnglishPhenotype } from '../utils/plainEnglishPhenotype';
 import { formatCompactGenotype } from '../utils/formatGenotype';
 import { useGeneticStore } from '../store/useGeneticStore';
+import { useContentMode } from '../store/useContentModeStore';
+import { resolveNerdPhenotypeBlurb } from '../utils/nerdPhenotype';
 import { CopyTextButton } from './CopyTextButton';
 import { GenotypeInline } from './GenotypeInline';
 import { GlossaryTermText } from './GlossaryTermText';
@@ -110,6 +112,7 @@ export function ProgenyOutcomesPanel() {
   const [silveredOnly, setSilveredOnly] = useState(false);
   const [hideRare, setHideRare] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+  const { isNerd } = useContentMode();
 
   const outcomes = useMemo(() => calculateCross(parent1, parent2), [parent1, parent2]);
   const groups = useMemo(() => buildPhenotypeGroups(outcomes), [outcomes]);
@@ -190,7 +193,7 @@ export function ProgenyOutcomesPanel() {
         </label>
       </div>
 
-      <div className="rounded-lg border border-slate-200 dark:border-slate-800 max-h-[min(55vh,400px)] overflow-y-auto overscroll-contain bg-paper-soft dark:bg-slate-900 divide-y divide-slate-200 dark:divide-slate-800">
+      <div className="rounded-lg border border-slate-200 dark:border-slate-800 max-h-[min(70vh,560px)] lg:max-h-[min(72vh,640px)] overflow-y-auto overscroll-contain bg-paper-soft dark:bg-slate-900 divide-y divide-slate-200 dark:divide-slate-800">
         {visibleGroups.length === 0 && (
           <p className="px-3 py-6 text-xs text-center text-slate-500 dark:text-slate-400">
             No outcomes match the current filters.
@@ -242,12 +245,22 @@ export function ProgenyOutcomesPanel() {
                       <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-snug">
                         <GlossaryTermText text={group.title} />
                       </h4>
-                      {group.plainEnglish && (
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug italic">
+                      {!isNerd && group.plainEnglish && (
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
                           {group.plainEnglish}
                         </p>
                       )}
-                      {group.subtitle && (
+                      {isNerd && headerGenotype && (
+                        <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">
+                          {resolveNerdPhenotypeBlurb(headerGenotype)}
+                        </p>
+                      )}
+                      {isNerd && group.subtitle && (
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug font-mono">
+                          <GlossaryTermText text={group.subtitle} />
+                        </p>
+                      )}
+                      {!isNerd && group.subtitle && (
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
                           <GlossaryTermText text={group.subtitle} />
                         </p>
@@ -306,13 +319,24 @@ export function ProgenyOutcomesPanel() {
                           />
                         </div>
                         <div className="flex-1 min-w-0 space-y-1">
-                          <GenotypeInline
-                            genotype={outcome.genotypeByLocus}
-                            baseline={baseline}
-                          />
-                          <span onClick={(event) => event.stopPropagation()}>
-                            <CopyTextButton text={compactGenotype} label="Copy genotype" />
-                          </span>
+                          {isNerd ? (
+                            <>
+                              <GenotypeInline
+                                genotype={outcome.genotypeByLocus}
+                                baseline={baseline}
+                              />
+                              <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-snug">
+                                {resolveNerdPhenotypeBlurb(outcome.genotypeByLocus)}
+                              </p>
+                              <span onClick={(event) => event.stopPropagation()}>
+                                <CopyTextButton text={compactGenotype} label="Copy genotype" />
+                              </span>
+                            </>
+                          ) : (
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                              Genotype variant · flip to Nerd for locus detail
+                            </p>
+                          )}
                         </div>
                       </li>
                     );
@@ -320,7 +344,7 @@ export function ProgenyOutcomesPanel() {
                 </ul>
               )}
 
-              {!isCollapsed && group.variants.length === 1 && (
+              {!isCollapsed && group.variants.length === 1 && isNerd && (
                 <div
                   className={`px-3 pb-2.5 pl-8 space-y-1 hover:bg-slate-50 dark:hover:bg-slate-950/40 cursor-pointer ${
                     progenyFocusLabel === group.title ? 'bg-sky-50/60 dark:bg-sky-950/20' : ''
