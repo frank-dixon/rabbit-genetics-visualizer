@@ -153,14 +153,14 @@ export function ProgenyOutcomesPanel() {
     <div>
       <div className="flex items-baseline justify-between gap-3 mb-2">
         <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">Progeny outcomes</h3>
-        <span className="text-[10px] text-slate-500 dark:text-slate-400 shrink-0">
+        <span className="text-[10px] text-ink-muted shrink-0">
           {filteredGroups.length}/{groups.length} phenotypes · {formatProbability(probabilitySum)}{' '}
           shown
         </span>
       </div>
 
       {progenyFocusLabel && (
-        <p className="text-[10px] text-sky-700 dark:text-sky-400 mb-2">
+        <p className="text-[10px] text-teal-deep dark:text-teal mb-2">
           Chromosome focus: {progenyFocusLabel}
         </p>
       )}
@@ -171,9 +171,9 @@ export function ProgenyOutcomesPanel() {
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
           placeholder="Filter phenotypes…"
-          className="flex-1 min-w-[10rem] text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-paper-soft dark:bg-slate-950 text-slate-800 dark:text-slate-100 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-400"
+          className="flex-1 min-w-[10rem] text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-paper-soft dark:bg-slate-950 text-ink dark:text-paper-soft px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-400"
         />
-        <label className="inline-flex items-center gap-1.5 text-[10px] text-slate-600 dark:text-slate-300 cursor-pointer">
+        <label className="inline-flex items-center gap-1.5 text-[10px] text-ink-soft cursor-pointer">
           <input
             type="checkbox"
             checked={silveredOnly}
@@ -182,7 +182,7 @@ export function ProgenyOutcomesPanel() {
           />
           Silvered only
         </label>
-        <label className="inline-flex items-center gap-1.5 text-[10px] text-slate-600 dark:text-slate-300 cursor-pointer">
+        <label className="inline-flex items-center gap-1.5 text-[10px] text-ink-soft cursor-pointer">
           <input
             type="checkbox"
             checked={hideRare}
@@ -195,7 +195,7 @@ export function ProgenyOutcomesPanel() {
 
       <div className="rounded-lg border border-slate-200 dark:border-slate-800 max-h-[min(70vh,560px)] lg:max-h-[min(72vh,640px)] overflow-y-auto overscroll-contain bg-paper-soft dark:bg-slate-900 divide-y divide-slate-200 dark:divide-slate-800">
         {visibleGroups.length === 0 && (
-          <p className="px-3 py-6 text-xs text-center text-slate-500 dark:text-slate-400">
+          <p className="px-3 py-6 text-xs text-center text-ink-muted">
             No outcomes match the current filters.
           </p>
         )}
@@ -208,15 +208,15 @@ export function ProgenyOutcomesPanel() {
           return (
             <section key={group.phenotype}>
               <div
-                className={`w-full flex items-start gap-2.5 px-3 py-2.5 bg-slate-50/90 dark:bg-slate-950/60 border-b border-slate-200/80 dark:border-slate-800/80 ${
-                  progenyFocusLabel === group.title ? 'ring-2 ring-inset ring-sky-400/60' : ''
+                className={`w-full flex items-start gap-2.5 px-3 py-2.5 bg-paper-2/80 dark:bg-espresso/50 border-b border-rule/80 dark:border-rule-dark/70 ${
+                  progenyFocusLabel === group.title ? 'ring-2 ring-inset ring-teal/50' : ''
                 }`}
               >
                 {canCollapse && (
                   <button
                     type="button"
                     onClick={() => toggleGroup(group.phenotype)}
-                    className="mt-0.5 shrink-0 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                    className="mt-0.5 shrink-0 text-ink-muted hover:text-ink dark:hover:text-paper-soft"
                     aria-label={isCollapsed ? 'Expand phenotype group' : 'Collapse phenotype group'}
                   >
                     <ChevronDown
@@ -242,35 +242,35 @@ export function ProgenyOutcomesPanel() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-snug">
+                      <h4 className="text-sm font-semibold text-ink dark:text-paper-soft leading-snug">
                         <GlossaryTermText text={group.title} />
                       </h4>
                       {!isNerd && group.plainEnglish && (
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
+                        <p className="text-[11px] text-ink-muted mt-0.5 leading-snug">
                           {group.plainEnglish}
                         </p>
                       )}
                       {isNerd && headerGenotype && (
-                        <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">
+                        <p className="text-[11px] text-ink-soft mt-0.5 leading-snug">
                           {resolveNerdPhenotypeBlurb(headerGenotype)}
                         </p>
                       )}
                       {isNerd && group.subtitle && (
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug font-mono">
+                        <p className="text-[11px] text-ink-muted mt-0.5 leading-snug font-mono">
                           <GlossaryTermText text={group.subtitle} />
                         </p>
                       )}
                       {!isNerd && group.subtitle && (
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
+                        <p className="text-[11px] text-ink-muted mt-0.5 leading-snug">
                           <GlossaryTermText text={group.subtitle} />
                         </p>
                       )}
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
+                      <p className="text-[10px] text-ink-muted mt-1">
                         {variantQualifier(group.variants.length)}
                       </p>
                     </div>
                     <div className="flex flex-col items-end gap-1 shrink-0 w-20">
-                      <span className="text-base font-bold font-mono text-sky-700 dark:text-sky-400 tabular-nums">
+                      <span className="text-base font-bold font-mono text-teal-deep dark:text-teal tabular-nums">
                         {formatProbability(group.combinedProbability)}
                       </span>
                       {group.variants.length === 1 && (
@@ -286,7 +286,7 @@ export function ProgenyOutcomesPanel() {
               </div>
 
               {!isCollapsed && group.variants.length > 1 && (
-                <ul className="divide-y divide-slate-100 dark:divide-slate-800/80">
+                <ul className="divide-y divide-rule/60 dark:divide-rule-dark/50">
                   {group.variants.map(({ outcome, baseline }) => {
                     const key = `${outcome.genotype}-${outcome.phenotype}`;
                     const compactGenotype = formatCompactGenotype(outcome.genotypeByLocus);
@@ -294,8 +294,8 @@ export function ProgenyOutcomesPanel() {
                     return (
                       <li
                         key={key}
-                        className={`flex items-start gap-2.5 pl-3 pr-3 py-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-950/40 ${
-                          progenyFocusLabel === outcome.genotype ? 'bg-sky-50/60 dark:bg-sky-950/20' : ''
+                        className={`flex items-start gap-2.5 pl-3 pr-3 py-2 cursor-pointer hover:bg-paper-2/70 dark:hover:bg-espresso/40 ${
+                          progenyFocusLabel === outcome.genotype ? 'bg-teal-soft/40 dark:bg-sky-950/30' : ''
                         }`}
                         onClick={() =>
                           focusProgenyGenotype(
@@ -310,7 +310,7 @@ export function ProgenyOutcomesPanel() {
                           className="shrink-0 w-16"
                         />
                         <div className="w-16 shrink-0 flex flex-col items-end gap-1 pt-0.5">
-                          <span className="text-xs font-bold font-mono text-slate-600 dark:text-slate-300 tabular-nums">
+                          <span className="text-xs font-bold font-mono text-ink-soft tabular-nums">
                             {formatProbability(outcome.probability)}
                           </span>
                           <ProbabilityBar
@@ -325,7 +325,7 @@ export function ProgenyOutcomesPanel() {
                                 genotype={outcome.genotypeByLocus}
                                 baseline={baseline}
                               />
-                              <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-snug">
+                              <p className="text-[10px] text-ink-muted leading-snug">
                                 {resolveNerdPhenotypeBlurb(outcome.genotypeByLocus)}
                               </p>
                               <span onClick={(event) => event.stopPropagation()}>
@@ -333,8 +333,8 @@ export function ProgenyOutcomesPanel() {
                               </span>
                             </>
                           ) : (
-                            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
-                              Genotype variant · flip to Nerd for locus detail
+                            <p className="text-[11px] text-ink-muted leading-snug">
+                              Same look · different genotype mix
                             </p>
                           )}
                         </div>
@@ -346,8 +346,8 @@ export function ProgenyOutcomesPanel() {
 
               {!isCollapsed && group.variants.length === 1 && isNerd && (
                 <div
-                  className={`px-3 pb-2.5 pl-8 space-y-1 hover:bg-slate-50 dark:hover:bg-slate-950/40 cursor-pointer ${
-                    progenyFocusLabel === group.title ? 'bg-sky-50/60 dark:bg-sky-950/20' : ''
+                  className={`px-3 pb-2.5 pl-8 space-y-1 hover:bg-paper-2/70 dark:hover:bg-espresso/40 cursor-pointer ${
+                    progenyFocusLabel === group.title ? 'bg-teal-soft/40 dark:bg-sky-950/30' : ''
                   }`}
                   onClick={() =>
                     focusProgenyGenotype(
@@ -374,7 +374,7 @@ export function ProgenyOutcomesPanel() {
         <button
           type="button"
           onClick={() => setShowAll(true)}
-          className="mt-2 text-xs text-sky-700 dark:text-sky-400 hover:underline min-h-[44px]"
+          className="mt-2 text-xs text-teal-deep dark:text-teal hover:underline min-h-[44px]"
         >
           Show {hiddenGroupCount} more phenotype{hiddenGroupCount === 1 ? '' : 's'}
         </button>
@@ -384,7 +384,7 @@ export function ProgenyOutcomesPanel() {
         <button
           type="button"
           onClick={() => setShowAll(false)}
-          className="mt-2 text-xs text-slate-500 dark:text-slate-400 hover:underline min-h-[44px]"
+          className="mt-2 text-xs text-ink-muted hover:underline min-h-[44px]"
         >
           Show fewer
         </button>

@@ -4,10 +4,10 @@ import { resolvePhenotypeVisual, type PhenotypeVisual } from '../utils/phenotype
 type GenotypeMap = Record<string, [string, string]>;
 
 const EYE_COLORS = {
-  ruby: { iris: '#c81e1e', ring: '#fca5a5' },
-  blue: { iris: '#2563eb', ring: '#93c5fd' },
-  pink: { iris: '#db2777', ring: '#f9a8d4' },
-  dark: { iris: '#1c1917', ring: '#57534e' },
+  ruby: '#c81e1e',
+  blue: '#2563eb',
+  pink: '#db2777',
+  dark: '#1c1917',
 } as const;
 
 const SIZE_MAP = {
@@ -16,10 +16,10 @@ const SIZE_MAP = {
   lg: 'w-40 h-28',
 } as const;
 
-const EYE_SIZE = {
-  sm: 'h-2.5 w-2.5',
-  md: 'h-3.5 w-3.5',
-  lg: 'h-4 w-4',
+const DOT_SIZE = {
+  sm: 'h-2 w-2',
+  md: 'h-2.5 w-2.5',
+  lg: 'h-3 w-3',
 } as const;
 
 interface PhenotypeRendererProps {
@@ -29,16 +29,14 @@ interface PhenotypeRendererProps {
   label?: string;
 }
 
-function FurSwatch({ visual, size }: { visual: PhenotypeVisual; size: keyof typeof SIZE_MAP }) {
-  const eyes = EYE_COLORS[visual.eyeColor];
+function FurSwatch({ visual }: { visual: PhenotypeVisual }) {
   const showBellyBand = visual.pattern === 'agouti' || visual.pattern === 'solid';
   const showPoints = visual.pattern === 'pointed' && visual.pointColor;
   const showBroken = visual.pattern === 'broken' && visual.patchColor;
   const showCharlie = visual.pattern === 'charlie' && visual.patchColor;
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-md">
-      {/* Base coat with fur texture */}
+    <div className="relative h-full w-full overflow-hidden rounded-sm">
       <div
         className="fur-swatch absolute inset-0"
         style={{ backgroundColor: visual.bodyColor }}
@@ -115,24 +113,6 @@ function FurSwatch({ visual, size }: { visual: PhenotypeVisual; size: keyof type
           }}
         />
       )}
-
-      {/* Eye color dots (not cartoon rabbit art) */}
-      <div className="absolute bottom-1 right-1 flex items-center gap-1 rounded-full bg-black/15 px-1 py-0.5 backdrop-blur-[1px]">
-        <span
-          className={`inline-block rounded-full ring-1 ring-white/70 shadow-sm ${EYE_SIZE[size]}`}
-          style={{
-            background: `radial-gradient(circle at 35% 30%, #fff 0 18%, ${eyes.iris} 28% 72%, ${eyes.ring} 100%)`,
-          }}
-          title={`Eyes: ${visual.eyeColor}`}
-        />
-        <span
-          className={`inline-block rounded-full ring-1 ring-white/70 shadow-sm ${EYE_SIZE[size]}`}
-          style={{
-            background: `radial-gradient(circle at 35% 30%, #fff 0 18%, ${eyes.iris} 28% 72%, ${eyes.ring} 100%)`,
-          }}
-          aria-hidden="true"
-        />
-      </div>
     </div>
   );
 }
@@ -144,14 +124,30 @@ export function PhenotypeRenderer({
   label,
 }: PhenotypeRendererProps) {
   const visual = useMemo(() => resolvePhenotypeVisual(genotype), [genotype]);
+  const eye = EYE_COLORS[visual.eyeColor];
 
   return (
     <div
-      className={`rounded-md border border-rule/80 dark:border-rule-dark/70 bg-paper-2/60 dark:bg-espresso/60 overflow-hidden ${SIZE_MAP[size]} ${className}`}
+      className={`flex flex-col gap-1 ${className}`}
       role={label ? 'img' : undefined}
-      aria-label={label}
+      aria-label={label ?? `Coat swatch, ${visual.eyeColor} eyes`}
     >
-      <FurSwatch visual={visual} size={size} />
+      <div
+        className={`rounded-sm border border-rule/70 dark:border-rule-dark/70 bg-paper-2/40 dark:bg-espresso/50 overflow-hidden ${SIZE_MAP[size]}`}
+      >
+        <FurSwatch visual={visual} />
+      </div>
+      {/* Single flat eye-color chip — not googly eyes on the fur face */}
+      <div className="flex items-center gap-1.5 px-0.5">
+        <span
+          className={`inline-block shrink-0 rounded-full border border-rule/60 dark:border-rule-dark/60 ${DOT_SIZE[size]}`}
+          style={{ backgroundColor: eye }}
+          title={`Eye color: ${visual.eyeColor}`}
+        />
+        <span className="text-[9px] leading-none text-ink-muted capitalize truncate">
+          {visual.eyeColor}
+        </span>
+      </div>
     </div>
   );
 }
