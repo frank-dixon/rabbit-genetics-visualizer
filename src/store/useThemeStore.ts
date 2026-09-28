@@ -13,21 +13,17 @@ function getStoredTheme(): Theme | null {
 }
 
 export function resolveTheme(): Theme {
-  // Cool Spectrum ships dark-first; honor stored choice but default dark.
-  return getStoredTheme() ?? 'dark';
+  // Cream breeding desk ships light-first; honor stored choice but default light.
+  return getStoredTheme() ?? 'light';
 }
 
 export function applyThemeToDocument(theme: Theme) {
   const root = document.documentElement;
 
   root.classList.remove('light', 'dark');
-  // Cool Spectrum is dark-only: keep dark: utilities active in both modes.
-  root.classList.add('dark');
-  if (theme === 'light') {
-    root.classList.add('light');
-  }
+  root.classList.add(theme);
   root.dataset.theme = theme;
-  root.style.colorScheme = 'dark';
+  root.style.colorScheme = theme;
   localStorage.setItem(STORAGE_KEY, theme);
 }
 

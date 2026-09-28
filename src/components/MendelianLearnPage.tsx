@@ -122,7 +122,7 @@ export function MendelianLearnPage({ onBack }: MendelianLearnPageProps) {
         </button>
 
         <header className="space-y-2">
-          <h1 className="font-serif text-2xl font-semibold text-slate-800 dark:text-slate-100">
+          <h1 className="font-sans text-2xl font-semibold text-slate-800 dark:text-slate-100">
             Mendelian Inheritance &amp; Punnett Squares
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-300 max-w-3xl">

@@ -4,32 +4,23 @@ import { resolvePhenotypeVisual, type PhenotypeVisual } from '../utils/phenotype
 type GenotypeMap = Record<string, [string, string]>;
 
 const EYE_COLORS = {
-  ruby: { iris: '#ef4444', glow: '#fca5a5' },
-  blue: { iris: '#38bdf8', glow: '#7dd3fc' },
-  pink: { iris: '#fb7185', glow: '#fda4af' },
-  dark: { iris: '#422006', glow: '#1c1917' },
+  ruby: { iris: '#c81e1e', ring: '#fca5a5' },
+  blue: { iris: '#2563eb', ring: '#93c5fd' },
+  pink: { iris: '#db2777', ring: '#f9a8d4' },
+  dark: { iris: '#1c1917', ring: '#57534e' },
 } as const;
 
 const SIZE_MAP = {
-  sm: 'w-20 h-14',
-  md: 'w-32 h-24',
-  lg: 'w-44 h-32',
+  sm: 'w-16 h-12',
+  md: 'w-28 h-20',
+  lg: 'w-40 h-28',
 } as const;
 
-const SILVER_SPECKS = [
-  [28, 38],
-  [42, 44],
-  [55, 36],
-  [48, 52],
-  [62, 46],
-  [70, 38],
-  [36, 50],
-  [58, 58],
-  [74, 50],
-  [44, 62],
-  [66, 42],
-  [52, 48],
-];
+const EYE_SIZE = {
+  sm: 'h-2.5 w-2.5',
+  md: 'h-3.5 w-3.5',
+  lg: 'h-4 w-4',
+} as const;
 
 interface PhenotypeRendererProps {
   genotype: GenotypeMap;
@@ -38,70 +29,111 @@ interface PhenotypeRendererProps {
   label?: string;
 }
 
-function RabbitSvg({ visual }: { visual: PhenotypeVisual }) {
+function FurSwatch({ visual, size }: { visual: PhenotypeVisual; size: keyof typeof SIZE_MAP }) {
   const eyes = EYE_COLORS[visual.eyeColor];
-  const showBelly = visual.pattern === 'agouti' || visual.pattern === 'solid';
+  const showBellyBand = visual.pattern === 'agouti' || visual.pattern === 'solid';
   const showPoints = visual.pattern === 'pointed' && visual.pointColor;
   const showBroken = visual.pattern === 'broken' && visual.patchColor;
   const showCharlie = visual.pattern === 'charlie' && visual.patchColor;
 
   return (
-    <svg viewBox="0 0 120 80" className="w-full h-full" aria-hidden="true">
-      <ellipse cx="58" cy="52" rx="34" ry="22" fill={visual.bodyColor} />
-      {showBelly && visual.pattern !== 'white' && (
-        <ellipse cx="58" cy="58" rx="20" ry="12" fill={visual.bellyColor} opacity="0.9" />
+    <div className="relative h-full w-full overflow-hidden rounded-md">
+      {/* Base coat with fur texture */}
+      <div
+        className="fur-swatch absolute inset-0"
+        style={{ backgroundColor: visual.bodyColor }}
+      />
+
+      {showBellyBand && visual.pattern !== 'white' && (
+        <div
+          className="fur-swatch absolute inset-x-0 bottom-0 h-[42%] opacity-90"
+          style={{ backgroundColor: visual.bellyColor }}
+        />
       )}
 
       {showBroken && (
         <>
-          <ellipse cx="42" cy="48" rx="14" ry="10" fill={visual.patchColor!} />
-          <ellipse cx="68" cy="54" rx="12" ry="9" fill={visual.patchColor!} />
-          <ellipse cx="54" cy="42" rx="10" ry="8" fill={visual.patchColor!} />
+          <div
+            className="fur-swatch absolute left-[8%] top-[18%] h-[48%] w-[38%] rounded-[40%_55%_45%_50%] opacity-95"
+            style={{ backgroundColor: visual.patchColor! }}
+          />
+          <div
+            className="fur-swatch absolute right-[10%] bottom-[12%] h-[36%] w-[32%] rounded-[50%_40%_55%_45%] opacity-95"
+            style={{ backgroundColor: visual.patchColor! }}
+          />
         </>
       )}
 
       {showCharlie && (
         <>
-          <ellipse cx="48" cy="50" rx="6" ry="5" fill={visual.patchColor!} />
-          <ellipse cx="66" cy="56" rx="5" ry="4" fill={visual.patchColor!} />
+          <div
+            className="fur-swatch absolute left-[22%] top-[28%] h-[22%] w-[18%] rounded-full opacity-90"
+            style={{ backgroundColor: visual.patchColor! }}
+          />
+          <div
+            className="fur-swatch absolute right-[24%] bottom-[22%] h-[18%] w-[14%] rounded-full opacity-90"
+            style={{ backgroundColor: visual.patchColor! }}
+          />
         </>
       )}
-
-      {visual.silvering > 0 &&
-        SILVER_SPECKS.map(([cx, cy], index) => (
-          <circle
-            key={index}
-            cx={cx}
-            cy={cy}
-            r={2 + (index % 2)}
-            fill="#ffffff"
-            opacity={visual.silvering * 0.85}
-          />
-        ))}
-
-      {visual.steelTips && (
-        <ellipse cx="58" cy="44" rx="30" ry="6" fill="#e2e8f0" opacity="0.45" />
-      )}
-
-      <circle cx="82" cy="36" r="16" fill={visual.pattern === 'pointed' ? '#f8fafc' : visual.bodyColor} />
-      <ellipse cx="74" cy="18" rx="7" ry="16" fill={showPoints ? visual.pointColor! : visual.bodyColor} />
-      <ellipse cx="90" cy="18" rx="7" ry="16" fill={showPoints ? visual.pointColor! : visual.bodyColor} />
 
       {showPoints && (
         <>
-          <ellipse cx="82" cy="42" rx="5" ry="4" fill={visual.pointColor!} />
-          <ellipse cx="52" cy="68" rx="6" ry="4" fill={visual.pointColor!} />
-          <ellipse cx="64" cy="68" rx="6" ry="4" fill={visual.pointColor!} />
+          <div
+            className="fur-swatch absolute left-0 top-0 h-[28%] w-[22%] rounded-br-xl opacity-95"
+            style={{ backgroundColor: visual.pointColor! }}
+          />
+          <div
+            className="fur-swatch absolute right-0 top-0 h-[28%] w-[22%] rounded-bl-xl opacity-95"
+            style={{ backgroundColor: visual.pointColor! }}
+          />
+          <div
+            className="fur-swatch absolute inset-x-[28%] bottom-0 h-[18%] opacity-95"
+            style={{ backgroundColor: visual.pointColor! }}
+          />
         </>
       )}
 
-      <circle cx="78" cy="35" r="4.5" fill={eyes.glow} />
-      <circle cx="88" cy="35" r="4.5" fill={eyes.glow} />
-      <circle cx="78" cy="35" r="2.8" fill={eyes.iris} />
-      <circle cx="88" cy="35" r="2.8" fill={eyes.iris} />
-      <circle cx="79" cy="34" r="0.8" fill="#ffffff" opacity="0.7" />
-      <circle cx="89" cy="34" r="0.8" fill="#ffffff" opacity="0.7" />
-    </svg>
+      {visual.silvering > 0 && (
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            opacity: visual.silvering,
+            backgroundImage:
+              'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.85) 0 1px, transparent 2px), radial-gradient(circle at 55% 45%, rgba(255,255,255,0.75) 0 1px, transparent 2px), radial-gradient(circle at 75% 25%, rgba(255,255,255,0.7) 0 1.5px, transparent 2.5px), radial-gradient(circle at 35% 70%, rgba(255,255,255,0.8) 0 1px, transparent 2px), radial-gradient(circle at 68% 68%, rgba(255,255,255,0.65) 0 1px, transparent 2px)',
+            backgroundSize: '14px 14px, 18px 18px, 16px 16px, 20px 20px, 15px 15px',
+          }}
+        />
+      )}
+
+      {visual.steelTips && (
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-[35%] opacity-50"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(226,232,240,0.75) 0%, transparent 100%)',
+          }}
+        />
+      )}
+
+      {/* Eye color dots (not cartoon rabbit art) */}
+      <div className="absolute bottom-1 right-1 flex items-center gap-1 rounded-full bg-black/15 px-1 py-0.5 backdrop-blur-[1px]">
+        <span
+          className={`inline-block rounded-full ring-1 ring-white/70 shadow-sm ${EYE_SIZE[size]}`}
+          style={{
+            background: `radial-gradient(circle at 35% 30%, #fff 0 18%, ${eyes.iris} 28% 72%, ${eyes.ring} 100%)`,
+          }}
+          title={`Eyes: ${visual.eyeColor}`}
+        />
+        <span
+          className={`inline-block rounded-full ring-1 ring-white/70 shadow-sm ${EYE_SIZE[size]}`}
+          style={{
+            background: `radial-gradient(circle at 35% 30%, #fff 0 18%, ${eyes.iris} 28% 72%, ${eyes.ring} 100%)`,
+          }}
+          aria-hidden="true"
+        />
+      </div>
+    </div>
   );
 }
 
@@ -115,11 +147,11 @@ export function PhenotypeRenderer({
 
   return (
     <div
-      className={`rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/60 overflow-hidden ${SIZE_MAP[size]} ${className}`}
+      className={`rounded-md border border-rule/80 dark:border-rule-dark/70 bg-paper-2/60 dark:bg-espresso/60 overflow-hidden ${SIZE_MAP[size]} ${className}`}
       role={label ? 'img' : undefined}
       aria-label={label}
     >
-      <RabbitSvg visual={visual} />
+      <FurSwatch visual={visual} size={size} />
     </div>
   );
 }

@@ -2,9 +2,14 @@ import { useMemo } from 'react';
 import { PARENT_PRESETS } from '../data/meatRabbitBreeds';
 import { getPresetBreedingNotes } from '../data/presetBreedingNotes';
 import { genotypesEqual, useGeneticStore } from '../store/useGeneticStore';
+import { useContentMode } from '../store/useContentModeStore';
 import { formatCompactGenotype } from '../utils/formatGenotype';
 import { resolveParentPhenotype } from '../utils/geneticEngine';
 import { resolvePlainEnglishPhenotype } from '../utils/plainEnglishPhenotype';
+import {
+  resolveNerdPhenotypeBlurb,
+  resolveNerdPhenotypeDetail,
+} from '../utils/nerdPhenotype';
 import { CompactCollapsible } from './CollapsibleSection';
 import { CopyTextButton } from './CopyTextButton';
 import { GenotypeInline } from './GenotypeInline';
@@ -49,9 +54,12 @@ export function ParentCompactCard({
   const loadParentPreset = useGeneticStore((state) => state.loadParentPreset);
   const clearParentPreset = useGeneticStore((state) => state.clearParentPreset);
   const resetParentToPreset = useGeneticStore((state) => state.resetParentToPreset);
+  const { isNerd } = useContentMode();
 
   const phenotype = useMemo(() => resolveParentPhenotype(genotype), [genotype]);
   const plainEnglish = useMemo(() => resolvePlainEnglishPhenotype(genotype), [genotype]);
+  const nerdBlurb = useMemo(() => resolveNerdPhenotypeBlurb(genotype), [genotype]);
+  const nerdDetail = useMemo(() => resolveNerdPhenotypeDetail(genotype), [genotype]);
   const varietyLabel = useMemo(() => getVarietyLabel(presetId, genotype), [presetId, genotype]);
   const breedingNotes = useMemo(
     () => getPresetBreedingNotes(presetId, genotype),
@@ -99,16 +107,48 @@ export function ParentCompactCard({
             {varietyLabel}
           </p>
 
-          <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug line-clamp-2">
-            <GlossaryTermText text={phenotype} />
-          </p>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug line-clamp-2">
-            {plainEnglish}
-          </p>
+          {!isNerd && (
+            <>
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug line-clamp-2">
+                <GlossaryTermText text={phenotype} />
+              </p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug line-clamp-3">
+                {plainEnglish}
+              </p>
+            </>
+          )}
+
+          {isNerd && (
+            <div className="space-y-1.5">
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">
+                {nerdBlurb}
+              </p>
+              <ul className="space-y-1 max-h-28 overflow-y-auto overscroll-contain text-[10px] leading-snug text-slate-500 dark:text-slate-400">
+                {nerdDetail.loci.map((locus) => (
+                  <li key={locus.id}>
+                    <span className="font-mono font-semibold text-teal-deep dark:text-sky-300">
+                      {locus.id} {locus.genotype}
+                    </span>
+                    <span className="text-slate-400"> → {locus.expressed}</span>
+                    <span className="block text-slate-500 dark:text-slate-400 line-clamp-2">
+                      {locus.detail}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              {nerdDetail.interactions.length > 0 && (
+                <ul className="list-disc pl-3 space-y-0.5 text-[10px] text-amber-800/90 dark:text-amber-200/80">
+                  {nerdDetail.interactions.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
-      <CompactCollapsible title="Genetics & editing" subtitle={compactGenotype}>
+      <CompactCollapsible title="Genetics & editing" subtitle={compactGenotype} defaultOpen={false}>
         <div className="space-y-3 pt-1">
           <div className="flex items-start justify-between gap-2">
             <GenotypeInline genotype={genotype} baseline={mateGenotype} />
