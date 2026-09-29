@@ -13,8 +13,8 @@ function getStoredTheme(): Theme | null {
 }
 
 export function resolveTheme(): Theme {
-  // Cream breeding desk ships light-first; honor stored choice but default light.
-  return getStoredTheme() ?? 'light';
+  // Graphite desk ships dark-first; honor a stored choice.
+  return getStoredTheme() ?? 'dark';
 }
 
 export function applyThemeToDocument(theme: Theme) {

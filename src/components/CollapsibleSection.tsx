@@ -106,7 +106,7 @@ export function CompactCollapsible({
 
   return (
     <div
-      className={`rounded-lg border border-rule/80 dark:border-rule-dark/60 bg-paper/50 dark:bg-ink/40 ${className}`}
+      className={`rounded-lg border border-rule/80 dark:border-rule-dark/60 bg-paper/50 dark:bg-paper-soft/60 ${className}`}
     >
       <button
         type="button"
@@ -167,7 +167,7 @@ export function CollapsiblePanel({
 
   return (
     <div
-      className={`bg-paper-soft/90 dark:bg-ink/55 border border-rule/90 dark:border-rule-dark/70 rounded-paper shadow-paper-sm overflow-hidden ${className}`}
+      className={`bg-paper-soft/90 dark:bg-paper-2/80 border border-rule/90 dark:border-rule-dark/70 rounded-paper shadow-paper-sm overflow-hidden ${className}`}
     >
       <button
         type="button"

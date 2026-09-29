@@ -8,7 +8,6 @@ import { useContentMode } from '../store/useContentModeStore';
 import { resolveNerdPhenotypeBlurb } from '../utils/nerdPhenotype';
 import { CopyTextButton } from './CopyTextButton';
 import { GenotypeInline } from './GenotypeInline';
-import { GlossaryTermText } from './GlossaryTermText';
 import { PhenotypeRenderer } from './PhenotypeRenderer';
 import { ProbabilityBar } from './ProbabilityBar';
 
@@ -171,7 +170,7 @@ export function ProgenyOutcomesPanel() {
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
           placeholder="Filter phenotypes…"
-          className="flex-1 min-w-[10rem] text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-paper-soft dark:bg-slate-950 text-ink dark:text-paper-soft px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-400"
+          className="flex-1 min-w-[10rem] text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-paper-soft dark:bg-slate-950 text-ink dark:text-ink px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-400"
         />
         <label className="inline-flex items-center gap-1.5 text-[10px] text-ink-soft cursor-pointer">
           <input
@@ -242,8 +241,8 @@ export function ProgenyOutcomesPanel() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <h4 className="text-sm font-semibold text-ink dark:text-paper-soft leading-snug">
-                        <GlossaryTermText text={group.title} />
+                      <h4 className="text-sm font-semibold text-ink dark:text-ink leading-snug">
+                        {group.title}
                       </h4>
                       {!isNerd && group.plainEnglish && (
                         <p className="text-[11px] text-ink-muted mt-0.5 leading-snug">
@@ -257,12 +256,12 @@ export function ProgenyOutcomesPanel() {
                       )}
                       {isNerd && group.subtitle && (
                         <p className="text-[11px] text-ink-muted mt-0.5 leading-snug font-mono">
-                          <GlossaryTermText text={group.subtitle} />
+                          {group.subtitle}
                         </p>
                       )}
                       {!isNerd && group.subtitle && (
                         <p className="text-[11px] text-ink-muted mt-0.5 leading-snug">
-                          <GlossaryTermText text={group.subtitle} />
+                          {group.subtitle}
                         </p>
                       )}
                       <p className="text-[10px] text-ink-muted mt-1">

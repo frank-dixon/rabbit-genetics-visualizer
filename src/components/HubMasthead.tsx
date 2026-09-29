@@ -10,13 +10,13 @@ const LINKS = [
 /** Shared portfolio chrome linking back to frank-dixon.github.io (absolute URLs). */
 export function HubMasthead() {
   return (
-    <header className="hub-masthead shrink-0 sticky top-0 z-[60] border-b border-rule/70 dark:border-rule-dark/70 bg-paper/92 dark:bg-[rgba(22,19,17,0.92)] backdrop-blur-[10px]">
+    <header className="hub-masthead shrink-0 sticky top-0 z-[60] border-b border-rule/70 dark:border-rule-dark/70 bg-paper/92 dark:bg-[rgba(7,8,10,0.9)] backdrop-blur-[10px]">
       <div className="hub-nav mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-3 py-2.5 sm:px-4">
         <a
-          className="hub-wordmark font-sans text-[0.95rem] font-bold tracking-[-0.02em] text-ink no-underline"
+          className="hub-wordmark font-mono text-[0.72rem] font-medium uppercase tracking-[0.14em] text-ink-soft no-underline hover:text-ink"
           href={`${HUB}/`}
         >
-          Frank Dixon<span className="text-teal">.</span>
+          <span aria-hidden="true">←</span> Frank Dixon
         </a>
         <nav aria-label="Frank Dixon site">
           <ul className="m-0 flex list-none flex-wrap gap-x-[1.35rem] gap-y-[0.35rem] p-0">

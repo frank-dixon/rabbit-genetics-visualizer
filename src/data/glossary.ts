@@ -326,7 +326,7 @@ export const GLOSSARY_SECTIONS: GlossarySection[] = [
       {
         term: 'Variety preset',
         definition:
-          'A starting genotype scaffold for a meat-rabbit breed or color variety. Edit alleles if your line differs — presets are planning aids, not ARBA certificates.',
+          'A starting genotype for a meat-rabbit breed or color variety. Edit alleles if your line differs — presets are planning aids, not ARBA certificates.',
       },
       {
         term: 'd’Argent',

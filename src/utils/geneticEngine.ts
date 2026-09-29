@@ -120,17 +120,17 @@ function baseColorName(
   const diluted = d === 'd' && isHomozygous(genotypes.D, 'd');
 
   if (e === 'e') {
-    if (a === 'A') return diluted ? 'Frosted / ermine (draft)' : 'Red / fawn / orange';
-    if (a === 'at') return diluted ? 'Lilac otter (draft)' : 'Chocolate otter (draft)';
-    return diluted ? 'Cream / pearl' : 'Cream / fawn';
+    if (a === 'A') return diluted ? 'Frosted / ermine' : 'Red / fawn / orange';
+    if (a === 'at') return diluted ? 'Lilac otter' : 'Chocolate otter';
+    return diluted ? 'Blue tortoiseshell' : 'Tortoiseshell';
   }
 
   if (e === 'Es' && a === 'A') {
-    return diluted ? 'Blue steel (draft)' : 'Steel / silver-tipped (draft)';
+    return diluted ? 'Blue steel' : 'Steel / silver-tipped';
   }
 
   if (e === 'Ed') {
-    return diluted ? (b === 'b' ? 'Lilac (draft)' : 'Blue (draft)') : b === 'b' ? 'Chocolate' : 'Black';
+    return diluted ? (b === 'b' ? 'Lilac' : 'Blue') : b === 'b' ? 'Chocolate' : 'Black';
   }
 
   if (a === 'a') {
@@ -139,14 +139,14 @@ function baseColorName(
   }
 
   if (a === 'at') {
-    return diluted ? 'Blue otter / smoke pearl (draft)' : 'Black otter / tan (draft)';
+    return diluted ? 'Blue otter / smoke pearl' : 'Black otter / tan';
   }
 
   if (a === 'A') {
-    return diluted ? 'Opal / blue agouti (draft)' : 'Chestnut / agouti';
+    return diluted ? 'Opal / blue agouti' : 'Chestnut / agouti';
   }
 
-  return 'Unknown base color (draft)';
+  return 'Unknown base color';
 }
 
 function isSilverHeterozygote(pair: [string, string]): boolean {
@@ -238,7 +238,7 @@ function resolvePhenotype(genotypes: GenotypeMap): string {
   }
 
   if (isHomozygous(genotypes.En, 'En')) {
-    parts.push('Charlie spotting (EnEn — draft)');
+    parts.push('Charlie spotting (EnEn)');
   } else if (
     (genotypes.En[0] === 'En' && genotypes.En[1] === 'en') ||
     (genotypes.En[0] === 'en' && genotypes.En[1] === 'En')
@@ -250,7 +250,7 @@ function resolvePhenotype(genotypes: GenotypeMap): string {
     (genotypes.V[0] === 'V' && genotypes.V[1] === 'v') ||
     (genotypes.V[0] === 'v' && genotypes.V[1] === 'V')
   ) {
-    parts.push('Vienna carrier (Vv — draft)');
+    parts.push('Vienna carrier (Vv)');
   }
 
   return parts.join('; ');

@@ -36,7 +36,7 @@ function FurSwatch({ visual }: { visual: PhenotypeVisual }) {
   const showCharlie = visual.pattern === 'charlie' && visual.patchColor;
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-sm">
+    <div className="relative h-full w-full overflow-hidden rounded-sm ring-1 ring-inset ring-black/10 dark:ring-white/15">
       <div
         className="fur-swatch absolute inset-0"
         style={{ backgroundColor: visual.bodyColor }}

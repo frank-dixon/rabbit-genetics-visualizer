@@ -25,7 +25,7 @@ export function CitationsPage({ onBack }: CitationsPageProps) {
 
       <p>
         Every locus, allele description, and eye-color rule in this app traces back to one or more
-        of the references below. URLs open the primary source where available.
+        of the references below.
       </p>
 
       <ol className="list-none space-y-5 pl-0">

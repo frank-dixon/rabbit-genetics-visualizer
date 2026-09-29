@@ -19,7 +19,7 @@ const CONCEPT_SECTIONS: ConceptSection[] = [
   {
     id: 'genes',
     title: 'Genes, loci, and alleles',
-    summary: 'A locus is a address on a chromosome; alleles are the versions a parent can pass on.',
+    summary: 'A locus is an address on a chromosome; alleles are the versions a parent can pass on.',
     body: (
       <>
         <p>

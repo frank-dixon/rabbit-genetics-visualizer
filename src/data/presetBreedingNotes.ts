@@ -17,7 +17,7 @@ const PRESET_CROSS_NOTES: Record<string, string[]> = {
     'Homozygous cc (albino) masks all underlying coat color — the rabbit looks REW regardless of A, E, or Si genotype.',
     'REW does can still carry agouti (A), red extension (e), and silvering (si) hidden under the white coat.',
     'Crossing to a full-color rabbit reveals those hidden alleles in the progeny.',
-    'Field-herd scaffold (A/a, E/e, Si/si) — switch to show line preset if your herd is homozygous.',
+    'Field-herd genotype (A/a, E/e, Si/si). Switch to the show-line preset if your herd is homozygous.',
   ],
   'nz-red': [
     'Homozygous ee blocks black extension — red/fawn shows on any agouti (A_) or self (aa) base.',
@@ -153,7 +153,7 @@ export function getPresetBreedingNotes(presetId: string | null, genotype: Genoty
       notes.push(...crossNotes);
     }
   } else {
-    notes.push('Custom genotype — use Edit genotype below to match your rabbit\'s alleles.');
+    notes.push('Custom genotype — open Genetics & editing to match your rabbit\'s alleles.');
   }
 
   notes.push(...genotypeBreedingNotes(genotype));

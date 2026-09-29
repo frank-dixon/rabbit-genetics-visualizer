@@ -32,7 +32,7 @@ export function EyeColorPanel() {
 
       <CollapsiblePanel
         title="Common Meat-Rabbit Varieties"
-        description={`${MEAT_RABBIT_VARIETIES.length} breeds and color varieties — draft genotypes, verify before breeding.`}
+        description={`${MEAT_RABBIT_VARIETIES.length} breeds and color varieties with typical genotypes. Verify against your own stock.`}
         defaultOpen={false}
       >
         {MEAT_RABBIT_CATEGORIES.map((category) => {

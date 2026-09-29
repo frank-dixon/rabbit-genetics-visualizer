@@ -14,6 +14,7 @@
     --teal: #0b8a8f;
     --teal-deep: #087075;
     --on-teal: #faf7f1;
+    --teal-soft: #d7eeee;
     --espresso: #241e1b;
     --action: #0b8a8f;
     --sea: #3f7d80;
@@ -21,20 +22,21 @@
   }
 
   html.dark {
-    --paper: #1c1916;
-    --paper-2: #241e1b;
-    --paper-soft: #2a2420;
-    --ink: #f0ebe2;
-    --ink-soft: #d2c9bb;
-    --muted: #9a9186;
-    --rule: #3a342f;
-    --teal: #3aa8ad;
-    --teal-deep: #7ec4c7;
-    --on-teal: #1c1916;
-    --espresso: #161311;
-    --action: #3aa8ad;
-    --sea: #6a9a9c;
-    --shadow-paper: 0 16px 40px rgba(0, 0, 0, 0.4);
+    --paper: #0d0f12;
+    --paper-2: #12151a;
+    --paper-soft: #161a20;
+    --ink: #d6dbe2;
+    --ink-soft: #b8c0ca;
+    --muted: #98a1ad;
+    --rule: #262c34;
+    --teal: #2fe0b8;
+    --teal-deep: #7cf3d6;
+    --teal-soft: #0f2a26;
+    --on-teal: #07080a;
+    --espresso: #07080a;
+    --action: #2fe0b8;
+    --sea: #8f8cf0;
+    --shadow-paper: 0 16px 40px rgba(0, 0, 0, 0.5);
   }
 
   html {
@@ -60,8 +62,9 @@
   html.dark body {
     @apply bg-espresso text-ink;
     background-image:
-      radial-gradient(900px 480px at 6% -10%, rgba(58, 168, 173, 0.12), transparent 55%),
-      radial-gradient(720px 420px at 100% 0%, rgba(106, 154, 156, 0.08), transparent 50%);
+      radial-gradient(900px 480px at 6% -10%, rgba(47, 224, 184, 0.08), transparent 55%),
+      radial-gradient(720px 420px at 100% 0%, rgba(192, 76, 255, 0.06), transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48.5' viewBox='0 0 28 48.5'%3E%3Cpath d='M14 0v8.1M14 48.5v-8.1M0 16.2l14-8.1 14 8.1v16.1l-14 8.1-14-8.1z' fill='none' stroke='%23d6dee8' stroke-opacity='.035'/%3E%3C/svg%3E");
   }
 
   h1,
@@ -81,7 +84,7 @@
 
   :focus-visible {
     outline: 2px solid var(--teal);
-    outline-offset: 3px;
+    outline-offset: 2px;
   }
 }
 
@@ -91,7 +94,14 @@
   }
 
   .dark .surface-card {
-    @apply border-rule-dark/80 bg-paper-2/90 shadow-none;
+    @apply border-rule-dark/80 bg-paper-2/80 shadow-none backdrop-blur-sm;
+    border-image: linear-gradient(135deg, rgba(47, 224, 184, 0.35), rgba(192, 76, 255, 0.28)) 1;
+  }
+
+  /* Hex brand tile with the master two-stop ombre */
+  .hex-tile {
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    background: linear-gradient(135deg, #2fe0b8, #c04cff);
   }
 
   .fur-swatch {

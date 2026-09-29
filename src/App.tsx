@@ -65,13 +65,13 @@ export default function App() {
           <div className="min-w-0 flex items-start gap-2.5">
             <span
               aria-hidden="true"
-              className="mt-0.5 hidden sm:block h-8 w-8 shrink-0 rounded-lg bg-gradient-to-br from-teal via-teal-deep to-espresso shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]"
+              className="hex-tile mt-0.5 hidden sm:block h-9 w-8 shrink-0"
             />
             <div className="min-w-0">
-              <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.1em] text-teal">
+              <p className="font-mono text-[10px] sm:text-[10.5px] font-medium uppercase tracking-[0.14em] text-teal">
                 Meat rabbit genetics
               </p>
-              <h1 className="font-sans text-lg sm:text-xl font-semibold text-ink leading-tight">
+              <h1 className="font-display text-base sm:text-lg font-normal tracking-[0.02em] text-ink leading-tight">
                 {APP_NAME}
               </h1>
               <p className="text-[11px] sm:text-xs text-ink-muted mt-0.5 truncate">

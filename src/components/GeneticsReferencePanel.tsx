@@ -23,7 +23,7 @@ export function GeneticsReferencePanel() {
     <div className="space-y-4">
       <CollapsiblePanel
         title="Genetics Reference"
-        description="Loci matrix, eye color rules, and meat-rabbit variety library — for deeper exploration."
+        description="Loci matrix, eye color rules, and meat-rabbit variety library."
         defaultOpen={false}
       >
         <div className="space-y-6">

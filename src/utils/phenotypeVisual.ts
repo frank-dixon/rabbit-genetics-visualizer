@@ -57,8 +57,8 @@ function resolveBaseCoat(resolved: Record<string, string>, genotypes: GenotypeMa
         : { body: '#c2410c', belly: '#ea580c' };
     }
     return diluted
-      ? { body: '#e7d4bc', belly: '#f5ead8' }
-      : { body: '#ea580c', belly: '#f97316' };
+      ? { body: '#b89a7c', belly: '#7d7a80' }
+      : { body: '#a8622c', belly: '#4a3d34' };
   }
 
   if (e === 'Es' && a === 'A') {
@@ -75,13 +75,13 @@ function resolveBaseCoat(resolved: Record<string, string>, genotypes: GenotypeMa
     }
     return diluted
       ? { body: '#5b6b7a', belly: '#7c8ea0' }
-      : { body: '#1e293b', belly: '#334155' };
+      : { body: '#161514', belly: '#2a2725' };
   }
 
   if (a === 'at') {
     return diluted
       ? { body: '#5b6b7a', belly: '#d4c4a8' }
-      : { body: '#1e293b', belly: '#d6c6a8' };
+      : { body: '#161514', belly: '#d6c6a8' };
   }
 
   if (a === 'A') {
@@ -137,7 +137,7 @@ export function resolvePhenotypeVisual(genotypes: GenotypeMap): PhenotypeVisual 
   if (resolved.C === 'ch') {
     pattern = 'pointed';
     coat = { body: '#f8fafc', belly: '#f1f5f9' };
-    pointColor = coat.body === '#f8fafc' ? '#1e293b' : '#0f172a';
+    pointColor = coat.body === '#f8fafc' ? '#1f1c1a' : '#141312';
     eyeColor = 'pink';
   } else if (resolved.C === 'cchd' || resolved.C === 'cchl') {
     coat = { body: '#c4b8a8', belly: '#e8e0d4' };

@@ -7,7 +7,7 @@ interface AboutPageProps {
 
 export function AboutPage({ onBack }: AboutPageProps) {
   return (
-    <InfoPage title="How This App Works" onBack={onBack}>
+    <InfoPage title="How It Works" onBack={onBack}>
       <p>
         <strong>{APP_NAME}</strong> is a {APP_TAGLINE.toLowerCase()}. Pick two parent rabbits,
         load variety presets (New Zealand White, Californian, Silver Fox, d&apos;Argent breeds, and
@@ -15,55 +15,43 @@ export function AboutPage({ onBack }: AboutPageProps) {
         probabilities for each outcome.
       </p>
 
-      <h2>What you can do today</h2>
+      <h2>What you can do</h2>
       <ul>
         <li>
-          <strong>Set your cross</strong> — Parent A and Parent B cards show a searchable preset
-          picker, technical phenotype, plain-English description, compact genotype, and a coat
-          preview. Swap parents with a text link between the cards.
+          <strong>Set your cross</strong> — Choose a preset for the dam and sire, or start from a
+          custom genotype. Each card shows the phenotype, a plain-English description, the compact
+          genotype, and a coat preview.
         </li>
         <li>
-          <strong>Scan progeny outcomes</strong> — Grouped results show combined probability,
-          plain-English summary, technical labels, thumbnails, and per-variant genotypes with
-          differing loci highlighted.
+          <strong>Scan progeny outcomes</strong> — Results are grouped by look, with the combined
+          probability and every genotype that produces it. Loci that differ between variants are
+          highlighted.
         </li>
         <li>
-          <strong>Edit alleles per parent</strong> — Expand &quot;Edit genotype&quot; inside each
-          parent card for per-locus control. Open &quot;Variety notes&quot; for cross-breeding
-          context on each breed.
+          <strong>Edit alleles per parent</strong> — Open &quot;Genetics &amp; editing&quot; on a
+          parent card for per-locus control and cross-breeding notes for the chosen breed.
         </li>
         <li>
-          <strong>Copy and share</strong> — Copy any genotype string from parent or progeny rows.
-          Use &quot;Copy share link&quot; in the cross header to save or send the full cross via
-          URL. Your cross also persists automatically in this browser.
+          <strong>Save and share</strong> — Copy any genotype string, save pairings you repeat, or
+          use Share to send the full cross as a link. Your current cross is remembered in this
+          browser.
         </li>
         <li>
-          <strong>Dig into genetics</strong> — Collapsible reference sections cover the loci matrix,
-          eye color rules, 3D chromosome explorer, and a full glossary.
+          <strong>Dig into genetics</strong> — The reference sections cover the loci matrix, eye
+          color rules, a 3D chromosome explorer, and a full glossary.
         </li>
         <li>
-          <strong>Install for offline use</strong> — Production builds register a service worker for
-          add-to-home-screen use.
+          <strong>Use it in the barn</strong> — Add it to your home screen and it keeps working
+          offline.
         </li>
-        <li>
-          <strong>Toggle light / dark mode</strong> — Sun/moon control in the header; your choice is
-          remembered across visits.
-        </li>
-      </ul>
-
-      <h2>What&apos;s coming next</h2>
-      <ul>
-        <li>Biology review — epistasis rules and phenotype naming in the cross engine</li>
-        <li>Richer coat previews — banding, finer broken patterns, reference photos per breed</li>
-        <li>Final branded icon artwork</li>
       </ul>
 
       <h2>Progeny predictions</h2>
       <p>
-        The cross engine calculates Mendelian offspring probabilities from parent genotypes.
-        Illustrative previews are procedural SVGs — draft genetics, not show-standard artwork.
-        Epistasis rules (especially <strong>cc</strong> albino and <strong>vv</strong> Vienna) need
-        human verification before breeding decisions.
+        The cross engine calculates Mendelian offspring probabilities from parent genotypes. Coat
+        previews are illustrations, not show-standard artwork. Interactions between loci
+        (especially <strong>cc</strong> albino and <strong>vv</strong> Vienna masking other colors)
+        are simplified, so confirm them against your own stock.
       </p>
 
       <h2>Important disclaimer</h2>

@@ -17,7 +17,13 @@ export function AppFooter({ view, onNavigate }: AppFooterProps) {
     <footer className="shrink-0 border-t border-rule/80 dark:border-rule-dark/70 bg-paper-soft/80 dark:bg-espresso/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <p className="text-xs text-ink-muted dark:text-slate-400">
-          Meat rabbit coat &amp; eye cross calculator
+          Rabbit Progeny Predictor · Built by{' '}
+          <a
+            href="https://frank-dixon.github.io/"
+            className="font-semibold text-teal underline-offset-2 hover:underline"
+          >
+            Frank Dixon
+          </a>
         </p>
 
         <nav aria-label="Footer navigation" className="flex flex-wrap gap-2">
