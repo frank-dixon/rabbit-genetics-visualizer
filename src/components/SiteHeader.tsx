@@ -17,17 +17,20 @@ interface SiteHeaderProps {
 
 export function SiteHeader({ view, onNavigate }: SiteHeaderProps) {
   return (
-    <div className="sticky top-0 z-[60] shrink-0">
+    <div className="sticky top-0 z-[60] shrink-0" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
       <header className="border-b border-rule bg-paper">
         <div className="mx-auto flex h-14 max-w-[1440px] items-center gap-6 px-4 sm:h-[60px] sm:px-9">
           <button
             type="button"
             onClick={() => onNavigate('landing')}
-            className="kicker text-[13px] text-ink"
+            className="kicker text-left text-[13px] text-ink"
           >
             Progeny
+            <span className="kicker mt-0.5 block whitespace-nowrap text-left text-[9px] tracking-[0.1em] text-teal-deep md:hidden">
+              Free · saved here
+            </span>
           </button>
-          <nav aria-label="Main" className="hidden items-center gap-7 md:flex">
+          <nav aria-label="Main desktop" className="hidden items-center gap-7 md:flex">
             {NAV.map((item) => (
               <button
                 key={item.id}
@@ -55,23 +58,10 @@ export function SiteHeader({ view, onNavigate }: SiteHeaderProps) {
             </span>
           </div>
         </div>
-        <nav aria-label="Main mobile" className="flex border-t border-rule md:hidden">
-          {NAV.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => onNavigate(item.id)}
-              aria-current={view === item.id ? 'page' : undefined}
-              className={`kicker flex-1 py-2.5 text-[10px] ${
-                view === item.id ? 'bg-[var(--forest)] text-[var(--mist)]' : 'text-ink-muted'
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
-        </nav>
       </header>
-      <GuestBanner />
+      <div className="hidden md:block">
+        <GuestBanner />
+      </div>
     </div>
   );
 }
