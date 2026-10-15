@@ -7,14 +7,13 @@ import { GeneticsReferencePanel } from './components/GeneticsReferencePanel';
 import { CrossHydrator } from './components/CrossHydrator';
 import { GlossaryPanel } from './components/GlossaryPanel';
 import { CitationsPage } from './components/CitationsPage';
-import { ContentModeToggle } from './components/ContentModeToggle';
-import { ThemeToggle } from './components/ThemeToggle';
-import { HubMasthead } from './components/HubMasthead';
+import { SiteHeader } from './components/SiteHeader';
+import { LandingPage } from './components/LandingPage';
+import { LitterSummary } from './components/LitterSummary';
 import {
   WorkspaceMobileTabs,
   type WorkspaceMobileTab,
 } from './components/WorkspaceMobileTabs';
-import { APP_NAME, APP_TAGLINE } from './constants/app';
 import { WORKSPACE_MAX_WIDTH } from './constants/layout';
 import { useThemeStore } from './store/useThemeStore';
 
@@ -22,9 +21,14 @@ function WorkspaceView() {
   const [mobileTab, setMobileTab] = useState<WorkspaceMobileTab>('parents');
 
   return (
-    <main
-      className={`flex-1 min-h-0 w-full mx-auto p-3 sm:p-4 ${WORKSPACE_MAX_WIDTH} space-y-3 lg:overflow-y-auto lg:overscroll-contain pb-6`}
-    >
+    <main className="flex-1 w-full">
+      <section className="relative mx-auto max-w-[1440px] px-4 pt-6 sm:px-9 sm:pt-10">
+        <p className="kicker text-ink-muted">Pairing · the cover cross</p>
+        <h1 className="headline mt-2 text-[clamp(3.5rem,10vw,9.5rem)] text-ink">Buck × Doe</h1>
+      </section>
+      <div className="relative mt-4">
+        <div className="absolute inset-x-0 top-24 bottom-0 bg-[var(--forest)]" aria-hidden />
+        <div className={`relative w-full mx-auto px-3 sm:px-9 ${WORKSPACE_MAX_WIDTH} space-y-3 pb-8`}>
       <WorkspaceMobileTabs activeTab={mobileTab} onChange={setMobileTab} />
 
       <div className="hidden md:block">
@@ -35,7 +39,8 @@ function WorkspaceView() {
         <CrossWorkspace section="parents" />
       </div>
 
-      <div className={mobileTab === 'outcomes' ? 'block md:hidden' : 'hidden'}>
+      <div className={mobileTab === 'outcomes' ? 'block md:hidden space-y-3' : 'hidden'}>
+        <div className="-mx-3 bg-paper"><LitterSummary /></div>
         <CrossWorkspace section="outcomes" />
       </div>
 
@@ -45,48 +50,39 @@ function WorkspaceView() {
         <GeneticsReferencePanel />
         <GlossaryPanel />
       </div>
+        </div>
+      </div>
+      <div className="mx-auto hidden max-w-[1440px] pb-10 md:block">
+        <LitterSummary />
+      </div>
     </main>
   );
 }
 
+const ONBOARDED_KEY = 'progeny:onboarded';
+
 export default function App() {
   const theme = useThemeStore((state) => state.theme);
-  const [view, setView] = useState<AppView>('workspace');
+  const [view, setViewState] = useState<AppView>(() =>
+    localStorage.getItem(ONBOARDED_KEY) ? 'workspace' : 'landing',
+  );
+  const setView = (next: AppView) => {
+    setViewState(next);
+    window.scrollTo({ top: 0 });
+  };
+  const startWorkspace = () => {
+    localStorage.setItem(ONBOARDED_KEY, '1');
+    setView('workspace');
+  };
 
   return (
     <div
       data-theme={theme}
-      className="min-h-screen lg:h-screen lg:overflow-hidden bg-transparent text-ink dark:text-ink flex flex-col font-sans transition-colors duration-200"
+      className="min-h-screen bg-transparent text-ink dark:text-ink flex flex-col font-sans transition-colors duration-200"
     >
-      <HubMasthead />
+      <SiteHeader view={view} onNavigate={setView} />
 
-      <header className="shrink-0 border-b border-rule/70 dark:border-rule-dark/70 bg-paper-soft/90 dark:bg-espresso/90 backdrop-blur-md px-3 py-2.5 sm:px-4 sticky top-[3rem] z-50">
-        <div className={`${WORKSPACE_MAX_WIDTH} mx-auto flex justify-between items-center gap-3`}>
-          <div className="min-w-0 flex items-start gap-2.5">
-            <span
-              aria-hidden="true"
-              className="hex-tile mt-0.5 hidden sm:block h-9 w-8 shrink-0"
-            />
-            <div className="min-w-0">
-              <p className="font-mono text-[10px] sm:text-[10.5px] font-medium uppercase tracking-[0.14em] text-teal">
-                Meat rabbit genetics
-              </p>
-              <h1 className="font-display text-base sm:text-lg font-normal tracking-[0.02em] text-ink leading-tight">
-                {APP_NAME}
-              </h1>
-              <p className="text-[11px] sm:text-xs text-ink-muted mt-0.5 truncate">
-                {APP_TAGLINE}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <ContentModeToggle />
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
-
+      {view === 'landing' && <LandingPage onStart={startWorkspace} />}
       {view === 'workspace' && (
         <>
           <CrossHydrator />

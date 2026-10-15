@@ -6,7 +6,7 @@ export function ContentModeToggle() {
 
   return (
     <div
-      className="inline-flex items-center rounded-full border border-rule dark:border-rule-dark bg-paper-soft/90 dark:bg-paper-2/90 p-0.5 shadow-paper-sm"
+      className="inline-flex items-center  border border-rule dark:border-rule-dark bg-paper-soft/90 dark:bg-paper-2/90 p-0.5 shadow-paper-sm"
       role="group"
       aria-label="Content detail"
     >
@@ -16,7 +16,7 @@ export function ContentModeToggle() {
         aria-pressed={!isNerd}
         aria-label="Simple explanations"
         title="Simple — plain-English phenotypes"
-        className={`relative flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold transition-all duration-200 ${
+        className={`relative flex h-7 items-center gap-1  px-2.5 text-[11px] font-semibold transition-all duration-200 ${
           !isNerd
             ? 'bg-teal text-teal-on shadow-sm'
             : 'text-ink-muted hover:text-ink'
@@ -32,7 +32,7 @@ export function ContentModeToggle() {
         aria-pressed={isNerd}
         aria-label="Nerd gene detail"
         title="Nerd — full locus and allele detail"
-        className={`relative flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold transition-all duration-200 ${
+        className={`relative flex h-7 items-center gap-1  px-2.5 text-[11px] font-semibold transition-all duration-200 ${
           isNerd
             ? 'bg-teal text-teal-on shadow-sm'
             : 'text-ink-muted hover:text-ink'

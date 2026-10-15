@@ -1,4 +1,4 @@
-export type AppView = 'workspace' | 'learn' | 'about' | 'citations';
+export type AppView = 'landing' | 'workspace' | 'learn' | 'about' | 'citations';
 
 interface AppFooterProps {
   view: AppView;
@@ -14,10 +14,10 @@ const NAV_ITEMS: { id: AppView; label: string }[] = [
 
 export function AppFooter({ view, onNavigate }: AppFooterProps) {
   return (
-    <footer className="shrink-0 border-t border-rule/80 dark:border-rule-dark/70 bg-paper-soft/80 dark:bg-espresso/80 backdrop-blur-md">
+    <footer className="shrink-0 border-t border-rule/80 dark:border-rule-dark/70 bg-paper-soft/80 dark:bg-espresso/80 ">
       <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <p className="text-xs text-ink-muted dark:text-slate-400">
-          Rabbit Progeny Predictor · Built by{' '}
+          Progeny · Rabbit Progeny Predictor · Built by{' '}
           <a
             href="https://frank-dixon.github.io/"
             className="font-semibold text-teal underline-offset-2 hover:underline"
@@ -32,9 +32,9 @@ export function AppFooter({ view, onNavigate }: AppFooterProps) {
               key={item.id}
               type="button"
               onClick={() => onNavigate(item.id)}
-              className={`text-xs px-3 py-1.5 rounded-full border transition ${
+              className={`text-xs px-3 py-1.5 border transition ${
                 view === item.id
-                  ? 'bg-teal text-teal-on border-teal shadow-teal font-semibold'
+                  ? 'bg-teal text-teal-on border-teal font-semibold'
                   : 'bg-paper/70 dark:bg-paper-2/80 border-rule dark:border-rule-dark text-ink-soft dark:text-slate-300 hover:border-teal/50 dark:hover:border-teal/40'
               }`}
             >

@@ -6,7 +6,7 @@ export function ThemeToggle() {
 
   return (
     <div
-      className="inline-flex items-center rounded-full border border-rule dark:border-rule-dark bg-paper/80 dark:bg-paper-2/90 p-0.5 shadow-paper-sm"
+      className="inline-flex items-center  border border-rule dark:border-rule-dark bg-paper/80 dark:bg-paper-2/90 p-0.5 shadow-paper-sm"
       role="group"
       aria-label="Theme"
     >
@@ -15,7 +15,7 @@ export function ThemeToggle() {
         onClick={() => setTheme('light')}
         aria-pressed={!isDark}
         aria-label="Light mode"
-        className={`relative flex h-7 w-7 items-center justify-center rounded-full transition-all duration-200 ${
+        className={`relative flex h-7 w-7 items-center justify-center  transition-all duration-200 ${
           !isDark
             ? 'bg-paper-soft text-teal shadow-sm'
             : 'text-slate-400 hover:text-ink'
@@ -29,7 +29,7 @@ export function ThemeToggle() {
         onClick={() => setTheme('dark')}
         aria-pressed={isDark}
         aria-label="Dark mode"
-        className={`relative flex h-7 w-7 items-center justify-center rounded-full transition-all duration-200 ${
+        className={`relative flex h-7 w-7 items-center justify-center  transition-all duration-200 ${
           isDark
             ? 'bg-espresso text-teal shadow-sm ring-1 ring-rule-dark'
             : 'text-ink-muted hover:text-ink'
