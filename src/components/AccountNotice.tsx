@@ -9,7 +9,7 @@ export function AccountButton({ compact = false }: { compact?: boolean }) {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className={`btn-block btn-lichen ${compact ? '!px-3 !py-2 !text-[10px]' : '!py-2.5'}`}
+        className={`btn-block btn-lichen !border-0 ${compact ? '!px-3 !py-1.5 !text-[10px]' : '!px-4 !py-1.5 !text-[11px]'}`}
       >
         {compact ? 'Save' : 'Create account'}
       </button>
@@ -35,8 +35,8 @@ export function AccountButton({ compact = false }: { compact?: boolean }) {
 
 export function GuestBanner() {
   return (
-    <div className="border-b border-rule bg-[var(--mist)] dark:bg-paper-2 text-[13px] text-ink-soft">
-      <div className="mx-auto flex max-w-[1440px] items-center gap-3 px-4 py-2 sm:px-9">
+    <div className="mx-auto mt-2 max-w-6xl text-[12px] text-ink-soft">
+      <div className="glass flex items-center gap-3 px-4 py-1.5">
         <p className="min-w-0">
           Free, no account needed. Your crosses stay on this device.
           <span className="hidden sm:inline"> Accounts that sync are coming soon.</span>

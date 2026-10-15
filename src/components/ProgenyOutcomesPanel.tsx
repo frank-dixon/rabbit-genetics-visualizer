@@ -69,11 +69,6 @@ function buildPhenotypeGroups(outcomes: ProgenyOutcome[]): PhenotypeGroup[] {
     .sort((a, b) => b.combinedProbability - a.combinedProbability);
 }
 
-function variantQualifier(count: number): string {
-  if (count === 1) return '1 genotype';
-  return `${count} genotype variants`;
-}
-
 function isSilveredGroup(group: PhenotypeGroup): boolean {
   const text = `${group.phenotype} ${group.title} ${group.subtitle ?? ''}`.toLowerCase();
   if (text.includes('silver')) return true;
@@ -110,7 +105,7 @@ export function ProgenyOutcomesPanel() {
   const [searchQuery, setSearchQuery] = useState('');
   const [silveredOnly, setSilveredOnly] = useState(false);
   const [hideRare, setHideRare] = useState(false);
-  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+  const [openGroups, setOpenGroups] = useState<Set<string>>(new Set());
   const { isNerd } = useContentMode();
 
   const outcomes = useMemo(() => calculateCross(parent1, parent2), [parent1, parent2]);
@@ -137,204 +132,179 @@ export function ProgenyOutcomesPanel() {
   );
 
   const toggleGroup = (phenotype: string) => {
-    setCollapsedGroups((current) => {
+    setOpenGroups((current) => {
       const next = new Set(current);
-      if (next.has(phenotype)) {
-        next.delete(phenotype);
-      } else {
-        next.add(phenotype);
-      }
+      if (next.has(phenotype)) next.delete(phenotype);
+      else next.add(phenotype);
       return next;
     });
   };
 
+  const totalCombos = outcomes.length;
+  const cols =
+    'md:grid md:grid-cols-[6.5rem_4.5rem_minmax(0,1fr)_minmax(0,15rem)_8.5rem] md:items-center md:gap-4';
+
   return (
     <div>
-      <div className="flex items-baseline justify-between gap-3 mb-2">
-        <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">Progeny outcomes</h3>
-        <span className="text-[10px] text-ink-muted shrink-0">
-          {filteredGroups.length}/{groups.length} phenotypes · {formatProbability(probabilitySum)}{' '}
-          shown
+      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h3 className="font-display text-lg font-bold text-ink">
+          {groups.length} possible {groups.length === 1 ? 'look' : 'looks'}
+          <span className="ml-2 hidden text-[11px] font-normal tracking-normal text-ink-muted sm:inline">
+            from {totalCombos} genotype {totalCombos === 1 ? 'combination' : 'combinations'} · updates live
+          </span>
+        </h3>
+        <span className="kicker hidden text-[10px] text-ink-muted sm:inline">
+          {filteredGroups.length}/{groups.length} shown · {formatProbability(probabilitySum)}
         </span>
       </div>
 
       {progenyFocusLabel && (
-        <p className="text-[10px] text-teal-deep dark:text-teal mb-2">
-          Chromosome focus: {progenyFocusLabel}
-        </p>
+        <p className="mb-2 text-[11px] text-teal">Chromosome focus: {progenyFocusLabel}</p>
       )}
 
-      <div className="flex flex-wrap items-center gap-2 mb-2">
+      <div className="mb-3 flex flex-wrap items-center gap-3">
         <input
           type="search"
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
-          placeholder="Filter phenotypes…"
-          className="flex-1 min-w-[10rem] text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-paper-soft dark:bg-slate-950 text-ink dark:text-ink px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-400"
+          placeholder="Filter looks or genes…"
+          className="w-full min-w-[10rem] flex-1 sm:w-auto rounded border border-rule bg-[var(--glass)] px-3 py-2 text-xs text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-teal/60"
         />
-        <label className="inline-flex items-center gap-1.5 text-[10px] text-ink-soft cursor-pointer">
+        <label className="inline-flex cursor-pointer items-center gap-1.5 text-[11px] text-ink-soft">
           <input
             type="checkbox"
             checked={silveredOnly}
             onChange={(event) => setSilveredOnly(event.target.checked)}
-            className="rounded border-slate-300 dark:border-slate-600"
+            className="accent-[var(--teal)]"
           />
           Silvered only
         </label>
-        <label className="inline-flex items-center gap-1.5 text-[10px] text-ink-soft cursor-pointer">
+        <label className="inline-flex cursor-pointer items-center gap-1.5 text-[11px] text-ink-soft">
           <input
             type="checkbox"
             checked={hideRare}
             onChange={(event) => setHideRare(event.target.checked)}
-            className="rounded border-slate-300 dark:border-slate-600"
+            className="accent-[var(--teal)]"
           />
           Hide &lt;5%
         </label>
       </div>
 
-      <div className="rounded-lg border border-slate-200 dark:border-slate-800 max-h-[min(70vh,560px)] lg:max-h-[min(72vh,640px)] overflow-y-auto overscroll-contain bg-paper-soft dark:bg-slate-900 divide-y divide-slate-200 dark:divide-slate-800">
+      <div role="table" aria-label="Litter outcomes" className="glass overflow-hidden">
+        <div
+          role="row"
+          className={`hidden border-b border-rule bg-[var(--glass)] px-4 py-2.5 kicker text-[10px] text-ink-muted ${cols}`}
+        >
+          <span role="columnheader">Odds</span>
+          <span role="columnheader">Look</span>
+          <span role="columnheader">Phenotype</span>
+          <span role="columnheader">Genotype</span>
+          <span role="columnheader" className="text-right">Variants</span>
+        </div>
+
         {visibleGroups.length === 0 && (
-          <p className="px-3 py-6 text-xs text-center text-ink-muted">
-            No outcomes match the current filters.
-          </p>
+          <p className="px-4 py-6 text-center text-xs text-ink-muted">No outcomes match the current filters.</p>
         )}
 
         {visibleGroups.map((group) => {
           const headerGenotype = group.variants[0]?.outcome.genotypeByLocus;
-          const isCollapsed = collapsedGroups.has(group.phenotype);
-          const canCollapse = group.variants.length > 0;
+          const isOpen = openGroups.has(group.phenotype);
+          const many = group.variants.length > 1;
+          const focused = progenyFocusLabel === group.title;
 
           return (
-            <section key={group.phenotype}>
+            <div key={group.phenotype} role="rowgroup" className="border-b border-rule last:border-b-0">
               <div
-                className={`w-full flex items-start gap-2.5 px-3 py-2.5 bg-paper-2/80 dark:bg-espresso/50 border-b border-rule/80 dark:border-rule-dark/70 ${
-                  progenyFocusLabel === group.title ? 'ring-2 ring-inset ring-teal/50' : ''
+                role="row"
+                onClick={() => headerGenotype && focusProgenyGenotype(headerGenotype, group.title)}
+                className={`grid cursor-pointer grid-cols-[4rem_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-4 py-3 hover:bg-[var(--glass)] ${cols} ${
+                  focused ? 'bg-[var(--glass)] ring-1 ring-inset ring-teal/60' : ''
                 }`}
               >
-                {canCollapse && (
-                  <button
-                    type="button"
-                    onClick={() => toggleGroup(group.phenotype)}
-                    className="mt-0.5 shrink-0 text-ink-muted hover:text-ink dark:hover:text-paper-soft"
-                    aria-label={isCollapsed ? 'Expand phenotype group' : 'Collapse phenotype group'}
-                  >
-                    <ChevronDown
-                      className={`h-3.5 w-3.5 transition-transform ${
-                        isCollapsed ? '-rotate-90' : ''
-                      }`}
-                      aria-hidden="true"
-                    />
-                  </button>
-                )}
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    headerGenotype && focusProgenyGenotype(headerGenotype, group.title)
-                  }
-                  className="flex flex-1 items-start gap-2.5 min-w-0 text-left hover:opacity-90"
-                >
-                {headerGenotype && (
-                  <PhenotypeRenderer genotype={headerGenotype} size="sm" className="shrink-0" />
-                )}
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <h4 className="text-sm font-semibold text-ink dark:text-ink leading-snug">
-                        {group.title}
-                      </h4>
-                      {!isNerd && group.plainEnglish && (
-                        <p className="text-[11px] text-ink-muted mt-0.5 leading-snug">
-                          {group.plainEnglish}
-                        </p>
-                      )}
-                      {isNerd && headerGenotype && (
-                        <p className="text-[11px] text-ink-soft mt-0.5 leading-snug">
-                          {resolveNerdPhenotypeBlurb(headerGenotype)}
-                        </p>
-                      )}
-                      {isNerd && group.subtitle && (
-                        <p className="text-[11px] text-ink-muted mt-0.5 leading-snug font-mono">
-                          {group.subtitle}
-                        </p>
-                      )}
-                      {!isNerd && group.subtitle && (
-                        <p className="text-[11px] text-ink-muted mt-0.5 leading-snug">
-                          {group.subtitle}
-                        </p>
-                      )}
-                      <p className="text-[10px] text-ink-muted mt-1">
-                        {variantQualifier(group.variants.length)}
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-end gap-1 shrink-0 w-20">
-                      <span className="text-base font-bold font-mono text-teal-deep dark:text-teal tabular-nums">
-                        {formatProbability(group.combinedProbability)}
-                      </span>
-                      {group.variants.length === 1 && (
-                        <ProbabilityBar
-                          value={group.combinedProbability}
-                          max={maxGroupProbability || 1}
-                        />
-                      )}
-                    </div>
+                <div role="cell" className="col-start-2 row-start-1 md:col-start-auto md:row-start-auto">
+                  <span className="font-display text-xl font-bold tabular-nums text-teal">
+                    {formatProbability(group.combinedProbability)}
+                  </span>
+                  <div className="mt-1 hidden md:block">
+                    <ProbabilityBar value={group.combinedProbability} max={maxGroupProbability || 1} />
                   </div>
                 </div>
-                </button>
+                <div role="cell" className="col-start-1 row-span-2 row-start-1 md:col-start-auto md:row-start-auto md:row-span-1">
+                  {headerGenotype && <PhenotypeRenderer genotype={headerGenotype} size="sm" />}
+                </div>
+                <div role="cell" className="col-span-2 col-start-2 row-start-2 min-w-0 md:col-start-auto md:row-start-auto md:col-span-1">
+                  <p className="text-[13px] font-semibold leading-snug text-ink">{group.title}</p>
+                  {group.subtitle && (
+                    <p className={`mt-0.5 text-[11px] leading-snug text-ink-muted ${isNerd ? 'font-mono' : ''}`}>
+                      {group.subtitle}
+                    </p>
+                  )}
+                  {!isNerd && group.plainEnglish && (
+                    <p className="mt-0.5 hidden text-[11px] leading-snug text-ink-muted md:block">{group.plainEnglish}</p>
+                  )}
+                  {isNerd && headerGenotype && (
+                    <p className="mt-0.5 text-[11px] leading-snug text-ink-soft">
+                      {resolveNerdPhenotypeBlurb(headerGenotype)}
+                    </p>
+                  )}
+                </div>
+                <div role="cell" className="hidden min-w-0 md:block">
+                  {headerGenotype && (
+                    <p className="truncate font-mono text-[11px] text-ink-soft" title={formatCompactGenotype(headerGenotype)}>
+                      {formatCompactGenotype(headerGenotype)}
+                    </p>
+                  )}
+                </div>
+                <div role="cell" className="col-start-3 row-start-1 text-right md:col-start-auto md:row-start-auto">
+                  {many ? (
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        toggleGroup(group.phenotype);
+                      }}
+                      aria-expanded={isOpen}
+                      className="chip inline-flex items-center gap-1 text-[var(--link)] hover:text-ink"
+                    >
+                      {group.variants.length} variants
+                      <ChevronDown className={`h-3 w-3 transition-transform ${isOpen ? 'rotate-180' : '-rotate-90'}`} aria-hidden />
+                    </button>
+                  ) : (
+                    <span className="text-[11px] text-ink-muted">1 genotype</span>
+                  )}
+                </div>
               </div>
 
-              {!isCollapsed && group.variants.length > 1 && (
-                <ul className="divide-y divide-rule/60 dark:divide-rule-dark/50">
+              {isOpen && many && (
+                <ul className="border-t border-rule bg-black/15">
                   {group.variants.map(({ outcome, baseline }) => {
                     const key = `${outcome.genotype}-${outcome.phenotype}`;
                     const compactGenotype = formatCompactGenotype(outcome.genotypeByLocus);
-
                     return (
                       <li
                         key={key}
-                        className={`flex items-start gap-2.5 pl-3 pr-3 py-2 cursor-pointer hover:bg-paper-2/70 dark:hover:bg-espresso/40 ${
-                          progenyFocusLabel === outcome.genotype ? 'bg-teal-soft/40 dark:bg-sky-950/30' : ''
-                        }`}
                         onClick={() =>
                           focusProgenyGenotype(
                             outcome.genotypeByLocus,
                             `${group.title} (${formatProbability(outcome.probability)})`,
                           )
                         }
+                        className="grid cursor-pointer grid-cols-[4rem_minmax(0,1fr)] items-center gap-3 px-4 py-2 hover:bg-[var(--glass)] md:grid-cols-[6.5rem_4.5rem_minmax(0,1fr)] md:gap-4"
                       >
-                        <PhenotypeRenderer
-                          genotype={outcome.genotypeByLocus}
-                          size="sm"
-                          className="shrink-0 w-16"
-                        />
-                        <div className="w-16 shrink-0 flex flex-col items-end gap-1 pt-0.5">
-                          <span className="text-xs font-bold font-mono text-ink-soft tabular-nums">
-                            {formatProbability(outcome.probability)}
-                          </span>
-                          <ProbabilityBar
-                            value={outcome.probability}
-                            max={group.combinedProbability || 1}
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0 space-y-1">
+                        <span className="font-mono text-xs font-bold tabular-nums text-ink-soft md:pl-3">
+                          ↳ {formatProbability(outcome.probability)}
+                        </span>
+                        <span className="hidden md:block" />
+                        <div className="min-w-0 space-y-1">
                           {isNerd ? (
-                            <>
-                              <GenotypeInline
-                                genotype={outcome.genotypeByLocus}
-                                baseline={baseline}
-                              />
-                              <p className="text-[10px] text-ink-muted leading-snug">
-                                {resolveNerdPhenotypeBlurb(outcome.genotypeByLocus)}
-                              </p>
-                              <span onClick={(event) => event.stopPropagation()}>
-                                <CopyTextButton text={compactGenotype} label="Copy genotype" />
-                              </span>
-                            </>
+                            <GenotypeInline genotype={outcome.genotypeByLocus} baseline={baseline} />
                           ) : (
-                            <p className="text-[11px] text-ink-muted leading-snug">
-                              Same look · different genotype mix
-                            </p>
+                            <p className="break-words font-mono text-[11px] text-ink-soft">{compactGenotype}</p>
+                          )}
+                          {isNerd && (
+                            <span onClick={(event) => event.stopPropagation()}>
+                              <CopyTextButton text={compactGenotype} label="Copy genotype" />
+                            </span>
                           )}
                         </div>
                       </li>
@@ -342,50 +312,18 @@ export function ProgenyOutcomesPanel() {
                   })}
                 </ul>
               )}
-
-              {!isCollapsed && group.variants.length === 1 && isNerd && (
-                <div
-                  className={`px-3 pb-2.5 pl-8 space-y-1 hover:bg-paper-2/70 dark:hover:bg-espresso/40 cursor-pointer ${
-                    progenyFocusLabel === group.title ? 'bg-teal-soft/40 dark:bg-sky-950/30' : ''
-                  }`}
-                  onClick={() =>
-                    focusProgenyGenotype(
-                      group.variants[0].outcome.genotypeByLocus,
-                      group.title,
-                    )
-                  }
-                >
-                  <GenotypeInline genotype={group.variants[0].outcome.genotypeByLocus} />
-                  <span onClick={(event) => event.stopPropagation()}>
-                    <CopyTextButton
-                      text={formatCompactGenotype(group.variants[0].outcome.genotypeByLocus)}
-                      label="Copy genotype"
-                    />
-                  </span>
-                </div>
-              )}
-            </section>
+            </div>
           );
         })}
       </div>
 
-      {hiddenGroupCount > 0 && !showAll && (
+      {hiddenGroupCount > 0 && (
         <button
           type="button"
-          onClick={() => setShowAll(true)}
-          className="mt-2 text-xs text-teal-deep dark:text-teal hover:underline min-h-[44px]"
+          onClick={() => setShowAll((value) => !value)}
+          className="mt-2 min-h-[44px] text-xs text-[var(--link)] hover:underline"
         >
-          Show {hiddenGroupCount} more phenotype{hiddenGroupCount === 1 ? '' : 's'}
-        </button>
-      )}
-
-      {showAll && hiddenGroupCount > 0 && (
-        <button
-          type="button"
-          onClick={() => setShowAll(false)}
-          className="mt-2 text-xs text-ink-muted hover:underline min-h-[44px]"
-        >
-          Show fewer
+          {showAll ? 'Show fewer' : `Show ${hiddenGroupCount} more look${hiddenGroupCount === 1 ? '' : 's'}`}
         </button>
       )}
     </div>

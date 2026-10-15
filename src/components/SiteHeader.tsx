@@ -1,6 +1,5 @@
 import type { AppView } from './AppFooter';
 import { ContentModeToggle } from './ContentModeToggle';
-import { ThemeToggle } from './ThemeToggle';
 import { AccountButton, GuestBanner } from './AccountNotice';
 
 const NAV: { id: AppView; label: string }[] = [
@@ -17,13 +16,16 @@ interface SiteHeaderProps {
 
 export function SiteHeader({ view, onNavigate }: SiteHeaderProps) {
   return (
-    <div className="sticky top-0 z-[60] shrink-0" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-      <header className="border-b border-rule bg-paper">
-        <div className="mx-auto flex h-14 max-w-[1440px] items-center gap-6 px-4 sm:h-[60px] sm:px-9">
+    <div
+      className="sticky top-0 z-[60] shrink-0 px-2 pt-2 sm:px-3 sm:pt-3"
+      style={{ paddingTop: 'calc(env(safe-area-inset-top) + 0.5rem)' }}
+    >
+      <header className="nav-float mx-auto max-w-6xl">
+        <div className="flex h-12 items-center gap-6 px-4">
           <button
             type="button"
             onClick={() => onNavigate('landing')}
-            className="kicker text-left text-[13px] text-ink"
+            className="kicker text-left text-[12px] font-bold text-ink"
           >
             Progeny
             <span className="kicker mt-0.5 block whitespace-nowrap text-left text-[9px] tracking-[0.1em] text-teal-deep md:hidden">
@@ -37,8 +39,8 @@ export function SiteHeader({ view, onNavigate }: SiteHeaderProps) {
                 type="button"
                 onClick={() => onNavigate(item.id)}
                 aria-current={view === item.id ? 'page' : undefined}
-                className={`kicker pb-1 ${
-                  view === item.id ? 'border-b-2 border-ink text-ink' : 'text-ink-muted hover:text-ink'
+                className={`kicker ${
+                  view === item.id ? 'text-ink' : 'text-[var(--link)] hover:text-ink'
                 }`}
               >
                 {item.label}
@@ -47,9 +49,6 @@ export function SiteHeader({ view, onNavigate }: SiteHeaderProps) {
           </nav>
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <ContentModeToggle />
-            <span className="hidden sm:block">
-              <ThemeToggle />
-            </span>
             <span className="hidden sm:block">
               <AccountButton />
             </span>
