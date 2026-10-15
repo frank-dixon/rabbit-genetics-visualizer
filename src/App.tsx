@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { SHOW_LITTER_EVENT } from './components/CrossCta';
 import { AboutPage } from './components/AboutPage';
 import { MendelianLearnPage } from './components/MendelianLearnPage';
 import { AppFooter, type AppView } from './components/AppFooter';
@@ -49,7 +50,7 @@ function WorkspaceView({ mobileTab }: { mobileTab: WorkspaceMobileTab }) {
         </div>
       </div>
       <div className="mx-auto hidden max-w-[1440px] pb-10 md:block">
-        <LitterSummary />
+        <LitterSummary anchorId="litter-overview" />
       </div>
     </main>
   );
@@ -72,6 +73,14 @@ export default function App() {
     if (to.view === 'workspace') localStorage.setItem(ONBOARDED_KEY, '1');
     setView(to.view);
   };
+  useEffect(() => {
+    const onShow = () => {
+      setMobileTab('outcomes');
+      window.scrollTo({ top: 0 });
+    };
+    window.addEventListener(SHOW_LITTER_EVENT, onShow);
+    return () => window.removeEventListener(SHOW_LITTER_EVENT, onShow);
+  }, []);
   const startWorkspace = () => {
     localStorage.setItem(ONBOARDED_KEY, '1');
     setMobileTab('parents');

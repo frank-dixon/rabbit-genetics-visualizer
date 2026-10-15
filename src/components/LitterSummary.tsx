@@ -6,7 +6,7 @@ import { furVars } from '../utils/furTone';
 const pct = (p: number) => `${(p * 100).toFixed(2).replace(/\.?0+$/, '')}%`;
 
 /** Field-grid litter overview: hero headline, top kit tiles and a rarest callout, from the real engine. */
-export function LitterSummary() {
+export function LitterSummary({ anchorId }: { anchorId?: string }) {
   const parent1 = useGeneticStore((s) => s.parent1);
   const parent2 = useGeneticStore((s) => s.parent2);
   const focus = useGeneticStore((s) => s.focusProgenyGenotype);
@@ -19,7 +19,7 @@ export function LitterSummary() {
   const rarest = litter.length > 1 && last.probability < top.probability - 1e-9 ? last : null;
 
   return (
-    <section aria-label="Litter overview" className="relative">
+    <section id={anchorId} aria-label="Litter overview" className="relative scroll-mt-28">
       <div className="fur-portrait relative px-4 pb-24 pt-6 text-[var(--mist)] sm:px-9 sm:pb-28 sm:pt-8" style={furVars(top.genotype)}>
         <div className="absolute inset-0 bg-[var(--forest)]/70" style={{ background: 'rgba(20,24,21,.72)' }} aria-hidden />
         <div className="relative">
