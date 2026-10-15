@@ -13,8 +13,8 @@ function getStoredTheme(): Theme | null {
 }
 
 export function resolveTheme(): Theme {
-  // Graphite desk ships dark-first; honor a stored choice.
-  return getStoredTheme() ?? 'dark';
+  // Field grid ships light-first; honor a stored choice.
+  return getStoredTheme() ?? 'light';
 }
 
 export function applyThemeToDocument(theme: Theme) {
