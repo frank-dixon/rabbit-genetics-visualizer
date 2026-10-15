@@ -21,8 +21,8 @@ export function MobileTabBar({ view, tab, onGo }: MobileTabBarProps) {
   return (
     <nav
       aria-label="Main"
-      className="nav-float fixed inset-x-2 bottom-2 z-[70] flex overflow-hidden md:hidden"
-      style={{ marginBottom: 'env(safe-area-inset-bottom)' }}
+      className="fixed inset-x-0 bottom-0 z-[70] flex border-t border-rule bg-paper md:hidden"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       {ITEMS.map((item) => {
         const active = view === item.to.view && (!item.to.tab || item.to.tab === tab);
@@ -32,8 +32,8 @@ export function MobileTabBar({ view, tab, onGo }: MobileTabBarProps) {
             type="button"
             onClick={() => onGo(item.to)}
             aria-current={active ? 'page' : undefined}
-            className={`kicker flex-1 py-3 text-[10px] ${
-              active ? 'text-ink font-bold' : 'text-[var(--link)]'
+            className={`kicker flex-1 py-3.5 text-[10px] ${
+              active ? 'bg-[var(--forest)] text-[var(--mist)]' : 'text-ink-muted'
             }`}
           >
             {item.label}

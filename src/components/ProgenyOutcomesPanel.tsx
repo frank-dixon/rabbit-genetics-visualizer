@@ -276,7 +276,7 @@ export function ProgenyOutcomesPanel() {
               </div>
 
               {isOpen && many && (
-                <ul className="border-t border-rule bg-black/15">
+                <ul className="border-t border-rule bg-paper-2/60">
                   {group.variants.map(({ outcome, baseline }) => {
                     const key = `${outcome.genotype}-${outcome.phenotype}`;
                     const compactGenotype = formatCompactGenotype(outcome.genotypeByLocus);
