@@ -5,6 +5,7 @@ import { ProgenyOutcomesPanel } from './ProgenyOutcomesPanel';
 import { CopyTextButton } from './CopyTextButton';
 import { ExampleCrossChips } from './ExampleCrossChips';
 import { SavedCrossesPanel } from './SavedCrossesPanel';
+import { CrossCta } from './CrossCta';
 import { useGeneticStore } from '../store/useGeneticStore';
 import { buildCrossShareUrl } from '../utils/genotypeCodec';
 
@@ -74,6 +75,8 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
           mateGenotype={parent1}
         />
       </div>
+
+      <CrossCta />
 
       <div className="flex flex-col items-center gap-1">
         <ParentDiffStrip />
