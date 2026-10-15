@@ -33,7 +33,7 @@ export function CrossWorkspace() {
       <section className="glass p-4 sm:p-6" aria-labelledby="pairing-title">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="eyebrow kicker text-[10px] text-ink-muted">Predict a litter</p>
+            <p className="kicker text-[10px] text-ink-muted">Predict a litter</p>
             <h1 id="pairing-title" className="headline-solid text-2xl sm:text-3xl">
               Pairing
             </h1>
