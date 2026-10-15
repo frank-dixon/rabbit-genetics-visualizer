@@ -3,103 +3,131 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --paper: #ffffff;
-    --paper-2: #e7eee6;
-    --paper-soft: #ffffff;
-    --ink: #141815;
-    --ink-soft: #2a332b;
-    --muted: #5e6758;
-    --rule: #b9c6b8;
-    --teal: #1f4d32;
-    --teal-deep: #1f4d32;
-    --on-teal: #ffffff;
-    --teal-soft: #e7eee6;
-    --espresso: #141815;
-    --action: #1f4d32;
-    --sea: #2f6b3a;
-    --forest: #141815;
-    --moss: #1f4d32;
-    --lichen: #9dcc96;
-    --mist: #e7eee6;
-    --shadow-paper: none;
-  }
-
-  html.dark {
-    --paper: #141815;
-    --paper-2: #1c221d;
-    --paper-soft: #1c221d;
-    --ink: #e7eee6;
-    --ink-soft: #cfdacf;
-    --muted: #b7c3b7;
-    --rule: #3d4a3e;
-    --teal: #9dcc96;
-    --teal-deep: #9dcc96;
-    --teal-soft: #24362a;
-    --on-teal: #141815;
-    --espresso: #0d100e;
-    --action: #9dcc96;
-    --sea: #9dcc96;
-    --shadow-paper: none;
-  }
-
-  html {
-    @apply transition-colors duration-200;
-  }
-
+  /* Tokens taken from frank-dixon.github.io (revamp 2026-10-14/15). Dark-only, like the site. */
+  :root,
+  html.dark,
   html.light {
-    color-scheme: light;
-  }
-
-  html.dark {
+    --bg-from: #062a2e;
+    --bg-to: #1e0f2b;
+    --paper: #0a2c31;
+    --paper-2: #11373c;
+    --paper-soft: #0d3136;
+    --ink: #ede7ef;
+    --ink-soft: #c9d9de;
+    --muted: #9fb6bc;
+    --rule: #ffffff33;
+    --teal: #52f9e4;
+    --teal-deep: #52f9e4;
+    --on-teal: #062a2e;
+    --teal-soft: #ffffff1f;
+    --espresso: #062a2e;
+    --action: #ff7f66;
+    --sea: #52f9e4;
+    --forest: #062a2e;
+    --moss: #11373c;
+    --lichen: #ff7f66;
+    --mist: #ede7ef;
+    --accent: #ff7f66;
+    --on-accent: #062a2e;
+    --link: #ffc1b6;
+    --heading: #52f9e4;
+    --heading-fill: linear-gradient(100deg, #52f9e4, #cf90ff, #ff8970);
+    --glass: #ffffff1f;
+    --glass-border: #ffffff33;
+    --shadow-paper: none;
     color-scheme: dark;
   }
 
-  body {
-    @apply bg-paper text-ink antialiased font-sans;
-    background-image:
-      linear-gradient(90deg, rgba(20, 24, 21, 0.06) 1px, transparent 1px),
-      linear-gradient(rgba(20, 24, 21, 0.06) 1px, transparent 1px);
-    background-size: 360px 100%, 100% 225px;
+  html {
+    background: linear-gradient(135deg, var(--bg-from), var(--bg-to));
     background-attachment: fixed;
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
   }
 
-  html.dark body {
-    @apply bg-espresso text-ink;
-    background-image:
-      linear-gradient(90deg, rgba(231, 238, 230, 0.06) 1px, transparent 1px),
-      linear-gradient(rgba(231, 238, 230, 0.06) 1px, transparent 1px);
-    background-size: 360px 100%, 100% 225px;
+  body {
+    @apply text-ink antialiased font-sans;
+    background: transparent;
+  }
+
+  .hex-bg {
+    z-index: -1;
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
   }
 
   h1,
   h2,
   h3,
   .font-display {
-    @apply font-sans tracking-tight;
+    font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
   }
 
   a {
-    @apply text-teal-deep;
+    color: var(--link);
   }
 
   a:hover {
-    @apply text-teal;
+    color: var(--ink);
   }
 
   :focus-visible {
     outline: 2px solid var(--teal);
     outline-offset: 2px;
   }
+
+  select,
+  input[type='search'],
+  input[type='text'] {
+    color-scheme: dark;
+  }
 }
 
 @layer components {
-  .surface-card {
-    @apply rounded-paper border border-rule/90 bg-paper-soft/95 shadow-paper-sm;
+  .surface-card,
+  .glass {
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
   }
-
-  .dark .surface-card {
-    @apply border-rule bg-paper-2 shadow-none;
+  .nav-float {
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+    background: color-mix(in srgb, var(--bg-from) 72%, #ffffff1f);
+    border-radius: 999px;
+    box-shadow: 0 8px 24px #00000047;
+  }
+  .chip {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    border-radius: 3px;
+    padding: 0.15rem 0.45rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .chip-hot {
+    border-color: color-mix(in srgb, var(--teal) 60%, transparent);
+    color: var(--teal);
+  }
+  .tag-cta {
+    border-radius: 3px;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.1rem 0.5rem;
   }
 
   /* Hex brand tile with the master two-stop ombre */
@@ -138,41 +166,55 @@
 
 @layer components {
   .headline {
-    font-family: 'Instrument Sans', system-ui, sans-serif;
+    font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
     font-weight: 700;
-    letter-spacing: -0.05em;
+    text-transform: uppercase;
+    letter-spacing: -0.04em;
     line-height: 0.88;
+    background-image: var(--heading-fill);
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  .headline-solid {
+    font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    color: var(--heading);
   }
   .kicker {
-    font-family: 'DM Mono', ui-monospace, monospace;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-  .serif-note {
-    font-family: 'Source Serif 4', Georgia, serif;
-    font-style: italic;
-  }
-  .btn-block {
-    font-family: 'DM Mono', ui-monospace, monospace;
-    font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    padding: 0.85rem 1.15rem;
+  }
+  .serif-note {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    color: var(--ink-soft);
+  }
+  .btn-block {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.75rem 1.25rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    border-radius: 4px;
     border: 1px solid transparent;
-    transition: background-color 0.15s, color 0.15s;
+    transition: filter 0.15s, background-color 0.15s, color 0.15s;
   }
-  .btn-forest { background: var(--forest); color: var(--mist); }
-  .btn-forest:hover { background: var(--moss); color: #fff; }
-  .btn-lichen { background: var(--lichen); color: var(--forest); }
-  .btn-lichen:hover { background: #b5dcae; }
-  .btn-outline { border-color: currentColor; }
+  .btn-lichen { background: var(--accent); color: var(--on-accent); border: 3px solid var(--accent); }
+  .btn-lichen:hover { filter: brightness(1.1); }
+  .btn-forest { background: var(--glass); color: var(--link); border-color: var(--glass-border); backdrop-filter: blur(10px); }
+  .btn-forest:hover { color: var(--ink); }
+  .btn-outline { border-color: var(--glass-border); }
   .fur-portrait {
     background-image:
       radial-gradient(ellipse 38% 30% at 46% 40%, var(--fur-hi, #c48a52), transparent 70%),

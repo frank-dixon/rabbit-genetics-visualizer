@@ -13,14 +13,16 @@ function getStoredTheme(): Theme | null {
 }
 
 export function resolveTheme(): Theme {
-  // Field grid ships light-first; honor a stored choice.
-  return getStoredTheme() ?? 'light';
+  // Matches frank-dixon.github.io: dark-only.
+  void getStoredTheme;
+  return 'dark';
 }
 
 export function applyThemeToDocument(theme: Theme) {
   const root = document.documentElement;
 
   root.classList.remove('light', 'dark');
+  theme = 'dark';
   root.classList.add(theme);
   root.dataset.theme = theme;
   root.style.colorScheme = theme;
