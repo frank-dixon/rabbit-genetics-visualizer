@@ -106,7 +106,7 @@ export function CompactCollapsible({
 
   return (
     <div
-      className={`rounded-lg border border-rule/80 dark:border-rule-dark/60 bg-paper/50 dark:bg-paper-soft/60 ${className}`}
+      className={`bg-[var(--mist)] dark:bg-paper-2 md:border md:border-rule/80 md:dark:border-rule-dark/60 md:bg-paper/50 md:dark:bg-paper-soft/60 ${className}`}
     >
       <button
         type="button"

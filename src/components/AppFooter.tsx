@@ -14,7 +14,7 @@ const NAV_ITEMS: { id: AppView; label: string }[] = [
 
 export function AppFooter({ view, onNavigate }: AppFooterProps) {
   return (
-    <footer className="shrink-0 border-t border-rule/80 dark:border-rule-dark/70 bg-paper-soft/80 dark:bg-espresso/80 ">
+    <footer className="hidden md:block shrink-0 border-t border-rule/80 dark:border-rule-dark/70 bg-paper-soft/80 dark:bg-espresso/80 ">
       <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <p className="text-xs text-ink-muted dark:text-slate-400">
           Progeny · Rabbit Progeny Predictor · Built by{' '}

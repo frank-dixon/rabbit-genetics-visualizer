@@ -82,7 +82,7 @@ export function ParentCompactCard({
 
   return (
     <article
-      className={`rounded-xl border bg-paper/70 dark:bg-espresso/40 p-3 space-y-2.5 ${accentBorderClass}`}
+      className={`border-0 border-t border-rule py-3 md:border md:bg-paper/70 md:dark:bg-espresso/40 md:p-3 space-y-2.5 ${accentBorderClass}`}
     >
       <div className="flex gap-3">
         <PhenotypeRenderer genotype={genotype} size="sm" className="shrink-0" />

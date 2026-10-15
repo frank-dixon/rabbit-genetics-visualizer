@@ -37,10 +37,14 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-teal">
-            Breeding desk
+          <p className="kicker text-[10px] text-teal">
+            <span className="md:hidden">The cross</span>
+            <span className="hidden md:inline">Breeding desk</span>
           </p>
-          <h2 className="text-base font-semibold text-ink leading-tight">Dam &amp; Sire</h2>
+          <h2 className="text-base font-semibold text-ink leading-tight">
+            <span className="headline text-[2rem] md:hidden">Buck × Doe</span>
+            <span className="hidden md:inline">Dam &amp; Sire</span>
+          </h2>
         </div>
         <CopyTextButton
           text={shareUrl}
@@ -52,7 +56,7 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
 
       <ExampleCrossChips />
 
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-1 gap-0 md:gap-3">
         <ParentCompactCard
           parentKey="parent1"
           roleLabel="Dam"
@@ -102,13 +106,13 @@ export function CrossWorkspace({ section = 'all' }: CrossWorkspaceProps) {
 
   if (section === 'parents') {
     return (
-      <section className="surface-card p-4 sm:p-5">{parentsRail}</section>
+      <section className="bg-paper px-4 pb-4 pt-3 md:surface-card md:p-5">{parentsRail}</section>
     );
   }
 
   if (section === 'outcomes') {
     return (
-      <section className="surface-card p-4 sm:p-5">{outcomesHero}</section>
+      <section className="bg-paper px-4 pb-4 pt-3 md:surface-card md:p-5">{outcomesHero}</section>
     );
   }
 
