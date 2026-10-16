@@ -7,6 +7,7 @@ import { formatCompactGenotype } from '../utils/formatGenotype';
 import { isBCDoubleHet, resolveParentPhenotype } from '../utils/geneticEngine';
 import { CoatTile } from './CoatTile';
 import { HairBar } from './HairBar';
+import { PartedInset } from './PartedInset';
 import {
   hiddenGenes,
   kitsPhrase,
@@ -265,7 +266,10 @@ export function SplitWorkspace({ onLearnMore }: SplitWorkspaceProps) {
         <div className="order-first bg-[var(--moss)] px-4 py-5 sm:px-9 lg:order-none lg:py-8">
           {top && (
             <div className="mx-auto max-w-[30rem] border border-ink bg-paper">
-              <CoatTile genotype={top.genotype} name={top.title} size="lg" className="h-[150px] sm:h-[190px]" />
+              <div className="relative">
+                <CoatTile genotype={top.genotype} name={top.title} size="lg" className="h-[150px] sm:h-[190px]" />
+                <PartedInset genotype={top.genotype} />
+              </div>
               <div className="p-5">
                 <p className="kicker text-ink-muted">Most likely kit</p>
                 <p className="headline mt-1 text-[clamp(1.6rem,2.6vw,2.25rem)] text-ink">{top.title}</p>
