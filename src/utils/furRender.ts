@@ -36,6 +36,34 @@ function shade(hex: string, f: number) {
   const p = [1, 3, 5].map((i) => parseInt(hex.substr(i, 2), 16));
   return `rgb(${p.map((v) => Math.min(255, Math.round(v * f))).join(',')})`;
 }
+const rgbOf = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.substr(i, 2), 16));
+/** Relative lightness 0..1 of a hex colour. */
+export function lightness(hex: string) {
+  const [r, g, b] = rgbOf(hex);
+  return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+}
+/**
+ * Hair colour: brightness f, with light colours compressed toward full
+ * brightness (white fur keeps only a faint shade, no grey hatch lines) and
+ * a warm cast; tint shifts dark hairs blue (+) or brown (-), sheen lifts them.
+ */
+function hairCol(hex: string, f: number, tint = 0, sheen = 0) {
+  const L = lightness(hex);
+  if (L > 0.8) {
+    const k = 1 - (1 - f) * 0.12;
+    const [r, g, b] = rgbOf(hex);
+    return `rgb(${Math.min(255, Math.round(r * k + 2))},${Math.min(255, Math.round(g * k))},${Math.min(255, Math.round(b * k - 3))})`;
+  }
+  let [r, g, b] = rgbOf(hex).map((v) => v * f);
+  if (L < 0.55) {
+    r += -tint * 6 + sheen * 70;
+    g += -tint * 2 + sheen * 74;
+    b += tint * 8 + sheen * 82;
+  }
+  return `rgb(${[r, g, b].map((v) => Math.max(0, Math.min(255, Math.round(v)))).join(',')})`;
+}
+/** Self black/blue/chocolate: every band dark, so roots, flow and sheen get the glossy treatment. */
+const isDarkSelf = (b: HairBand[]) => b.every((x) => lightness(x.color) < 0.55);
 function bandAt(b: HairBand[], t: number) {
   let a = 0;
   for (const band of b) {
@@ -76,8 +104,17 @@ export function drawFur(cv: HTMLCanvasElement | OffscreenCanvas, c: CoatSpec, se
   const S = opts.hairPx ?? Math.max(w, h) / 220;
   // Pattern field is sampled in a fixed-aspect space so patches keep their shape at any width.
   const F = Math.max(w, h);
-  x.fillStyle = shade(regionBands(c, w / 2, h / 2, w, h, n)[0].color, 0.7);
+  const baseBands = regionBands(c, w / 2, h / 2, w, h, n);
+  const tipL = lightness(baseBands[baseBands.length - 1].color);
+  const darkBase = isDarkSelf(baseBands);
+  // Light coats sit on a near-white ground; dark coats on their own dark tip colour so roots read darker, not slate-bright.
+  x.fillStyle = tipL > 0.8 ? hairCol(baseBands[0].color, 0.9) : darkBase ? shade(baseBands[baseBands.length - 1].color, 0.75) : shade(baseBands[0].color, 0.7);
   x.fillRect(0, 0, w, h);
+  // Sheen: a soft wavy band across the coat, catching on dark tips.
+  const sheenAt = (px: number, py: number) => {
+    const d = (py / F - 0.3 - 0.1 * Math.sin((px / F) * 4.2 + 1)) / 0.16;
+    return Math.exp(-d * d);
+  };
   const N = Math.round((w * h) / (2.2 * S * S));
   x.lineCap = 'round';
   x.lineJoin = 'round';
@@ -106,10 +143,14 @@ export function drawFur(cv: HTMLCanvasElement | OffscreenCanvas, c: CoatSpec, se
   for (const [lf, bright, vis] of [[0.7, 0.55, 2], [0.85, 0.9, 3], [0.95, 1.0, 4]]) {
     for (let i = 0; i < N / 3; i++) {
       const px = R() * w * 1.1 - w * 0.05, py = R() * h * 1.15 - h * 0.05;
-      let a = -1.95 + (fbm(n, (px / F) * 1.5 + 9, (py / F) * 1.5) - 0.5) * 1.1;
+      // Dark self coats get a stronger, swirlier flow so the lie of the fur reads.
+      const flow = darkBase ? 1.7 : 1.1;
+      let a = -1.95 + (fbm(n, (px / F) * 1.5 + 9, (py / F) * 1.5) - 0.5) * flow + (darkBase ? (n((px / F) * 6 + 3, (py / F) * 6) - 0.5) * 0.5 : 0);
       const L = (18 + R() * 10) * S * lf;
       const bands = regionBands(c, px, py, w, h, n);
       const hb = bright * q(0.84 + R() * 0.26, 0.04);
+      const tint = q(R() * 2 - 1, 0.5);
+      const sh = vis === 4 ? q(sheenAt(px, py) * (0.55 + R() * 0.45), 0.1) : 0;
       let cx = px, cy = py;
       for (let k = 0; k <= SEG; k++) {
         pts[k][0] = cx;
@@ -125,7 +166,11 @@ export function drawFur(cv: HTMLCanvasElement | OffscreenCanvas, c: CoatSpec, se
         let e = k + 1;
         while (e < SEG && bandAt(bands, (e + 0.5) / SEG) === col && e - k < 3) e++;
         const t = (k + e) / 2 / SEG;
-        const p = pathFor(shade(col, hb), q(S * 1.1 * (1 - t * 0.7), wStep));
+        // Roots of dark coats stay deep; undercolour is dimmed so it doesn't flash through as light streaks.
+        const dark = isDarkSelf(bands);
+        const isTip = bandAt(bands, 1) === col;
+        const fb = dark && !isTip ? hb * 0.7 : dark ? hb * (0.8 + 0.5 * (tint + 1) * 0.5) : hb;
+        const p = pathFor(hairCol(col, fb, dark ? tint : 0, dark && isTip ? sh * c.sheen * 4.5 : 0), q(S * 1.1 * (1 - t * 0.7), wStep));
         p.moveTo(pts[k][0], pts[k][1]);
         for (let j = k + 1; j < e; j++) p.quadraticCurveTo(pts[j][0], pts[j][1], (pts[j][0] + pts[j + 1][0]) / 2, (pts[j][1] + pts[j + 1][1]) / 2);
         p.lineTo(pts[e][0], pts[e][1]);
@@ -159,7 +204,7 @@ export function drawFur(cv: HTMLCanvasElement | OffscreenCanvas, c: CoatSpec, se
   const g = x.createRadialGradient(w * 0.3, h * 0.25, 0, w * 0.3, h * 0.25, Math.max(w, h) * 0.9);
   g.addColorStop(0, `rgba(255,255,255,${c.sheen})`);
   g.addColorStop(0.6, 'rgba(255,255,255,0)');
-  g.addColorStop(1, 'rgba(0,0,0,.18)');
+  g.addColorStop(1, `rgba(${tipL > 0.8 ? '120,100,70,.08' : '0,0,0,.18'})`);
   x.fillStyle = g;
   x.fillRect(0, 0, w, h);
 }
