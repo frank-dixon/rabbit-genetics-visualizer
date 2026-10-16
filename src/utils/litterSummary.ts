@@ -12,7 +12,24 @@ export interface LitterPhenotype {
   variantCount: number;
 }
 
-/** Group the real engine's outcomes by headline coat (text before the first ';'), most likely first. */
+/**
+ * The visible look for a full engine phenotype: every visible part (base coat, pointing,
+ * spotting), minus hidden carrier notes and genotype codes in brackets.
+ * Earlier this kept only the text before the first ';', which threw away spotting
+ * (Enen), and for Himalayan/chinchilla kits threw away the base colour, so different
+ * looks were merged into one group and most crosses read as 100% one look.
+ */
+export function lookTitle(phenotype: string): string {
+  return phenotype
+    .split(';')
+    .map((part) => part.trim())
+    .filter((part) => part && !/carrier \(/i.test(part))
+    .map((part) => part.replace(/\s*\([^)]*\)/g, '').trim())
+    .map((part, i) => (i === 0 ? part : part.charAt(0).toLowerCase() + part.slice(1)))
+    .join(', ');
+}
+
+/** Group the real engine's outcomes by visible look, most likely first. */
 export function summarizeLitter(
   parent1: GenotypeMap,
   parent2: GenotypeMap,
@@ -20,7 +37,7 @@ export function summarizeLitter(
 ): LitterPhenotype[] {
   const groups = new Map<string, LitterPhenotype>();
   for (const outcome of calculateCross(parent1, parent2, options)) {
-    const title = outcome.phenotype.split(';')[0].trim();
+    const title = lookTitle(outcome.phenotype);
     const existing = groups.get(title);
     if (existing) {
       existing.probability += outcome.probability;

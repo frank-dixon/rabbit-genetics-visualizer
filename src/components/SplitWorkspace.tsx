@@ -15,7 +15,7 @@ import {
   punnett,
   varyingLoci,
 } from '../utils/litterCopy';
-import { oddsPhrase, summarizeLitter, type LitterPhenotype } from '../utils/litterSummary';
+import { lookTitle, oddsPhrase, summarizeLitter, type LitterPhenotype } from '../utils/litterSummary';
 import { resolvePlainEnglishPhenotype } from '../utils/plainEnglishPhenotype';
 import { BCPhasePicker } from './BCPhasePicker';
 import { ExampleCrossChips } from './ExampleCrossChips';
@@ -46,7 +46,7 @@ function ParentPicker({ parentKey, role, mate }: { parentKey: ParentKey; role: '
   const loadParentPreset = useGeneticStore((s) => s.loadParentPreset);
   const clearParentPreset = useGeneticStore((s) => s.clearParentPreset);
   const resetParentToPreset = useGeneticStore((s) => s.resetParentToPreset);
-  const look = useMemo(() => resolveParentPhenotype(genotype).split(';')[0], [genotype]);
+  const look = useMemo(() => lookTitle(resolveParentPhenotype(genotype)), [genotype]);
   const hidden = useMemo(() => hiddenGenes(genotype), [genotype]);
   const notes = useMemo(() => getPresetBreedingNotes(presetId, genotype), [presetId, genotype]);
   const preset = presetId ? PARENT_PRESETS.find((p) => p.id === presetId) : null;
