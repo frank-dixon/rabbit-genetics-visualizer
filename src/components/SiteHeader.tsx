@@ -1,5 +1,4 @@
 import type { AppView } from './AppFooter';
-import { ContentModeToggle } from './ContentModeToggle';
 import { AccountButton, GuestBanner } from './AccountNotice';
 
 const NAV: { id: AppView; label: string }[] = [
@@ -45,7 +44,6 @@ export function SiteHeader({ view, onNavigate }: SiteHeaderProps) {
             ))}
           </nav>
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            <ContentModeToggle />
             <span className="hidden sm:block">
               <AccountButton />
             </span>

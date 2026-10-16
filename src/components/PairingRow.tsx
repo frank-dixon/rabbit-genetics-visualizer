@@ -4,7 +4,6 @@ import { PARENT_PRESETS } from '../data/meatRabbitBreeds';
 import { LOCI_ORDER } from '../data/rabbitGenetics';
 import { getPresetBreedingNotes } from '../data/presetBreedingNotes';
 import { genotypesEqual, useGeneticStore } from '../store/useGeneticStore';
-import { useContentMode } from '../store/useContentModeStore';
 import { formatCompactGenotype } from '../utils/formatGenotype';
 import { resolveParentPhenotype } from '../utils/geneticEngine';
 import { resolveNerdPhenotypeBlurb } from '../utils/nerdPhenotype';
@@ -43,7 +42,7 @@ function ParentField({ parentKey, role, mate }: ParentFieldProps) {
   const loadParentPreset = useGeneticStore((state) => state.loadParentPreset);
   const clearParentPreset = useGeneticStore((state) => state.clearParentPreset);
   const resetParentToPreset = useGeneticStore((state) => state.resetParentToPreset);
-  const { isNerd } = useContentMode();
+  const isNerd = false; // Simple/Nerd toggle removed; genetics live in disclosures
   const [open, setOpen] = useState(false);
 
   const phenotype = useMemo(() => resolveParentPhenotype(genotype), [genotype]);

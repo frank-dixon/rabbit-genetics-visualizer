@@ -4,7 +4,6 @@ import { calculateCross, formatProbability, type ProgenyOutcome } from '../utils
 import { resolvePlainEnglishPhenotype } from '../utils/plainEnglishPhenotype';
 import { formatCompactGenotype } from '../utils/formatGenotype';
 import { useGeneticStore } from '../store/useGeneticStore';
-import { useContentMode } from '../store/useContentModeStore';
 import { resolveNerdPhenotypeBlurb } from '../utils/nerdPhenotype';
 import { CopyTextButton } from './CopyTextButton';
 import { GenotypeInline } from './GenotypeInline';
@@ -106,7 +105,7 @@ export function ProgenyOutcomesPanel() {
   const [silveredOnly, setSilveredOnly] = useState(false);
   const [hideRare, setHideRare] = useState(false);
   const [openGroups, setOpenGroups] = useState<Set<string>>(new Set());
-  const { isNerd } = useContentMode();
+  const isNerd = false; // Simple/Nerd toggle removed; genetics live in disclosures
 
   const outcomes = useMemo(() => calculateCross(parent1, parent2), [parent1, parent2]);
   const groups = useMemo(() => buildPhenotypeGroups(outcomes), [outcomes]);
