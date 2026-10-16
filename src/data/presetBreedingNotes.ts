@@ -37,7 +37,7 @@ const PRESET_CROSS_NOTES: Record<string, string[]> = {
   ],
   'silver-fox-black': [
     'Kits are born dark; heavy silver ticking develops as the coat matures (sisi).',
-    'Crossing to SiSi stock produces Sisi offspring with visible light silvering, not just carrier status.',
+    'Crossing to SiSi stock produces Sisi kits: not silvered, but carriers of silvering.',
   ],
   'champagne-dargent': [
     'Black-born like Silver Fox; silvering typically develops around 7–8 weeks.',
@@ -120,7 +120,7 @@ function genotypeBreedingNotes(genotype: GenotypeMap): string[] {
   if (isHomozygous(genotype.Si, 'si')) {
     notes.push('Homozygous sisi — progressive white tipping develops as the coat matures.');
   } else if (isHeterozygous(genotype.Si, 'Si', 'si')) {
-    notes.push('Sisi heterozygote — light silvering is visible on the coat, not just carried invisibly.');
+    notes.push('Sisi — carrier of silvering. No visible silvering, but half its kits inherit si.');
   }
 
   if (isHomozygous(genotype.E, 'e')) {

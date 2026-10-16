@@ -111,7 +111,7 @@ export function resolveNerdPhenotypeDetail(genotypes: GenotypeMap): {
     }
     if (si && (si[0] === 'si' || si[1] === 'si')) {
       interactions.push(
-        'Silver (si) adds progressive silver ticking as the coat matures; homozygous si/si is heavier than heterozygous.',
+        'Silvering (si) is recessive: si/si adds progressive silver ticking as the coat matures; Si/si is a carrier with no visible silvering.',
       );
     }
   }

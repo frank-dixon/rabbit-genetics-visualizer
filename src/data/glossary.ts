@@ -133,7 +133,7 @@ export const GLOSSARY_SECTIONS: GlossarySection[] = [
       {
         term: 'Silvering (sisi / Sisi)',
         definition:
-          'Progressive white tipping of guard hairs as the coat matures. sisi = heavy silvering (Silver Fox, Champagne d’Argent, Crème d’Argent). Sisi = lighter visible tipping, not invisible carriage. Invisible on cc REW or vv BEW coats.',
+          'Progressive white tipping of guard hairs as the coat matures. sisi = heavy silvering (Silver Fox, Champagne d’Argent, Crème d’Argent). Sisi = carrier: silvering is recessive, so one copy normally does not show (a few stray silver hairs are occasionally reported), but it can be passed on. Invisible on cc REW or vv BEW coats.',
       },
       {
         term: 'Ruby-Eyed White (REW)',

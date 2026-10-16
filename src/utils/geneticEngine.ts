@@ -158,7 +158,7 @@ function isSilverHeterozygote(pair: [string, string]): boolean {
 function describeSilvering(
   genotypes: GenotypeMap,
   resolved: Record<string, string>,
-  baseColor: string,
+  _baseColor: string,
 ): string | null {
   if (!genotypes.Si) return null;
 
@@ -178,22 +178,8 @@ function describeSilvering(
     return 'Silvered coat (sisi — progressive white tipping)';
   }
 
-  if (isSilverHeterozygote(genotypes.Si)) {
-    if (resolved.E === 'e' && resolved.A === 'a') {
-      return 'Cream/fawn with light silvering (Sisi)';
-    }
-    if (resolved.E === 'e' && resolved.A === 'A') {
-      return 'Red/fawn with light silvering (Sisi)';
-    }
-    if (resolved.A === 'A') {
-      return `${baseColor} with light silvering (Sisi)`;
-    }
-    if (resolved.A === 'a') {
-      return `${baseColor} with light silvering (Sisi)`;
-    }
-    return `${baseColor} with light silvering (Sisi)`;
-  }
-
+  // Sisi: silvering is recessive, so one copy is carried, not shown (see the
+  // 'Silvering carrier (Sisi)' part added in resolvePhenotype).
   return null;
 }
 
@@ -251,6 +237,12 @@ function resolvePhenotype(genotypes: GenotypeMap): string {
     (genotypes.V[0] === 'v' && genotypes.V[1] === 'V')
   ) {
     parts.push('Vienna carrier (Vv)');
+  }
+
+  // Silvering is recessive: Sisi looks non-silvered but can pass si on.
+  // OSU Extension notes heterozygotes occasionally show a few silver hairs; we model the usual case.
+  if (genotypes.Si && isSilverHeterozygote(genotypes.Si)) {
+    parts.push('Silvering carrier (Sisi)');
   }
 
   return parts.join('; ');

@@ -358,7 +358,7 @@ export const RABBIT_GENETIC_MAP: Record<string, Locus> = {
         name: 'Silvered',
         symbol: 'si',
         description:
-          'Silvered allele — white-tipped guard hairs develop as the coat matures. Heavy expression typically sisi; light tipping possible in Sisi carriers.',
+          'Silvered allele — white-tipped guard hairs develop as the coat matures. Recessive: shows in sisi; Sisi rabbits are carriers with no visible silvering.',
       },
     ],
     dominanceHierarchy: ['Si', 'si'],

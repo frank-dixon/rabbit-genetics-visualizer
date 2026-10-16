@@ -92,7 +92,7 @@ export function resolvePlainEnglishPhenotype(genotypes: GenotypeMap): string {
   if (genotypes.Si && isHomozygous(genotypes.Si, 'si')) {
     parts.push(`${base}, with heavy silver ticking as the coat matures`);
   } else if (genotypes.Si && isHeterozygous(genotypes.Si, 'Si', 'si')) {
-    parts.push(`${base}, with light silver ticking visible`);
+    parts.push(`${base} (carries silvering, does not show it)`);
   } else {
     parts.push(base);
   }

@@ -159,11 +159,6 @@ export function resolvePhenotypeVisual(genotypes: GenotypeMap): PhenotypeVisual 
 
   if (genotypes.Si && isHomozygous(genotypes.Si, 'si')) {
     silvering = 0.75;
-  } else if (
-    genotypes.Si &&
-    isHeterozygous(genotypes.Si, 'Si', 'si')
-  ) {
-    silvering = 0.35;
   }
 
   if (
