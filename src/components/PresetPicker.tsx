@@ -6,13 +6,18 @@ interface PresetPickerProps {
   id: string;
   value: string | null;
   onChange: (presetId: string | null) => void;
+  /** 'hero' is the large primary control used on the Predict workspace. */
+  variant?: 'compact' | 'hero';
+  /** Shown above the current choice in the hero variant, e.g. "Choose a doe". */
+  prompt?: string;
 }
 
 function normalizeSearch(value: string): string {
   return value.trim().toLowerCase();
 }
 
-export function PresetPicker({ id, value, onChange }: PresetPickerProps) {
+export function PresetPicker({ id, value, onChange, variant = 'compact', prompt }: PresetPickerProps) {
+  const hero = variant === 'hero';
   const listboxId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -91,17 +96,28 @@ export function PresetPicker({ id, value, onChange }: PresetPickerProps) {
         aria-expanded={open}
         aria-controls={listboxId}
         onClick={() => setOpen((current) => !current)}
-        className="w-full flex items-center justify-between gap-2 text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-paper-soft dark:bg-slate-950 text-slate-800 dark:text-slate-100 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400 text-left"
+        className={
+          hero
+            ? 'group flex w-full items-center justify-between gap-3 border-2 border-ink bg-[var(--lichen)] px-4 py-3 text-left text-ink transition-colors hover:bg-[#f0cc4f] focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--teal)]/40 aria-expanded:bg-[#f0cc4f]'
+            : 'w-full flex items-center justify-between gap-2 text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-paper-soft dark:bg-slate-950 text-slate-800 dark:text-slate-100 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400 text-left'
+        }
       >
-        <span className="truncate">{selectedLabel}</span>
+        {hero ? (
+          <span className="min-w-0">
+            {prompt && <span className="kicker block text-[10px] text-ink-soft">{prompt}</span>}
+            <span className="block truncate text-[17px] font-bold leading-tight">{selectedLabel}</span>
+          </span>
+        ) : (
+          <span className="truncate">{selectedLabel}</span>
+        )}
         <ChevronDown
-          className={`h-3.5 w-3.5 shrink-0 text-slate-500 transition-transform ${open ? 'rotate-180' : ''}`}
+          className={`shrink-0 transition-transform ${hero ? 'h-5 w-5 text-ink' : 'h-3.5 w-3.5 text-slate-500'} ${open ? 'rotate-180' : ''}`}
           aria-hidden="true"
         />
       </button>
 
       {open && (
-        <div className="absolute z-30 mt-1 w-full rounded-md border border-slate-200 dark:border-slate-700 bg-paper-soft dark:bg-slate-950 shadow-paper overflow-hidden">
+        <div className={`absolute z-30 mt-1 w-full ${hero ? 'min-w-[16rem] border-2 border-ink' : 'rounded-md border border-slate-200 dark:border-slate-700'} bg-paper-soft dark:bg-slate-950 shadow-paper overflow-hidden`}>
           <div className="flex items-center gap-2 px-2 py-1.5 border-b border-slate-200 dark:border-slate-800">
             <Search className="h-3.5 w-3.5 text-slate-400 shrink-0" aria-hidden="true" />
             <input
@@ -117,7 +133,7 @@ export function PresetPicker({ id, value, onChange }: PresetPickerProps) {
           <ul
             id={listboxId}
             role="listbox"
-            className="max-h-52 overflow-y-auto overscroll-contain py-1"
+            className={`${hero ? 'max-h-72' : 'max-h-52'} overflow-y-auto overscroll-contain py-1`}
           >
             <li role="option" aria-selected={value === null}>
               <button
