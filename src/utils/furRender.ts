@@ -45,9 +45,9 @@ function bandAt(b: HairBand[], t: number) {
   return b[b.length - 1].color;
 }
 
-function regionBands(c: CoatSpec, x: number, y: number, w: number, h: number, n: Noise): HairBand[] {
+function regionBands(c: CoatSpec, x: number, y: number, w: number, h: number, n: Noise, f = Math.max(w, h)): HairBand[] {
   if ((c.pattern === 'broken' || c.pattern === 'charlie') && c.secondary) {
-    const v = fbm(n, (x / w) * 3.2, (y / h) * 3.2);
+    const v = fbm(n, (x / f) * 3.2, (y / f) * 3.2);
     return v > (c.pattern === 'broken' ? 0.52 : 0.66) ? c.bands : c.secondary;
   }
   if (c.pattern === 'pointed' && c.secondary) {
@@ -57,57 +57,98 @@ function regionBands(c: CoatSpec, x: number, y: number, w: number, h: number, n:
   return c.bands;
 }
 
-export function drawFur(cv: HTMLCanvasElement, c: CoatSpec, seed: number) {
+export interface FurOpts {
+  /** Hair scale in device pixels. Defaults to tile-relative (small tiles). */
+  hairPx?: number;
+}
+
+/**
+ * Draw the fur into a canvas. Hair scale is independent of tile size when
+ * hairPx is given, so a big hero tile gets more, finer hairs instead of an
+ * enlarged small tile. Each hair is one smooth tapered stroke per colour band
+ * with a single brightness, so there are no dashed segment seams.
+ */
+export function drawFur(cv: HTMLCanvasElement | OffscreenCanvas, c: CoatSpec, seed: number, opts: FurOpts = {}) {
   const w = cv.width, h = cv.height;
-  const x = cv.getContext('2d');
+  const x = cv.getContext('2d') as CanvasRenderingContext2D | null;
   if (!x) return;
   const R = rng(seed), n = valueNoise(seed);
-  const S = Math.max(w, h) / 220;
+  const S = opts.hairPx ?? Math.max(w, h) / 220;
+  // Pattern field is sampled in a fixed-aspect space so patches keep their shape at any width.
+  const F = Math.max(w, h);
   x.fillStyle = shade(regionBands(c, w / 2, h / 2, w, h, n)[0].color, 0.7);
   x.fillRect(0, 0, w, h);
   const N = Math.round((w * h) / (2.2 * S * S));
   x.lineCap = 'round';
-  for (const [lf, bright] of [[0.75, 0.55], [1, 0.9], [1.1, 1.0]]) {
+  x.lineJoin = 'round';
+  const SEG = 8;
+  const pts: [number, number][] = Array.from({ length: SEG + 1 }, () => [0, 0]);
+  // Strokes are batched per (colour, width) into one path per layer: tens of
+  // thousands of hairs then cost a few dozen stroke() calls instead of one each.
+  const flush = (batch: Map<string, Path2D>) => {
+    for (const [key, path] of batch) {
+      const [col, lw] = key.split('|');
+      x.strokeStyle = col;
+      x.lineWidth = +lw;
+      x.stroke(path);
+    }
+    batch.clear();
+  };
+  const batch = new Map<string, Path2D>();
+  const pathFor = (col: string, lw: number) => {
+    const key = `${col}|${lw}`;
+    let p = batch.get(key);
+    if (!p) batch.set(key, (p = new Path2D()));
+    return p;
+  };
+  const q = (v: number, step: number) => Math.round(v / step) * step;
+  const wStep = Math.max(0.15, S * 0.18);
+  for (const [lf, bright, vis] of [[0.7, 0.55, 2], [0.85, 0.9, 3], [0.95, 1.0, 4]]) {
     for (let i = 0; i < N / 3; i++) {
       const px = R() * w * 1.1 - w * 0.05, py = R() * h * 1.15 - h * 0.05;
-      let a = -1.95 + (fbm(n, (px / w) * 1.5 + 9, (py / h) * 1.5) - 0.5) * 1.1;
+      let a = -1.95 + (fbm(n, (px / F) * 1.5 + 9, (py / F) * 1.5) - 0.5) * 1.1;
       const L = (18 + R() * 10) * S * lf;
       const bands = regionBands(c, px, py, w, h, n);
-      const pts: [number, number][] = [];
+      const hb = bright * q(0.84 + R() * 0.26, 0.04);
       let cx = px, cy = py;
-      for (let k = 0; k <= 6; k++) {
-        pts.push([cx, cy]);
-        a += (R() - 0.5) * 0.08 + 0.03;
-        cx += (Math.cos(a) * L) / 6;
-        cy += (Math.sin(a) * L) / 6;
+      for (let k = 0; k <= SEG; k++) {
+        pts[k][0] = cx;
+        pts[k][1] = cy;
+        a += (R() - 0.5) * 0.12 + 0.035;
+        cx += (Math.cos(a) * L) / SEG;
+        cy += (Math.sin(a) * L) / SEG;
       }
-      for (let k = 2; k < 6; k++) {
-        const t = (k + 0.5) / 6;
-        x.strokeStyle = shade(bandAt(bands, t), bright * (0.82 + R() * 0.3));
-        x.lineWidth = S * 1.25 * (1 - t * 0.75);
-        x.beginPath();
-        x.moveTo(pts[k][0], pts[k][1]);
-        x.lineTo(pts[k + 1][0], pts[k + 1][1]);
-        x.stroke();
+      // Visible part of a lying hair: top layers show only band and tip, deeper layers show more undercolour.
+      let k = vis;
+      while (k < SEG) {
+        const col = bandAt(bands, (k + 0.5) / SEG);
+        let e = k + 1;
+        while (e < SEG && bandAt(bands, (e + 0.5) / SEG) === col && e - k < 3) e++;
+        const t = (k + e) / 2 / SEG;
+        const p = pathFor(shade(col, hb), q(S * 1.1 * (1 - t * 0.7), wStep));
+        p.moveTo(pts[k][0], pts[k][1]);
+        for (let j = k + 1; j < e; j++) p.quadraticCurveTo(pts[j][0], pts[j][1], (pts[j][0] + pts[j + 1][0]) / 2, (pts[j][1] + pts[j + 1][1]) / 2);
+        p.lineTo(pts[e][0], pts[e][1]);
+        k = e;
       }
       if (c.silver && R() < c.silver * 0.35) {
-        x.strokeStyle = 'rgba(255,252,245,.8)';
-        x.lineWidth = S * 0.7;
-        x.beginPath();
-        x.moveTo(pts[3][0], pts[3][1]);
-        x.lineTo(pts[6][0], pts[6][1]);
-        x.stroke();
+        const p = pathFor('rgba(255,252,245,.8)', q(S * 0.6, wStep));
+        p.moveTo(pts[4][0], pts[4][1]);
+        p.quadraticCurveTo(pts[6][0], pts[6][1], pts[SEG][0], pts[SEG][1]);
       }
+      // Flush in chunks so later hairs still sit on top of earlier ones.
+      if (i % 1500 === 1499) flush(batch);
     }
+    flush(batch);
   }
   if (c.guard) {
     x.globalAlpha = 0.85;
     x.strokeStyle = c.guard;
-    x.lineWidth = S * 0.9;
+    x.lineWidth = S * 0.8;
     for (let i = 0; i < N / 40; i++) {
       const px = R() * w, py = R() * h * 1.1;
       if (regionBands(c, px, py, w, h, n) !== c.bands) continue;
-      const a = -1.95 + (fbm(n, (px / w) * 1.5 + 9, (py / h) * 1.5) - 0.5) * 1.1, L = 30 * S;
+      const a = -1.95 + (fbm(n, (px / F) * 1.5 + 9, (py / F) * 1.5) - 0.5) * 1.1, L = 30 * S;
       x.beginPath();
       x.moveTo(px, py);
       x.quadraticCurveTo(px + Math.cos(a) * L * 0.5, py + Math.sin(a) * L * 0.5, px + Math.cos(a + 0.08) * L, py + Math.sin(a + 0.08) * L);
@@ -126,8 +167,8 @@ export function drawFur(cv: HTMLCanvasElement, c: CoatSpec, seed: number) {
 const cache = new Map<string, string>();
 
 /** Bake (once) and return a data URL for a coat at a pixel size. Null where canvas is unavailable. */
-export function furTileUrl(c: CoatSpec, w: number, h: number): string | null {
-  const id = `${c.key}|${w}x${h}`;
+export function furTileUrl(c: CoatSpec, w: number, h: number, hairPx?: number): string | null {
+  const id = `${c.key}|${w}x${h}|${hairPx ?? 'rel'}`;
   const hit = cache.get(id);
   if (hit) return hit;
   if (typeof document === 'undefined') return null;
@@ -135,10 +176,10 @@ export function furTileUrl(c: CoatSpec, w: number, h: number): string | null {
   cv.width = w;
   cv.height = h;
   if (!cv.getContext('2d')) return null;
-  drawFur(cv, c, hashSeed(c.key));
+  drawFur(cv, c, hashSeed(c.key), { hairPx });
   let url: string;
   try {
-    url = cv.toDataURL('image/webp', 0.86);
+    url = cv.toDataURL('image/webp', 0.94);
     if (!url.startsWith('data:image/webp')) url = cv.toDataURL('image/png');
   } catch {
     return null;
