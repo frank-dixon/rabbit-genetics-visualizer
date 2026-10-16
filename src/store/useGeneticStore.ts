@@ -6,7 +6,6 @@ import {
   getLocusChromosome,
 } from '../data/rabbitGenetics';
 import type { CrossSnapshot } from '../utils/genotypeCodec';
-import { openChromosomeExplorer } from '../utils/referenceNavigation';
 
 type ParentKey = 'parent1' | 'parent2';
 type GenotypeMap = Record<string, [string, string]>;
@@ -67,7 +66,6 @@ export const useGeneticStore = create<GeneticState>()(
           selectedLocusId: firstMapped,
           progenyFocusLabel: label,
         });
-        openChromosomeExplorer();
       },
 
       clearProgenyFocus: () =>

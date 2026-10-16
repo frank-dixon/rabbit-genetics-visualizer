@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useGeneticStore } from '../store/useGeneticStore';
 import { punnett, varyingLoci } from '../utils/litterCopy';
-import { ChromosomeCanvas } from './ChromosomeCanvas';
 import { PunnettSquare } from './PunnettSquare';
 
 interface LearnMoreModalProps {
@@ -11,7 +10,7 @@ interface LearnMoreModalProps {
   onOpenCitations: () => void;
 }
 
-/** The deep dive: Punnett squares for the loci that vary, how to read them, the 3D view and sources. */
+/** The deep dive: Punnett squares for the loci that vary, how to read them and sources. */
 export function LearnMoreModal({ open, onClose, onOpenLearn, onOpenCitations }: LearnMoreModalProps) {
   const dam = useGeneticStore((s) => s.parent1);
   const sire = useGeneticStore((s) => s.parent2);
@@ -76,13 +75,6 @@ export function LearnMoreModal({ open, onClose, onOpenLearn, onOpenCitations }: 
               equally likely kit, so a pair that fills two cells turns up in about half the litter. Multiply the
               chances across genes to get each look&rsquo;s odds.
             </p>
-          </section>
-          <section>
-            <h3 className="text-xl font-bold tracking-tight">Where the genes sit</h3>
-            <p className="mb-3 mt-1 text-ink-soft">The 3D chromosome view: tap a gene to see its notes.</p>
-            <div className="border border-rule">
-              <ChromosomeCanvas />
-            </div>
           </section>
           <div className="flex flex-col gap-3 sm:flex-row">
             <button type="button" onClick={onOpenLearn} className="btn-block btn-forest">
