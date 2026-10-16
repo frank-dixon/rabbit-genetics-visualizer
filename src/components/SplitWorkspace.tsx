@@ -29,6 +29,7 @@ import { WhyDisclosure } from './WhyDisclosure';
 type ParentKey = 'parent1' | 'parent2';
 type GenotypeMap = Record<string, [string, string]>;
 const INITIAL_BLOCKS = 6;
+const OTHERS_SHOWN = 6;
 
 function pct(p: number): string {
   return `${(p * 100).toFixed(1).replace(/\.0$/, '')}%`;
@@ -59,22 +60,34 @@ function ParentPicker({ parentKey, role, mate }: { parentKey: ParentKey; role: '
   };
 
   return (
-    <section aria-label={`The ${role}`} className="mt-7">
-      <p className="kicker text-ink-muted">The {role}</p>
-      <div className="mt-2 flex items-start gap-4">
-        <div className="fur-portrait h-24 w-24 shrink-0 sm:h-28 sm:w-28" style={furVars(genotype)} role="img" aria-label={look} />
-        <div className="min-w-0 flex-1 space-y-2">
-          <PresetPicker id={`${parentKey}-split-preset`} value={presetId} onChange={onPreset} />
-          <p className="text-[15px] font-semibold leading-snug text-ink">
-            {presetLabel(presetId, genotype)} · <span className="font-normal">{look}</span>
-          </p>
-          <p className="serif-note text-[15px] text-ink-soft">
-            {hidden.length ? `Carries ${hidden.map((h) => h.replace(/ \(.*\)$/, '')).join(', ')}` : 'Carries no hidden genes we model'}
+    <section
+      aria-label={`The ${role}`}
+      className="flex min-w-0 flex-col border-2 border-ink bg-paper p-4 transition-shadow focus-within:shadow-[6px_6px_0_var(--ink)] hover:shadow-[6px_6px_0_var(--ink)]"
+    >
+      <div className="flex items-baseline justify-between gap-2">
+        <h2 className="kicker text-[11px] text-ink">The {role}</h2>
+        {edited && <span className="kicker text-[10px] text-ink-muted">Edited</span>}
+      </div>
+      <div className="mt-2">
+        <PresetPicker
+          id={`${parentKey}-split-preset`}
+          value={presetId}
+          onChange={onPreset}
+          variant="hero"
+          prompt={`Choose a ${role}`}
+        />
+      </div>
+      <div className="mt-3 flex items-center gap-3">
+        <div className="fur-portrait h-11 w-11 shrink-0" style={furVars(genotype)} role="img" aria-label={look} />
+        <div className="min-w-0">
+          <p className="text-[15px] font-semibold leading-snug text-ink">{look}</p>
+          <p className="text-[13px] leading-snug text-ink-soft">
+            {hidden.length ? `Carries ${hidden.map((h) => h.replace(/ \(.*\)$/, '')).join(', ')}` : 'No hidden genes we model'}
           </p>
         </div>
       </div>
       <BCPhasePicker parentKey={parentKey} role={role} />
-      <WhyDisclosure label={`Why? See the ${role}'s genes`}>
+      <WhyDisclosure label={`See or edit the ${role}'s genes`}>
         <GenotypeInline genotype={genotype} baseline={mate} />
         <p>{resolvePlainEnglishPhenotype(genotype)}</p>
         {hidden.length > 0 && <p>Hidden genes it can pass on: {hidden.join(', ')}.</p>}
@@ -183,7 +196,7 @@ export function SplitWorkspace({ onLearnMore }: SplitWorkspaceProps) {
   const lead = litterLead(groups);
   const top = groups[0];
   const visible = showAll ? groups : groups.slice(0, INITIAL_BLOCKS);
-  const nextLooks = groups.slice(1, 5).map((g) => lookName(g.title));
+  const others = groups.slice(1);
 
   const onSave = () => {
     saveCross(`${presetLabel(damPreset, dam)} × ${presetLabel(sirePreset, sire)}`, getCrossSnapshot());
@@ -193,19 +206,21 @@ export function SplitWorkspace({ onLearnMore }: SplitWorkspaceProps) {
 
   return (
     <div>
-      <section className="mx-auto grid max-w-[1440px] grid-cols-1 lg:grid-cols-2">
-        <div className="bg-paper px-4 pb-10 pt-8 sm:px-9 lg:pt-12">
+      <section className="mx-auto grid max-w-[1440px] grid-cols-1 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
+        <div className="bg-paper px-4 pb-7 pt-6 sm:px-9 lg:pt-8">
           <p className="kicker text-ink-muted">Plan a litter</p>
-          <h1 className="headline mt-2 text-[clamp(3.5rem,8vw,7.5rem)] text-ink">Doe × buck</h1>
-          <p className="mt-5 max-w-[34rem] text-xl leading-snug text-ink sm:text-2xl">
-            Pick two parents. The answer updates the moment you change either one.
+          <h1 className="headline mt-1 text-[clamp(2.25rem,4.2vw,3.75rem)] text-ink">Doe × buck</h1>
+          <p className="mt-2 max-w-[38rem] text-[17px] leading-snug text-ink-soft">
+            Choose a parent on each side. The odds update as soon as you change either one.
           </p>
-          <div className="mt-6">
-            <ExampleCrossChips />
+          <div className="mt-5 grid grid-cols-1 items-start gap-3 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+            <ParentPicker parentKey="parent1" role="doe" mate={sire} />
+            <span aria-hidden className="headline self-center justify-self-center text-[28px] leading-none text-ink-muted md:pt-6">
+              ×
+            </span>
+            <ParentPicker parentKey="parent2" role="buck" mate={dam} />
           </div>
-          <ParentPicker parentKey="parent1" role="doe" mate={sire} />
-          <ParentPicker parentKey="parent2" role="buck" mate={dam} />
-          <div className="mt-8 grid grid-cols-1 gap-3 sm:flex">
+          <div className="mt-5 flex flex-wrap items-center gap-3">
             <button type="button" onClick={onSave} className="btn-block btn-forest whitespace-nowrap">
               {saved ? 'Saved on this device ✓' : 'Save this cross'}
             </button>
@@ -213,29 +228,43 @@ export function SplitWorkspace({ onLearnMore }: SplitWorkspaceProps) {
               Swap doe and buck
             </button>
           </div>
+          <div className="mt-5">
+            <ExampleCrossChips />
+          </div>
         </div>
 
-        <div className="relative order-first min-h-[440px] bg-[var(--moss)] lg:order-none lg:min-h-0">
+        <div className="order-first bg-[var(--moss)] px-4 py-5 sm:px-9 lg:order-none lg:py-8">
           {top && (
-            <>
-              <div
-                className="fur-portrait absolute inset-x-6 top-6 h-[250px] sm:inset-x-[12%] sm:top-12 lg:h-[440px]"
-                style={furVars(top.genotype)}
-                role="img"
-                aria-label={top.title}
-              />
-              <div className="absolute inset-x-4 top-[200px] border border-ink bg-paper p-5 sm:left-auto sm:right-[8%] sm:top-[380px] sm:w-[26rem]">
-                <p className="kicker text-ink-muted">The answer · most likely kit</p>
-                <p className="headline mt-1 text-[clamp(2rem,3.4vw,2.9rem)] text-ink">{top.title}</p>
-                <p className="mt-1 text-xl font-bold text-ink">
+            <div className="mx-auto max-w-[30rem] border border-ink bg-paper">
+              <div className="fur-portrait h-[150px] sm:h-[190px]" style={furVars(top.genotype)} role="img" aria-label={top.title} />
+              <div className="p-5">
+                <p className="kicker text-ink-muted">Most likely kit</p>
+                <p className="headline mt-1 text-[clamp(1.6rem,2.6vw,2.25rem)] text-ink">{top.title}</p>
+                <p className="mt-1 text-lg font-bold text-ink">
                   {oddsPhrase(top.probability)}
                   {oddsPhrase(top.probability) === 'Every kit' ? '' : ' kits'} · {pct(top.probability)}
                 </p>
-                {nextLooks.length > 0 && (
-                  <p className="serif-note mt-1 text-ink-soft">Then {nextLooks.join(', ')}.</p>
+                {others.length > 0 && (
+                  <div className="mt-4 border-t border-rule pt-3">
+                    <p className="kicker text-[10px] text-ink-muted">Also in this litter</p>
+                    <ul className="mt-2 space-y-1.5">
+                      {others.slice(0, OTHERS_SHOWN).map((g) => (
+                        <li key={g.title} className="flex items-center gap-3 text-[14px] text-ink">
+                          <span className="fur-portrait h-6 w-6 shrink-0" style={furVars(g.genotype)} aria-hidden />
+                          <span className="min-w-0 flex-1 truncate" title={g.title}>{g.title}</span>
+                          <span className="font-mono text-[13px] font-bold tabular-nums">{pct(g.probability)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    {others.length > OTHERS_SHOWN && (
+                      <p className="mt-2 text-[13px] text-ink-soft">
+                        +{others.length - OTHERS_SHOWN} rarer looks below, {pct(others.slice(OTHERS_SHOWN).reduce((s, g) => s + g.probability, 0))} combined
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
-            </>
+            </div>
           )}
         </div>
       </section>
