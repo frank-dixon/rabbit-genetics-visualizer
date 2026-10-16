@@ -4,7 +4,7 @@ import { getPresetBreedingNotes } from '../data/presetBreedingNotes';
 import { genotypesEqual, useGeneticStore } from '../store/useGeneticStore';
 import { useSavedCrossesStore } from '../store/useSavedCrossesStore';
 import { formatCompactGenotype } from '../utils/formatGenotype';
-import { resolveParentPhenotype } from '../utils/geneticEngine';
+import { isBCDoubleHet, resolveParentPhenotype } from '../utils/geneticEngine';
 import { furVars } from '../utils/furTone';
 import {
   hiddenGenes,
@@ -17,6 +17,7 @@ import {
 } from '../utils/litterCopy';
 import { oddsPhrase, summarizeLitter, type LitterPhenotype } from '../utils/litterSummary';
 import { resolvePlainEnglishPhenotype } from '../utils/plainEnglishPhenotype';
+import { BCPhasePicker } from './BCPhasePicker';
 import { ExampleCrossChips } from './ExampleCrossChips';
 import { GenotypeInline } from './GenotypeInline';
 import { ParentGenotypeEditor } from './ParentCrossPanel';
@@ -72,6 +73,7 @@ function ParentPicker({ parentKey, role, mate }: { parentKey: ParentKey; role: '
           </p>
         </div>
       </div>
+      <BCPhasePicker parentKey={parentKey} role={role} />
       <WhyDisclosure label={`Why? See the ${role}'s genes`}>
         <GenotypeInline genotype={genotype} baseline={mate} />
         <p>{resolvePlainEnglishPhenotype(genotype)}</p>
@@ -171,7 +173,12 @@ export function SplitWorkspace({ onLearnMore }: SplitWorkspaceProps) {
   const [saved, setSaved] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
-  const groups = useMemo(() => summarizeLitter(dam, sire), [dam, sire]);
+  const bcPhase = useGeneticStore((s) => s.bcPhase);
+  const groups = useMemo(() => summarizeLitter(dam, sire, { phase: bcPhase }), [dam, sire, bcPhase]);
+  const linkageParents: { role: string; phase: string }[] = [
+    isBCDoubleHet(dam) ? { role: 'doe', phase: bcPhase.parent1 } : null,
+    isBCDoubleHet(sire) ? { role: 'buck', phase: bcPhase.parent2 } : null,
+  ].filter((x) => x !== null) as { role: string; phase: string }[];
   const headline = litterHeadline(groups);
   const lead = litterLead(groups);
   const top = groups[0];
@@ -239,6 +246,29 @@ export function SplitWorkspace({ onLearnMore }: SplitWorkspaceProps) {
           {headline}
         </h2>
         <p className="mt-4 max-w-[46rem] text-lg leading-snug text-ink sm:text-xl">{lead}</p>
+        {linkageParents.length > 0 && (
+          <div className="max-w-[46rem]">
+            <WhyDisclosure
+              label={
+                linkageParents.some((p) => p.phase === 'unknown')
+                  ? 'Why? B and C linkage is set to not known'
+                  : 'Why? These odds include B and C linkage'
+              }
+            >
+              {linkageParents.map((p) => (
+                <p key={p.role}>
+                  The {p.role} is mixed at both B and C, which sit on the same chromosome.{' '}
+                  {p.phase === 'unknown'
+                    ? `We don't know which B came in with which C, so we use plain Punnett odds for the ${p.role}. That is the average of the two possibilities. If you know the pairing, set it under the ${p.role}.`
+                    : `You set which B and C came in together, so the ${p.role}'s eggs or sperm keep that pairing 64% of the time and swap it 36% (Castle 1924).`}
+                </p>
+              ))}
+              <button type="button" onClick={onLearnMore} className="kicker text-[11px] text-ink underline">
+                How linkage works →
+              </button>
+            </WhyDisclosure>
+          </div>
+        )}
       </section>
 
       <section

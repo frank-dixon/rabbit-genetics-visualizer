@@ -6,6 +6,7 @@ import {
   getLocusChromosome,
 } from '../data/rabbitGenetics';
 import type { CrossSnapshot } from '../utils/genotypeCodec';
+import type { BCPhase } from '../utils/geneticEngine';
 
 type ParentKey = 'parent1' | 'parent2';
 type GenotypeMap = Record<string, [string, string]>;
@@ -23,6 +24,9 @@ interface GeneticState {
   parent2: GenotypeMap;
   parent1PresetId: string | null;
   parent2PresetId: string | null;
+  /** How each parent's B and C alleles sit on chromosome 1; 'unknown' unless the user says. */
+  bcPhase: Record<ParentKey, BCPhase>;
+  setBcPhase: (parent: ParentKey, phase: BCPhase) => void;
   setSelectedLocus: (locusId: string | null) => void;
   setHoveredChromosome: (chromId: number | null) => void;
   focusProgenyGenotype: (genotype: GenotypeMap, label: string) => void;
@@ -50,6 +54,9 @@ export const useGeneticStore = create<GeneticState>()(
       parent2: { ...defaultGenotypes, A: ['a', 'a'], C: ['C', 'C'] },
       parent1PresetId: null,
       parent2PresetId: null,
+      bcPhase: { parent1: 'unknown', parent2: 'unknown' },
+
+      setBcPhase: (parent, phase) => set((state) => ({ bcPhase: { ...state.bcPhase, [parent]: phase } })),
 
       setSelectedLocus: (locusId) =>
         set({ selectedLocusId: locusId, progenyFocusLabel: null, highlightedLocusIds: [] }),
@@ -85,7 +92,8 @@ export const useGeneticStore = create<GeneticState>()(
         })),
 
       loadParentPreset: (parent, presetId, genotype) =>
-        set(() => ({
+        set((state) => ({
+          bcPhase: { ...state.bcPhase, [parent]: 'unknown' },
           [parent]: { ...genotype },
           [presetKey(parent)]: presetId,
         })),
@@ -106,6 +114,7 @@ export const useGeneticStore = create<GeneticState>()(
           parent2: { ...state.parent1 },
           parent1PresetId: state.parent2PresetId,
           parent2PresetId: state.parent1PresetId,
+          bcPhase: { parent1: state.bcPhase.parent2, parent2: state.bcPhase.parent1 },
         })),
 
       loadCrossSnapshot: (snapshot) =>
@@ -114,6 +123,7 @@ export const useGeneticStore = create<GeneticState>()(
           parent2: { ...snapshot.parent2 },
           parent1PresetId: snapshot.parent1PresetId,
           parent2PresetId: snapshot.parent2PresetId,
+          bcPhase: { parent1: 'unknown', parent2: 'unknown' },
         })),
 
       getCrossSnapshot: () => {
@@ -147,6 +157,7 @@ export const useGeneticStore = create<GeneticState>()(
         parent2: state.parent2,
         parent1PresetId: state.parent1PresetId,
         parent2PresetId: state.parent2PresetId,
+        bcPhase: state.bcPhase,
       }),
     },
   ),

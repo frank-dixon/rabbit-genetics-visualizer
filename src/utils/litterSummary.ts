@@ -1,4 +1,4 @@
-import { calculateCross } from './geneticEngine';
+import { calculateCross, type CrossOptions } from './geneticEngine';
 import { resolvePlainEnglishPhenotype } from './plainEnglishPhenotype';
 
 type GenotypeMap = Record<string, [string, string]>;
@@ -13,9 +13,13 @@ export interface LitterPhenotype {
 }
 
 /** Group the real engine's outcomes by headline coat (text before the first ';'), most likely first. */
-export function summarizeLitter(parent1: GenotypeMap, parent2: GenotypeMap): LitterPhenotype[] {
+export function summarizeLitter(
+  parent1: GenotypeMap,
+  parent2: GenotypeMap,
+  options: CrossOptions = {},
+): LitterPhenotype[] {
   const groups = new Map<string, LitterPhenotype>();
-  for (const outcome of calculateCross(parent1, parent2)) {
+  for (const outcome of calculateCross(parent1, parent2, options)) {
     const title = outcome.phenotype.split(';')[0].trim();
     const existing = groups.get(title);
     if (existing) {
