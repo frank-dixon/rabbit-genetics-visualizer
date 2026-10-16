@@ -1,4 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { CoatTile } from './CoatTile';
+import { HairBar } from './HairBar';
 
 interface ParentGenesModalProps {
   open: boolean;
@@ -7,13 +9,14 @@ interface ParentGenesModalProps {
   kicker: string;
   title: string;
   children: ReactNode;
+  genotype?: Record<string, [string, string]>;
 }
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])';
 
 /** Overlay for a parent's genes. Same shell as the Learn more modal, plus a focus trap and focus return. */
-export function ParentGenesModal({ open, onClose, titleId, kicker, title, children }: ParentGenesModalProps) {
+export function ParentGenesModal({ open, onClose, titleId, kicker, title, children, genotype }: ParentGenesModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -67,11 +70,13 @@ export function ParentGenesModal({ open, onClose, titleId, kicker, title, childr
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-rule bg-paper px-5 py-4 sm:px-7">
-          <div className="min-w-0">
+          {genotype && <CoatTile genotype={genotype} name={title} size="sm" className="h-16 w-16 shrink-0 rounded-[6px] border border-ink/20" />}
+          <div className="min-w-0 flex-1">
             <p className="kicker text-ink-muted">{kicker}</p>
             <h2 id={titleId} className="headline mt-1 text-2xl sm:text-3xl">
               {title}
             </h2>
+            {genotype && <HairBar genotype={genotype} labeled className="mt-2 max-w-[20rem]" />}
           </div>
           <button
             ref={closeRef}

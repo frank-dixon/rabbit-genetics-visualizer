@@ -5,7 +5,7 @@ import { furTileUrl } from '../utils/furRender';
 type GenotypeMap = Record<string, [string, string]>;
 
 /** Size buckets keep the cache small: each coat is baked at most once per bucket. */
-const SIZES = { sm: [96, 96], md: [320, 240], lg: [640, 400] } as const;
+const SIZES = { sm: [96, 96], md: [320, 240], lg: [640, 400], sq: [520, 520] } as const;
 
 export function CoatTile({
   genotype,

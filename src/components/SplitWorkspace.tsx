@@ -5,7 +5,8 @@ import { genotypesEqual, useGeneticStore } from '../store/useGeneticStore';
 import { useSavedCrossesStore } from '../store/useSavedCrossesStore';
 import { formatCompactGenotype } from '../utils/formatGenotype';
 import { isBCDoubleHet, resolveParentPhenotype } from '../utils/geneticEngine';
-import { furVars } from '../utils/furTone';
+import { CoatTile } from './CoatTile';
+import { HairBar } from './HairBar';
 import {
   hiddenGenes,
   kitsPhrase,
@@ -81,12 +82,13 @@ function ParentPicker({ parentKey, role, mate }: { parentKey: ParentKey; role: '
         />
       </div>
       <div className="mt-3 flex items-center gap-3">
-        <div className="fur-portrait h-11 w-11 shrink-0" style={furVars(genotype)} role="img" aria-label={look} />
-        <div className="min-w-0">
+        <CoatTile genotype={genotype} name={look} size="sm" className="h-14 w-14 shrink-0 rounded-[6px] border border-ink/20" />
+        <div className="min-w-0 flex-1">
           <p className="text-[15px] font-semibold leading-snug text-ink">{look}</p>
           <p className="text-[13px] leading-snug text-ink-soft">
             {hidden.length ? `Carries ${hidden.map((h) => h.replace(/ \(.*\)$/, '')).join(', ')}` : 'No hidden genes we model'}
           </p>
+          <HairBar genotype={genotype} className="mt-1.5 max-w-[11rem]" />
         </div>
       </div>
       <BCPhasePicker parentKey={parentKey} role={role} />
@@ -109,6 +111,7 @@ function ParentPicker({ parentKey, role, mate }: { parentKey: ParentKey; role: '
         titleId={`${parentKey}-genes-title`}
         kicker={`The ${role} · genes`}
         title={look}
+        genotype={genotype}
       >
         <GenotypeInline genotype={genotype} baseline={mate} />
         <p className="text-ink">{resolvePlainEnglishPhenotype(genotype)}</p>
@@ -160,7 +163,8 @@ function OutcomeBlock({
         {String(index + 1).padStart(2, '0')} · {oddsPhrase(group.probability)}
         {oddsPhrase(group.probability) === 'Every kit' ? '' : ' kits'}
       </p>
-      <div className="fur-portrait mb-4 mt-3 h-36" style={furVars(group.genotype)} role="img" aria-label={group.title} />
+      <CoatTile genotype={group.genotype} name={group.title} size="md" className="mb-2 mt-3 h-36" />
+      <HairBar genotype={group.genotype} labeled className="mb-4" />
       <h3 className="headline text-[28px] sm:text-[30px]">{group.title}</h3>
       <p className="mt-1 text-[34px] font-bold tracking-[-0.04em] text-ink">{pct(group.probability)}</p>
       <p className="mt-1 text-[15px] leading-snug text-ink-soft">{group.plainEnglish}</p>
@@ -261,11 +265,12 @@ export function SplitWorkspace({ onLearnMore }: SplitWorkspaceProps) {
         <div className="order-first bg-[var(--moss)] px-4 py-5 sm:px-9 lg:order-none lg:py-8">
           {top && (
             <div className="mx-auto max-w-[30rem] border border-ink bg-paper">
-              <div className="fur-portrait h-[150px] sm:h-[190px]" style={furVars(top.genotype)} role="img" aria-label={top.title} />
+              <CoatTile genotype={top.genotype} name={top.title} size="lg" className="h-[150px] sm:h-[190px]" />
               <div className="p-5">
                 <p className="kicker text-ink-muted">Most likely kit</p>
                 <p className="headline mt-1 text-[clamp(1.6rem,2.6vw,2.25rem)] text-ink">{top.title}</p>
-                <p className="mt-1 text-lg font-bold text-ink">
+                <HairBar genotype={top.genotype} labeled className="mt-3 max-w-[22rem]" />
+                <p className="mt-2 text-lg font-bold text-ink">
                   {oddsPhrase(top.probability)}
                   {oddsPhrase(top.probability) === 'Every kit' ? '' : ' kits'} · {pct(top.probability)}
                 </p>
@@ -275,8 +280,9 @@ export function SplitWorkspace({ onLearnMore }: SplitWorkspaceProps) {
                     <ul className="mt-2 space-y-1.5">
                       {others.slice(0, OTHERS_SHOWN).map((g) => (
                         <li key={g.title} className="flex items-center gap-3 text-[14px] text-ink">
-                          <span className="fur-portrait h-6 w-6 shrink-0" style={furVars(g.genotype)} aria-hidden />
+                          <CoatTile genotype={g.genotype} name={g.title} size="sm" className="h-8 w-8 shrink-0 rounded-[4px]" />
                           <span className="min-w-0 flex-1 truncate" title={g.title}>{g.title}</span>
+                          <HairBar genotype={g.genotype} className="w-10 shrink-0 sm:w-16" />
                           <span className="font-mono text-[13px] font-bold tabular-nums">{pct(g.probability)}</span>
                         </li>
                       ))}

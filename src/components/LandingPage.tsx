@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { PARENT_PRESETS } from '../data/meatRabbitBreeds';
 import { useGeneticStore } from '../store/useGeneticStore';
 import { summarizeLitter } from '../utils/litterSummary';
-import { furVars } from '../utils/furTone';
+import { CoatTile } from './CoatTile';
 
 const DEMO = { parent1: 'nz-white-field', parent2: 'nz-red' } as const;
 
@@ -68,8 +68,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
         <div className="relative min-h-[420px] bg-[var(--moss)] lg:min-h-0" aria-hidden={!demo}>
           {demo && (
             <figure className="absolute inset-x-[12%] top-8 bottom-16 m-0 lg:inset-x-[18%] lg:top-10 lg:bottom-20">
-              <div className="fur-portrait h-full w-full" style={furVars(demo.top.genotype)} role="img"
-                aria-label={`Illustration of a ${demo.top.title} kit`} />
+              <CoatTile genotype={demo.top.genotype} name={`${demo.top.title} kit, fur close-up`} size="sq" className="h-full w-full" />
               <figcaption className="absolute -bottom-10 right-[-8%] w-[min(20rem,90%)] border border-ink bg-paper px-4 py-3 text-ink">
                 <span className="kicker text-[10px] text-ink-muted">Kit 01 · demo litter</span>
                 <span className="block text-lg font-bold leading-tight">
