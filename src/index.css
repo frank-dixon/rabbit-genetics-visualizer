@@ -3,43 +3,27 @@
 @tailwind utilities;
 
 @layer base {
+  /* Palette C, Ink and Butter. Light only (the dark theme was dropped to keep contrast simple). */
   :root {
-    --paper: #ffffff;
-    --paper-2: #e7eee6;
-    --paper-soft: #ffffff;
-    --ink: #141815;
-    --ink-soft: #2a332b;
-    --muted: #5e6758;
-    --rule: #b9c6b8;
-    --teal: #1f4d32;
-    --teal-deep: #1f4d32;
-    --on-teal: #ffffff;
-    --teal-soft: #e7eee6;
-    --espresso: #141815;
-    --action: #1f4d32;
-    --sea: #2f6b3a;
-    --forest: #141815;
-    --moss: #1f4d32;
-    --lichen: #9dcc96;
-    --mist: #e7eee6;
-    --shadow-paper: none;
-  }
-
-  html.dark {
-    --paper: #141815;
-    --paper-2: #1c221d;
-    --paper-soft: #1c221d;
-    --ink: #e7eee6;
-    --ink-soft: #cfdacf;
-    --muted: #b7c3b7;
-    --rule: #3d4a3e;
-    --teal: #9dcc96;
-    --teal-deep: #9dcc96;
-    --teal-soft: #24362a;
-    --on-teal: #141815;
-    --espresso: #0d100e;
-    --action: #9dcc96;
-    --sea: #9dcc96;
+    --paper: #fffdf7;
+    --paper-2: #eceff5;
+    --paper-soft: #fffdf7;
+    --ink: #13203b;
+    --ink-soft: #2a3654;
+    --muted: #525c72;
+    --rule: #c5cbd8;
+    --teal: #24408a;
+    --teal-deep: #24408a;
+    --on-teal: #fffdf7;
+    --teal-soft: #eceff5;
+    --espresso: #13203b;
+    --action: #13203b;
+    --sea: #24408a;
+    --forest: #13203b;
+    --moss: #1e2e55;
+    --lichen: #f5d76e;
+    --mist: #eceff5;
+    --link: #24408a;
     --shadow-paper: none;
   }
 
@@ -47,29 +31,17 @@
     @apply transition-colors duration-200;
   }
 
-  html.light {
+  html {
     color-scheme: light;
-  }
-
-  html.dark {
-    color-scheme: dark;
   }
 
   body {
     @apply bg-paper text-ink antialiased font-sans;
     background-image:
-      linear-gradient(90deg, rgba(20, 24, 21, 0.06) 1px, transparent 1px),
-      linear-gradient(rgba(20, 24, 21, 0.06) 1px, transparent 1px);
+      linear-gradient(90deg, rgba(19, 32, 59, 0.05) 1px, transparent 1px),
+      linear-gradient(rgba(19, 32, 59, 0.05) 1px, transparent 1px);
     background-size: 360px 100%, 100% 225px;
     background-attachment: fixed;
-  }
-
-  html.dark body {
-    @apply bg-espresso text-ink;
-    background-image:
-      linear-gradient(90deg, rgba(231, 238, 230, 0.06) 1px, transparent 1px),
-      linear-gradient(rgba(231, 238, 230, 0.06) 1px, transparent 1px);
-    background-size: 360px 100%, 100% 225px;
   }
 
   h1,
@@ -98,9 +70,6 @@
     @apply rounded-paper border border-rule/90 bg-paper-soft/95 shadow-paper-sm;
   }
 
-  .dark .surface-card {
-    @apply border-rule bg-paper-2 shadow-none;
-  }
 
   /* Hex brand tile with the master two-stop ombre */
   .hex-tile {
@@ -171,7 +140,7 @@
   .btn-forest { background: var(--forest); color: var(--mist); }
   .btn-forest:hover { background: var(--moss); color: #fff; }
   .btn-lichen { background: var(--lichen); color: var(--forest); }
-  .btn-lichen:hover { background: #b5dcae; }
+  .btn-lichen:hover { background: #f8e08f; }
   .btn-outline { border-color: currentColor; }
   .fur-portrait {
     background-image:
@@ -182,8 +151,7 @@
 
 /* Option A (Field Grid): pairing chips, tags and flat panels */
 @layer base {
-  :root { --glass: #f4f7f3; --glass-border: #b9c6b8; --link: #1f4d32; --heading: #141815; }
-  html.dark { --glass: #1c221d; --glass-border: #3d4a3e; --link: #9dcc96; --heading: #e7eee6; }
+  :root { --glass: #eceff5; --glass-border: #c5cbd8; --heading: #13203b; }
 }
 @layer components {
   .glass { background: var(--paper); border: 1px solid var(--rule); }
@@ -214,5 +182,4 @@
     text-transform: uppercase;
     padding: 0.15rem 0.5rem;
   }
-  html.dark .tag-cta { background: var(--lichen); color: var(--forest); }
 }

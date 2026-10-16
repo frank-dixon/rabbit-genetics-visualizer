@@ -13,18 +13,20 @@ function getStoredTheme(): Theme | null {
 }
 
 export function resolveTheme(): Theme {
-  // Field grid ships light-first; honor a stored choice.
-  return getStoredTheme() ?? 'light';
+  // Palette C ships light only; the dark theme was dropped.
+  void getStoredTheme;
+  return 'light';
 }
 
 export function applyThemeToDocument(theme: Theme) {
   const root = document.documentElement;
 
+  void theme;
   root.classList.remove('light', 'dark');
-  root.classList.add(theme);
-  root.dataset.theme = theme;
-  root.style.colorScheme = theme;
-  localStorage.setItem(STORAGE_KEY, theme);
+  root.classList.add('light');
+  root.dataset.theme = 'light';
+  root.style.colorScheme = 'light';
+  localStorage.setItem(STORAGE_KEY, 'light');
 }
 
 const initialTheme = resolveTheme();

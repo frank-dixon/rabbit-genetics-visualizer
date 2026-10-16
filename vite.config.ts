@@ -23,8 +23,8 @@ export default defineConfig(({ command, isPreview }) => {
           name: 'Rabbit Progeny Predictor',
           short_name: 'Progeny Predictor',
           description: 'Predict meat rabbit progeny coat and eye colors from parent crosses.',
-          theme_color: '#141815',
-          background_color: '#FFFFFF',
+          theme_color: '#13203B',
+          background_color: '#FFFDF7',
           display: 'standalone',
           orientation: 'any',
           // Follow the Vite base (/ in dev, /rabbit/ in the Pages build)
