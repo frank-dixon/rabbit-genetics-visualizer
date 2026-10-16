@@ -260,17 +260,117 @@ export function resolveParentPhenotype(genotypes: GenotypeMap): string {
   return resolvePhenotype(genotypes);
 }
 
+/**
+ * B (TYRP1) and C (TYR) both sit on rabbit chromosome 1 (OryCun2.0: 41.35 Mb and
+ * 127.56 Mb), so they are linked. Castle (1924, PNAS 10:486) counted 35.8%
+ * recombinant young among 1,006 backcross kits; we use 0.36 for both sexes.
+ * Castle (1936) reports a sex difference (about 43 cM in does, 35 cM in bucks),
+ * but those are map distances, not observed rates, and we have not read the
+ * paper's full data, so a single sex-averaged rate is the honest choice.
+ */
+export const BC_RECOMBINATION = 0.36;
+
+/**
+ * How a parent's B and C alleles sit on its two chromosome 1 copies.
+ * - 'cis':   B[0] travels with C[0] (and B[1] with C[1])
+ * - 'trans': B[0] travels with C[1] (and B[1] with C[0])
+ * - 'unknown': not known. The average of the two phases is exactly the
+ *   unlinked (independent) result, so unknown phase uses plain Punnett odds.
+ */
+export type BCPhase = 'unknown' | 'cis' | 'trans';
+
+export interface CrossOptions {
+  phase?: { parent1?: BCPhase; parent2?: BCPhase };
+  recombination?: number;
+}
+
+/** True when a parent is mixed at both B and C, the only case where its phase changes the odds. */
+export function isBCDoubleHet(genotype: GenotypeMap): boolean {
+  const b = genotype.B;
+  const c = genotype.C;
+  return Boolean(b && c && b[0] !== b[1] && c[0] !== c[1]);
+}
+
+/** Gamete frequencies for a parent's B–C haplotype, keyed "B-allele|C-allele". */
+export function bcGametes(
+  genotype: GenotypeMap,
+  phase: BCPhase = 'unknown',
+  recombination: number = BC_RECOMBINATION,
+): Map<string, number> {
+  const [b0, b1] = genotype.B;
+  const [c0, c1] = genotype.C;
+  const out = new Map<string, number>();
+  const add = (b: string, c: string, p: number) => {
+    const key = `${b}|${c}`;
+    out.set(key, (out.get(key) ?? 0) + p);
+  };
+  if (phase === 'unknown') {
+    for (const b of [b0, b1]) for (const c of [c0, c1]) add(b, c, 0.25);
+    return out;
+  }
+  const pc = phase === 'cis' ? [c0, c1] : [c1, c0];
+  const parental = (1 - recombination) / 2;
+  const recomb = recombination / 2;
+  add(b0, pc[0], parental);
+  add(b1, pc[1], parental);
+  add(b0, pc[1], recomb);
+  add(b1, pc[0], recomb);
+  return out;
+}
+
+/** Joint offspring distribution over the B and C pairs, keyed "Bpair|Cpair". */
+function getBCCrossProbabilities(
+  parent1: GenotypeMap,
+  parent2: GenotypeMap,
+  options: CrossOptions,
+): { genotypes: GenotypeMap; probability: number }[] {
+  const r = options.recombination ?? BC_RECOMBINATION;
+  const g1 = bcGametes(parent1, options.phase?.parent1 ?? 'unknown', r);
+  const g2 = bcGametes(parent2, options.phase?.parent2 ?? 'unknown', r);
+  const merged = new Map<string, { genotypes: GenotypeMap; probability: number }>();
+  for (const [k1, p1] of g1) {
+    const [b1, c1] = k1.split('|');
+    for (const [k2, p2] of g2) {
+      const [b2, c2] = k2.split('|');
+      const bKey = pairKey('B', b1, b2);
+      const cKey = pairKey('C', c1, c2);
+      const key = `${bKey}|${cKey}`;
+      const existing = merged.get(key);
+      if (existing) existing.probability += p1 * p2;
+      else
+        merged.set(key, {
+          genotypes: { B: parsePairKey('B', bKey), C: parsePairKey('C', cKey) },
+          probability: p1 * p2,
+        });
+    }
+  }
+  return [...merged.values()];
+}
+
 export function calculateCross(
   parent1: Record<string, [string, string]>,
   parent2: Record<string, [string, string]>,
+  options: CrossOptions = {},
 ): ProgenyOutcome[] {
   const activeLoci = LOCI_ORDER.filter(
     (locusId) => parent1[locusId] && parent2[locusId] && RABBIT_GENETIC_MAP[locusId],
   );
+  const linked = activeLoci.includes('B') && activeLoci.includes('C');
 
   let outcomes: { genotypes: GenotypeMap; probability: number }[] = [{ genotypes: {}, probability: 1 }];
 
   for (const locusId of activeLoci) {
+    if (linked && locusId === 'C') continue;
+    if (linked && locusId === 'B') {
+      const joint = getBCCrossProbabilities(parent1, parent2, options);
+      outcomes = outcomes.flatMap((o) =>
+        joint.map((j) => ({
+          genotypes: { ...o.genotypes, ...j.genotypes },
+          probability: o.probability * j.probability,
+        })),
+      );
+      continue;
+    }
     const locusProbabilities = getLocusCrossProbabilities(
       locusId,
       parent1[locusId],
