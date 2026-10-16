@@ -38,7 +38,7 @@ export function AboutPage({ onBack }: AboutPageProps) {
         </li>
         <li>
           <strong>Dig into genetics</strong> — The reference sections cover the loci matrix, eye
-          color rules, a 3D chromosome explorer, and a full glossary.
+          color rules, a chromosome and recombination diagram, and a full glossary.
         </li>
         <li>
           <strong>Use it in the barn</strong> — Add it to your home screen and it keeps working

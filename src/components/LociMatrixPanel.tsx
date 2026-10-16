@@ -59,7 +59,7 @@ export function LociMatrixPanel({ loci, selectedLocusId, onSelectLocus }: LociMa
   return (
     <CollapsiblePanel
       title="Loci Matrix Selectors"
-      description="Expand a locus for details, then focus it on the 3D chromosome canvas."
+      description="Expand a locus for details, including where it sits on the chromosome."
       defaultOpen
     >
       {loci.map((locus) => (

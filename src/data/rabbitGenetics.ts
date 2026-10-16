@@ -425,7 +425,7 @@ export const EYE_COLOR_RULES: EyeColorRule[] = [
 
 export const LOCI_ORDER = ['A', 'B', 'C', 'D', 'E', 'En', 'V', 'Si'] as const;
 
-/** Distinct band colors for mapped loci on the 3D chromosome models */
+/** Distinct band colors for mapped loci on the chromosome diagram */
 export const LOCUS_BAND_COLORS: Record<string, string> = {
   A: '#10b981',
   B: '#f59e0b',

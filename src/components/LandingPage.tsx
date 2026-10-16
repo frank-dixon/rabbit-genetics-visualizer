@@ -39,7 +39,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
   const features = [
     { k: '01 · Pair', t: 'Buck × doe', d: 'Breed presets or a custom genotype at every locus.' },
     { k: '02 · Predict', t: 'Litter odds', d: 'Every phenotype, its share of the litter, and why.' },
-    { k: '03 · Learn', t: 'See the why', d: 'Plain English first. Open any answer for Punnett squares and a 3D chromosome.', lichen: true },
+    { k: '03 · Learn', t: 'See the why', d: 'Plain English first. Open any answer for Punnett squares and a chromosome diagram.', lichen: true },
     { k: '04 · Keep', t: 'Save crosses', d: 'Saved on this device, free. No account needed.' },
   ];
 
