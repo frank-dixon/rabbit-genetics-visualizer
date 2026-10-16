@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { AboutPage } from './components/AboutPage';
 import { MendelianLearnPage } from './components/MendelianLearnPage';
 import { AppFooter, type AppView } from './components/AppFooter';
-import { CrossWorkspace } from './components/CrossWorkspace';
+import { SplitWorkspace } from './components/SplitWorkspace';
+import { LearnMoreModal } from './components/LearnMoreModal';
 import { GeneticsReferencePanel } from './components/GeneticsReferencePanel';
 import { CrossHydrator } from './components/CrossHydrator';
 import { GlossaryPanel } from './components/GlossaryPanel';
@@ -14,19 +15,32 @@ import { MobileTabBar, type MobileDestination } from './components/MobileTabBar'
 import { WORKSPACE_MAX_WIDTH } from './constants/layout';
 import { useThemeStore } from './store/useThemeStore';
 
-function WorkspaceView({ mobileTab }: { mobileTab: WorkspaceMobileTab }) {
+function WorkspaceView({
+  mobileTab,
+  onNavigate,
+}: {
+  mobileTab: WorkspaceMobileTab;
+  onNavigate: (view: AppView) => void;
+}) {
+  const [learnOpen, setLearnOpen] = useState(false);
   const showReference = mobileTab === 'reference';
   return (
     <main className="w-full flex-1">
-      <div className={`mx-auto w-full ${WORKSPACE_MAX_WIDTH} space-y-5 px-3 pb-10 pt-5 sm:px-5 md:pt-8`}>
-        <div className={showReference ? 'hidden md:block' : 'block'}>
-          <CrossWorkspace />
-        </div>
-        <div className={`space-y-4 ${showReference ? 'block' : 'hidden md:block'}`}>
-          <GeneticsReferencePanel />
-          <GlossaryPanel />
-        </div>
+      <div className={showReference ? 'hidden md:block' : 'block'}>
+        <SplitWorkspace onLearnMore={() => setLearnOpen(true)} />
       </div>
+      <div
+        className={`mx-auto w-full ${WORKSPACE_MAX_WIDTH} space-y-4 px-4 pb-10 pt-6 sm:px-9 ${showReference ? 'block' : 'hidden md:block'}`}
+      >
+        <GeneticsReferencePanel />
+        <GlossaryPanel />
+      </div>
+      <LearnMoreModal
+        open={learnOpen}
+        onClose={() => setLearnOpen(false)}
+        onOpenLearn={() => onNavigate('learn')}
+        onOpenCitations={() => onNavigate('citations')}
+      />
     </main>
   );
 }
@@ -65,7 +79,7 @@ export default function App() {
       {view === 'workspace' && (
         <>
           <CrossHydrator />
-          <WorkspaceView mobileTab={mobileTab} />
+          <WorkspaceView mobileTab={mobileTab} onNavigate={setView} />
         </>
       )}
       {view === 'learn' && <MendelianLearnPage onBack={() => setView('workspace')} />}

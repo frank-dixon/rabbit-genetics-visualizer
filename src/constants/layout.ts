@@ -1,2 +1,2 @@
 /** Shared max-width for workspace header + main column on desktop */
-export const WORKSPACE_MAX_WIDTH = 'max-w-6xl';
+export const WORKSPACE_MAX_WIDTH = 'max-w-[1440px]';
