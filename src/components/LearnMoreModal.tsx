@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useGeneticStore } from '../store/useGeneticStore';
 import { punnett, varyingLoci } from '../utils/litterCopy';
 import { PunnettSquare } from './PunnettSquare';
+import { GoingDeeper } from './learn/GoingDeeper';
+import { LitterStory } from './learn/LitterStory';
 
 interface LearnMoreModalProps {
   open: boolean;
@@ -40,7 +42,7 @@ export function LearnMoreModal({ open, onClose, onOpenLearn, onOpenCitations }: 
         role="dialog"
         aria-modal="true"
         aria-labelledby="learn-more-title"
-        className="max-h-[92vh] w-full overflow-y-auto border border-ink bg-paper sm:max-h-[86vh] sm:w-[min(900px,94vw)]"
+        className="max-h-[92vh] w-full overflow-y-auto border border-ink bg-paper sm:max-h-[86vh] sm:w-[min(1120px,94vw)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-rule bg-paper px-5 py-4 sm:px-7">
@@ -75,6 +77,25 @@ export function LearnMoreModal({ open, onClose, onOpenLearn, onOpenCitations }: 
               equally likely kit, so a pair that fills two cells turns up in about half the litter. Multiply the
               chances across genes to get each look&rsquo;s odds.
             </p>
+          </section>
+          <section aria-labelledby="litter-story-heading">
+            <h3 id="litter-story-heading" className="text-xl font-bold tracking-tight">
+              How a litter is made
+            </h3>
+            <p className="mb-3 mt-1 max-w-[44rem] text-ink-soft">
+              Where B and C sit on chromosome 1, how a crossover reshuffles them, and why that bends the odds.
+            </p>
+            <LitterStory />
+          </section>
+          <section aria-labelledby="going-deeper-heading">
+            <h3 id="going-deeper-heading" className="text-xl font-bold tracking-tight">
+              Going deeper: how genes travel together
+            </h3>
+            <p className="mb-3 mt-1 max-w-[44rem] text-ink-soft">
+              Genes on different chromosomes sort on their own. Genes on the same one travel together, less so the
+              further apart they sit.
+            </p>
+            <GoingDeeper />
           </section>
           <div className="flex flex-col gap-3 sm:flex-row">
             <button type="button" onClick={onOpenLearn} className="btn-block btn-forest">
