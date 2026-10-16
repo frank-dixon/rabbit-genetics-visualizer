@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { PARENT_PRESETS } from '../data/meatRabbitBreeds';
 import { getPresetBreedingNotes } from '../data/presetBreedingNotes';
 import { genotypesEqual, useGeneticStore } from '../store/useGeneticStore';
@@ -25,6 +25,7 @@ import { PresetPicker } from './PresetPicker';
 import { PunnettSquare } from './PunnettSquare';
 import { SavedCrossesPanel } from './SavedCrossesPanel';
 import { WhyDisclosure } from './WhyDisclosure';
+import { ParentGenesModal } from './ParentGenesModal';
 
 type ParentKey = 'parent1' | 'parent2';
 type GenotypeMap = Record<string, [string, string]>;
@@ -52,6 +53,8 @@ function ParentPicker({ parentKey, role, mate }: { parentKey: ParentKey; role: '
   const notes = useMemo(() => getPresetBreedingNotes(presetId, genotype), [presetId, genotype]);
   const preset = presetId ? PARENT_PRESETS.find((p) => p.id === presetId) : null;
   const edited = Boolean(preset && !genotypesEqual(genotype, preset.genotype));
+  const [genesOpen, setGenesOpen] = useState(false);
+  const closeGenes = useCallback(() => setGenesOpen(false), []);
 
   const onPreset = (next: string | null) => {
     if (!next) return clearParentPreset(parentKey);
@@ -62,7 +65,7 @@ function ParentPicker({ parentKey, role, mate }: { parentKey: ParentKey; role: '
   return (
     <section
       aria-label={`The ${role}`}
-      className="flex min-w-0 flex-col border-2 border-ink bg-paper p-4 transition-shadow focus-within:shadow-[6px_6px_0_var(--ink)] hover:shadow-[6px_6px_0_var(--ink)]"
+      className="flex h-full min-w-0 flex-col border-2 border-ink bg-paper p-4 transition-shadow focus-within:shadow-[6px_6px_0_var(--ink)] hover:shadow-[6px_6px_0_var(--ink)]"
     >
       <div className="flex items-baseline justify-between gap-2">
         <h2 className="kicker text-[11px] text-ink">The {role}</h2>
@@ -87,9 +90,28 @@ function ParentPicker({ parentKey, role, mate }: { parentKey: ParentKey; role: '
         </div>
       </div>
       <BCPhasePicker parentKey={parentKey} role={role} />
-      <WhyDisclosure label={`See or edit the ${role}'s genes`}>
+      <div className="mt-auto pt-3">
+        <p className="truncate font-mono text-[12px] text-ink-muted" title={formatCompactGenotype(genotype)}>
+          {formatCompactGenotype(genotype)}
+        </p>
+        <button
+          type="button"
+          onClick={() => setGenesOpen(true)}
+          aria-haspopup="dialog"
+          className="kicker mt-1 text-[11px] text-ink underline underline-offset-4"
+        >
+          See or edit the {role}&rsquo;s genes →
+        </button>
+      </div>
+      <ParentGenesModal
+        open={genesOpen}
+        onClose={closeGenes}
+        titleId={`${parentKey}-genes-title`}
+        kicker={`The ${role} · genes`}
+        title={look}
+      >
         <GenotypeInline genotype={genotype} baseline={mate} />
-        <p>{resolvePlainEnglishPhenotype(genotype)}</p>
+        <p className="text-ink">{resolvePlainEnglishPhenotype(genotype)}</p>
         {hidden.length > 0 && <p>Hidden genes it can pass on: {hidden.join(', ')}.</p>}
         {notes.length > 0 && (
           <ul className="list-disc space-y-1 pl-5 text-sm">
@@ -103,13 +125,16 @@ function ParentPicker({ parentKey, role, mate }: { parentKey: ParentKey; role: '
             Reset to {preset.label}
           </button>
         )}
-        <details className="border border-rule bg-paper-2/50 p-3">
-          <summary className="kicker cursor-pointer text-[11px] text-ink">Edit genes one by one</summary>
+        <section aria-labelledby={`${parentKey}-edit-heading`} className="border border-rule bg-paper-2/50 p-3">
+          <h3 id={`${parentKey}-edit-heading`} className="kicker text-[11px] text-ink">
+            Edit genes one by one
+          </h3>
+          <p className="mt-1 text-[13px]">Changes apply to the cross right away.</p>
           <div className="pt-3">
             <ParentGenotypeEditor parentKey={parentKey} mateGenotype={mate} />
           </div>
-        </details>
-      </WhyDisclosure>
+        </section>
+      </ParentGenesModal>
     </section>
   );
 }
@@ -213,9 +238,9 @@ export function SplitWorkspace({ onLearnMore }: SplitWorkspaceProps) {
           <p className="mt-2 max-w-[38rem] text-[17px] leading-snug text-ink-soft">
             Choose a parent on each side. The odds update as soon as you change either one.
           </p>
-          <div className="mt-5 grid grid-cols-1 items-start gap-3 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+          <div className="mt-5 grid grid-cols-1 items-stretch gap-3 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
             <ParentPicker parentKey="parent1" role="doe" mate={sire} />
-            <span aria-hidden className="headline self-center justify-self-center text-[28px] leading-none text-ink-muted md:pt-6">
+            <span aria-hidden className="headline self-center justify-self-center text-[28px] leading-none text-ink-muted">
               ×
             </span>
             <ParentPicker parentKey="parent2" role="buck" mate={dam} />
